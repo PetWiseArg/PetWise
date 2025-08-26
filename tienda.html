@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Codificación y vista adaptable -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Verificación de Google Search Console -->
+  <meta name="google-site-verification" content="YVMSVH6LA3ZY-Z4NBdyS7aP1Efr7r-0CYpZ73qWTcoE" />
+
+  <!-- SEO básico -->
+  <meta name="description" content="PetWise: productos, atención veterinaria y tecnología para el bienestar de tus mascotas. Conectamos innovación y amor animal en una sola plataforma." />
+  <meta name="keywords" content="PetWise, mascotas, tecnología para mascotas, cuidado animal, tienda mascotas, bienestar animal" />
+  <meta name="author" content="PetWise Company" />
+
+  <!-- SEO para compartir en redes sociales (Open Graph) -->
+  <meta property="og:title" content="PetWise | Cuidado animal moderno" />
+  <meta property="og:description" content="Conectamos tecnología, productos y atención veterinaria para el bienestar de tu mascota." />
+  <meta property="og:image" content="https://lautaroarce.github.io/petwise.arg.proyec/img/logo.png" />
+  <meta property="og:url" content="https://lautaroarce.github.io/petwise.arg.proyec/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Título en pestaña -->
+  <title>Tienda | PetWise</title>
+
+  <!-- Fuentes y estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="estilo.css" />
+<link rel="icon" href="img/logo2.png" type="image/png">
+
+  <style>
+    .producto {
+      background-color: #1f2937;
+      color: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .producto:hover {
+      transform: translateY(-5px);
+    }
+
+    .producto img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .producto h5 {
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    .producto p {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-comprar {
+      background-color: #69aa2d;
+      color: #0e1117;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    .btn-comprar:hover {
+      background-color: #16aa79;
+    }
+
+    .galeria img {
+      border-radius: 12px;
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s;
+    }
+
+    .galeria img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="img/logo.png" alt="PetWise Logo" class="img-fluid">
+      <span>PetWise Company</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+     <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="contacto.html">Contacto</a>
+        </li>
+        <li class="nav-item">
+          <!-- Volver a la página anterior con JS -->
+          <a class="nav-link" href="#" onclick="history.back(); return false;">Atrás</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <h1 class="display-4 fw-bold">Tienda PetWise</h1>
+  <p class="lead">Productos útiles, modernos y pensados para vos y tu mascota</p>
+  <a href="#" onclick="history.back(); return false;" class="btn btn-lg btn-custom mt-4">Volver atrás</a>
+</header>
+
+<!-- PRODUCTOS -->
+<section class="container mt-5">
+  <h2 class="text-center mb-4"><b>Productos disponibles</b></h2>
+  <div class="row g-4">
+
+    <!-- Producto 1 -->
+    <div class="col-12 col-md-4">
+      <div class="producto">
+        <img src="img/producto 1.jpg" alt="Collar inteligente">
+        <h5>Croquetas de perro</h5>
+        <p>$4.500</p>
+        <button class="btn btn-comprar" onclick="window.location.href='pago1.html'">Ir a la tienda</button>
+
+
+      </div>
+    </div>
+
+    <!-- Producto 2 -->
+    <div class="col-12 col-md-4">
+      <div class="producto">
+        <img src="img/producto 2.jpg" alt="Placa QR personalizada">
+        <h5>Combo: Collar, tazòn, cama</h5>
+        <p>$35.300</p>
+        <button class="btn btn-comprar" onclick="alert('Producto agregado al carrito')">Agregar al carrito</button>
+      </div>
+    </div>
+
+    <!-- Producto 3 -->
+    <div class="col-12 col-md-4">
+      <div class="producto">
+        <img src="img/producto 3.jpg" alt="Botella portátil">
+        <h5>Shampoo perros/gatos</h5>
+        <p>$9.800</p>
+        <button class="btn btn-comprar" onclick="alert('Producto agregado al carrito')">Agregar al carrito</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- GALERÍA DE FOTOS -->
+<section class="container mt-5">
+  <h2 class="text-center mb-4"><b>Galería de Fotos</b></h2>
+  
+  <div class="row g-4 galeria">
+    <div class="col-6 col-md-3">
+       <a href="img/f1.jpg" target="_blank"><img src="img/f1.jpg" alt="Mascota usando collar"></a>
+    </div>
+    <div class="col-6 col-md-3">
+       <a href="img/paseadora.png" target="_blank"><img src="img/paseadora.png" alt="Placa con QR puesta"></a>
+    </div>
+    <div class="col-6 col-md-3">
+       <a href="img/f3.png" target="_blank"><img src="img/f3.png" alt="Botella en paseo"></a>
+    </div>
+    <div class="col-6 col-md-3">
+       <a href="img/vet.jpg" target="_blank"><img src="img/vet.jpg" alt="Mascota feliz con producto"></a>
+    </div>
+  </div>
+</section>
+
+
+  <!-- GALERÍA DESTACADA (2 FOTOS) -->
+<section class="container mt-5">
+  <h2 class="text-center mb-4"><b>Nuestras Instalaciones</b></h2>
+
+  <div class="row g-4 galeria">
+    <div class="col-12 col-md-6">
+    <img src="img/tiendaafuera.png" alt="Mascota feliz en casa">
+    </div>
+    <div class="col-12 col-md-6">
+      <img src="img/tiendadentro.png" alt="Producto en uso en exterior">
+    </div>
+  </div>
+</section>
+<!-- MAPA -->
+<section class="container mt-5">
+  <h2 class="text-center mb-4"><b>Dónde encontrarnos</b></h2>
+  <div class="mapa-container">
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2085.8733258301513!2d-59.25461033118602!3d-29.12382466435107!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x944e8494e2cdcb2b%3A0x8c0a8ec5c88cfae!2sInstituto%20Superior%20Goya!5e1!3m2!1ses!2sar!4v1750644234406!5m2!1ses!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">" 
+      width="100%" 
+      height="450" 
+      style="border:0;" 
+      allowfullscreen="" 
+      loading="lazy" 
+      referrerpolicy="no-referrer-when-downgrade" 
+      title="Ubicación PetWise">
+    </iframe>
+  </div>
+</section>
+
+
+
+<!-- FOOTER -->
+<footer class="mt-5">
+  <p>&copy; 2025 PetWise Company. Todos los derechos reservados.</p>
+</footer>
+<script>
+  // Cierra el menú al hacer clic en un enlace de la navbar (modo móvil)
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+
+      if (navbarToggler.offsetParent !== null && navbarCollapse.classList.contains('show')) {
+        navbarToggler.click(); // simula click para cerrar el menú
+      }
+    });
+  });
+</script>
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

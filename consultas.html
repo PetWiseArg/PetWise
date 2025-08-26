@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="YVMSVH6LA3ZY-Z4NBdyS7aP1Efr7r-0CYpZ73qWTcoE" />
+  <meta name="description" content="PetWise: productos, atención veterinaria y tecnología para el bienestar de tus mascotas." />
+  <meta name="keywords" content="PetWise, mascotas, tecnología para mascotas, cuidado animal, tienda mascotas, bienestar animal" />
+  <meta name="author" content="PetWise Company" />
+  <meta property="og:title" content="PetWise | Servicios" />
+  <meta property="og:description" content="Conectamos tecnología, productos y atención veterinaria para el bienestar de tu mascota." />
+  <meta property="og:image" content="https://lautaroarce.github.io/petwise.arg.proyec/img/logo.png" />
+  <meta property="og:url" content="https://lautaroarce.github.io/petwise.arg.proyec/" />
+  <meta property="og:type" content="website" />
+
+  <title>Servicios PetWise</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="estilo.css" />
+  <link rel="icon" href="img/logo2.png" type="image/png">
+
+  <style>
+    html, body {
+  margin: 0;
+  padding: 0;
+}
+
+    .negro { color: #000}
+    .blanco { color: #ffffffff}
+    .btn-custom {
+      background-color: #216ec5ff;
+      color: #fff;
+      border-radius: 50px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+      background-color: #8ed849;
+      color: #1f2937;
+    }
+
+    /* SECCION SERVICIOS */
+    main {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 1rem;
+    }
+/* === CARDS UNIFORMES === */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: linear-gradient(#c5c5c5ff 100%);
+  gap: 0.5rem; /* espacio entre elementos, más compacto */
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 18px 35px rgba(0,0,0,.45);
+}
+
+.service-card i {
+  font-size: 2.5rem;
+  color: #218f97ff;
+  margin-bottom: 0.8rem;
+}
+
+.service-card h3 {
+  font-size: 1.4rem;
+  color: #26909eff;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+.service-card p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  flex-grow: 1; /* ocupa el espacio disponible para alinear botones */
+}
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+  .service-card {
+    width: 90%;      /* que no sea demasiado ancho */
+    margin: 0 auto;  /* centra horizontalmente */
+  }
+  .service-card button {
+    width: 80%;      /* botón más pequeño en móvil */
+    margin: 0.5rem auto 0 auto; /* centrado y cerca del texto */
+    display: block;  /* necesario para que margin auto funcione */
+  }
+}
+
+
+/* Cards de envenenamiento igual estilo que las demás */
+.envenenamiento-perros,
+.envenenamiento-gatos {
+  background-color: #ff4d4f;
+  color: #cf0000ff;
+  border-radius: 18px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+  min-height: 350px; /* igual altura que las otras cards */
+  max-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.envenenamiento-perros i,
+.envenenamiento-gatos i {
+  font-size: 2.5rem;
+  color: #e00000ff;
+  margin-bottom: 0.5rem;
+}
+
+.envenenamiento-perros h3,
+.envenenamiento-gatos h3,
+.envenenamiento-perros p,
+.envenenamiento-gatos p {
+  color: #af0000ff !important;
+}
+
+
+    /* MODAL */
+    .modal-content {
+      background-color:#1f2937; 
+      color:#f1f1f1; 
+      border-radius:12px;
+    }
+    .modal-content .form-label {
+      color: #8ed849;
+    }
+    .modal-content .form-control::placeholder {
+      color: #ccc;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #0e1117;
+      color: #8ed849;
+      margin-top: 4rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.25rem;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+  
+
+  </style>
+</head>
+<body>
+
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="img/logo.png" alt="PetWise Logo" class="img-fluid" />
+      <span>PetWise Company</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="history.back(); return false;">Atrás</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<header class="hero">
+  <h1 class="display-4 fw-bold">Consultas PetWise</h1>
+  <p class="lead">Ofrecemos soluciones integrales para el cuidado y bienestar de tus mascotas</p>
+  <a href="#" onclick="history.back(); return false;" class="btn btn-lg btn-custom mt-4">Volver atrás</a>
+</header>
+
+<!-- ====== SERVICIOS ====== -->
+<main>
+  <center><h1 class="blanco">Perros</h1></center>
+  <div class="services-grid">
+
+
+    <div class="service-card">
+      <i class="bi bi-clipboard-data"></i>
+      <h3>Consulta de Salud</h3>
+      <p class="negro">Identificación de síntomas comunes como vómitos, diarrea, fiebre y otros problemas de salud.</p>
+      <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#servicioModal" data-servicio="Consulta de Salud">Más Información</button>
+    </div>
+
+    <div class="service-card">
+      <i class="bi bi-egg-fried"></i>
+      <h3>Dieta y Nutrición</h3>
+      <p  class="negro">Planes alimenticios personalizados según raza, edad y condición de salud de tu mascota.</p>
+      <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#servicioModal" data-servicio="Dieta y Nutrición">Más Información</button>
+    </div>
+
+    <div class="service-card">
+      <i class="bi bi-bricks"></i>
+      <h3>Entrenamiento y Comportamiento</h3>
+      <p class="negro">Asesoramiento en conducta, obediencia básica y problemas de comportamiento.</p>
+      <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#servicioModal" data-servicio="Entrenamiento y Comportamiento">Más Información</button>
+    </div>
+<!-- NUEVA CARD ENVENENAMIENTO -->
+   <div class="service-card envenenamiento-perros">
+  <i class="bi bi-exclamation-triangle"></i>
+  <h3>Envenenamiento Perros</h3>
+  <p class="negro">Identificación y primeros auxilios ante intoxicaciones o ingestión de sustancias peligrosas.</p>
+  <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#envenenamientoModalPerros" data-servicio="Envenenamiento">Más Información</button>
+</div>
+
+
+  </div>
+</main>
+
+<!-- ====== MODAL SERVICIOS ====== -->
+<div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background-color:#1f2937; color:#f1f1f1; border-radius:12px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="servicioModalLabel">Problemas Comunes</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="problemasLista">
+          <!-- Aquí se cargan los problemas según el servicio -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+   const problemasPorServicio = {
+  "Consulta de Salud": [
+    { 
+      nombre: "Vómito", 
+      descripcion: "El vómito en perros puede ser causado por indigestión, ingestión de alimentos inapropiados, parásitos o sustancias tóxicas. Observa frecuencia, consistencia y presencia de sangre.",
+      tips: [
+        "Ofrece comidas pequeñas y frecuentes.",
+        "Evita dar restos de comida humana que puedan ser tóxicos.",
+        "Mantén agua fresca disponible siempre."
+      ],
+      advertencia: "Consulta al veterinario si los vómitos son recurrentes, contienen sangre o vienen acompañados de letargo.",
+      enlace: "https://www.advance-affinity.com/es/es/perro/consejos/que-hacer-cuando-tu-perro-cuando-vomita-causas-y-soluciones"
+    },
+    { 
+      nombre: "Diarrea", 
+      descripcion: "Puede deberse a cambios de dieta, infecciones, parásitos o alergias alimentarias.",
+      tips: [
+        "Mantén hidratación constante.",
+        "Ofrece dieta blanda temporalmente.",
+        "Evita cambios bruscos de alimento."
+      ],
+      advertencia: "Acude al veterinario si dura más de 48 horas, hay sangre o signos de deshidratación.",
+      enlace: "https://www.expertoanimal.com/que-hacer-si-mi-perro-tiene-diarrea-20375.html"
+    },
+    { 
+      nombre: "Fiebre", 
+      descripcion: "La fiebre indica inflamación o infección. Mide la temperatura con un termómetro adecuado.",
+      tips: [
+        "Proporciona un lugar cálido y tranquilo para el perro.",
+        "Evita medicar por tu cuenta sin indicación veterinaria."
+      ],
+      advertencia: "Si supera los 39.5°C o hay síntomas graves como vómitos o letargo, visita al veterinario de inmediato.",
+      enlace: "https://www.expertoanimal.com/fiebre-en-perros-causas-sintomas-y-tratamiento-7642.html"
+    },
+    { 
+      nombre: "Letargo", 
+      descripcion: "Falta de energía, sueño excesivo o falta de interés en actividades habituales. Puede indicar infecciones, problemas metabólicos o dolor.",
+      tips: [
+        "Observa cambios en la conducta diaria.",
+        "Proporciona descanso y un ambiente tranquilo."
+      ],
+      advertencia: "Consulta al veterinario si persiste o se acompaña de otros síntomas graves.",
+      enlace: "https://cuasveterinaria.es/blog/letargo-debilidad-perros-gatos/"
+    },
+    { 
+      nombre: "Tos persistente", 
+      descripcion: "Puede indicar problemas respiratorios como bronquitis, colapso traqueal o cardiopatías.",
+      tips: [
+        "Evita ambientes con humo o polvo.",
+        "Mantén al perro hidratado y en reposo relativo."
+      ],
+      advertencia: "Acude al veterinario si la tos persiste o hay dificultad respiratoria.",
+      enlace: "https://cuasveterinaria.es/blog/tos-persistente-perros-causas-tratamiento/"
+    },
+    { 
+      nombre: "Pérdida de apetito", 
+      descripcion: "La anorexia puede deberse a estrés, cambios de dieta, dolor o enfermedades internas.",
+      tips: [
+        "Ofrece comidas apetitosas y pequeñas varias veces al día.",
+        "Observa otros síntomas como vómitos o diarrea."
+      ],
+      advertencia: "Consulta al veterinario si no come durante más de 24-48 horas.",
+      enlace: "https://www.holamascotas.es/perros/mi-perro-pierde-el-apetito-que-hago/"
+    }
+  ],
+
+  "Dieta y Nutrición": [
+     { 
+    nombre: "Alimentación balanceada", 
+    descripcion: "Una dieta equilibrada es clave para la salud, crecimiento y energía de tu mascota.",
+    tips: [
+      "Ofrece alimento balanceado de buena calidad según la edad y tamaño del perro.",
+      "Mantén horarios regulares de comida en lugar de dejar alimento libre todo el día.",
+      "Asegúrate de que siempre tenga agua fresca disponible.",
+      "Consulta con tu veterinario antes de introducir suplementos o cambios de dieta."
+    ],
+    advertencia: "Evita dar huesos cocidos, chocolate, cebolla, uvas y otros alimentos tóxicos.",
+    enlace: "https://revistabiologica.com/comida-balanceada-para-perros/"
+  },
+
+    { 
+
+      nombre: "Perros con sobrepeso", 
+      descripcion: "El sobrepeso puede causar problemas articulares, cardíacos y metabólicos.",
+      tips: [
+        "Controla las porciones y evita dar comida humana alta en calorías.",
+        "Aumenta el ejercicio diario con paseos y juegos.",
+        "Realiza controles de peso periódicos."
+      ],
+      advertencia: "Evita dietas extremas sin supervisión veterinaria.",
+      enlace: "https://www.expertoanimal.com/sobrepeso-y-obesidad-en-perros-sintomas-consecuencias-y-tratamiento-26726.html"
+    },
+    { 
+      nombre: "Perros con alergias", 
+      descripcion: "Se manifiestan con picazón, problemas digestivos o caída de pelo.",
+      tips: [
+        "Introduce dietas hipoalergénicas de forma gradual.",
+        "Mantén un registro de síntomas y alimentos.",
+        "Evita cambios bruscos de dieta."
+      ],
+      advertencia: "Consulta siempre al veterinario antes de cambios de alimentación.",
+      enlace: "https://www.purina.com/es/articulos/perro/salud/sintomas/como-identificar-los-sintomas-de-alergias-alimentarias-en-perros"
+    },
+    { 
+      nombre: "Deficiencias nutricionales", 
+      descripcion: "La falta de vitaminas o minerales puede afectar crecimiento, pelaje y energía.",
+      tips: [
+        "Proporciona dietas balanceadas según edad, raza y tamaño.",
+        "Consulta sobre suplementos solo si lo indica el veterinario."
+      ],
+      advertencia: "Evita automedicar con vitaminas o suplementos sin supervisión.",
+      enlace: "https://nutrofar.es/como-detectar-deficiencias-nutricionales-en-mascotas-y-cuidar-su-salud/"
+    },
+    { 
+      nombre: "Cachorros en crecimiento", 
+      descripcion: "Necesitan dietas ricas en proteínas, calcio y grasas saludables.",
+      tips: [
+        "Alimenta varias veces al día según recomendaciones de peso y raza.",
+        "Asegura agua fresca y limpia siempre disponible."
+      ],
+      advertencia: "Evita sobredosis de vitaminas o cambios bruscos de dieta.",
+      enlace: "https://soyunperro.com/como-alimentar-a-un-cachorro/"
+    },
+    { 
+      nombre: "Perro mayor", 
+      descripcion: "Requieren menos calorías pero más nutrientes específicos como antioxidantes y fibra.",
+      tips: [
+        "Proporciona dietas especiales para perros mayores.",
+        "Estimula actividad física ligera para mantener movilidad.",
+        "Realiza chequeos veterinarios periódicos."
+      ],
+      advertencia: "Evita cambios bruscos de alimentación y suplementos sin indicación profesional.",
+      enlace: "https://especiespro.es/articulos/alimentacion-y-salud-de-los-animales-mayores/"
+    }
+  ],
+
+  "Entrenamiento y Comportamiento": [
+    { 
+      nombre: "Obediencia básica", 
+      descripcion: "Incluye sentarse, quedarse, venir y caminar sin tirar de la correa.",
+      tips: [
+        "Usa refuerzo positivo y recompensas.",
+        "Mantén sesiones cortas y consistentes.",
+        "Sé paciente y constante."
+      ],
+      advertencia: "Evita castigos físicos o gritos; pueden afectar la confianza del perro.",
+      enlace: "https://caninopedia.com/guia-de-adiestramiento-de-perros-en-formato-pdf/"
+    },
+    { 
+      nombre: "Ansiedad por separación", 
+      descripcion: "Se observa cuando el perro llora, ladra o destruye objetos al quedarse solo.",
+      tips: [
+        "Deja objetos con olor familiar.",
+        "Haz salidas cortas y graduales.",
+        "Crea rutinas predecibles para reducir estrés."
+      ],
+      advertencia: "Si el comportamiento persiste, consulta a un especialista en conducta.",
+      enlace: "https://www.expertoanimal.com/ansiedad-por-separacion-en-perros-sintomas-y-tratamiento-3083.html"
+    },
+    { 
+      nombre: "Ladrido excesivo", 
+      descripcion: "Puede ser por aburrimiento, alerta o ansiedad.",
+      tips: [
+        "Proporciona ejercicio diario y estimulación mental.",
+        "Usa comandos y refuerzos positivos para controlar ladridos.",
+        "Evita reforzar el ladrido con atención no deseada."
+      ],
+      advertencia: "Consulta al veterinario si hay cambios repentinos de conducta.",
+      enlace: "https://miperroeducado.com/5-pasos-para-resolver-problemas-de-ladridos-excesivos-en-perros"
+    },
+    { 
+      nombre: "Destrucción de objetos", 
+      descripcion: "Puede ser resultado de estrés, aburrimiento o ansiedad.",
+      tips: [
+        "Ofrece juguetes seguros y rutinas de juego.",
+        "Proporciona estimulación mental con juegos de inteligencia.",
+        "Evita dejar objetos peligrosos al alcance."
+      ],
+      advertencia: "Si persiste, consulta a un adiestrador profesional.",
+      enlace: "https://caninopedia.com/guia-de-adiestramiento-de-perros-en-formato-pdf/"
+    },
+    { 
+      nombre: "Agresividad", 
+      descripcion: "Puede surgir por miedo, territorialidad o frustración.",
+      tips: [
+        "Identifica los desencadenantes de la agresión.",
+        "Utiliza adiestramiento basado en refuerzo positivo.",
+        "Proporciona un entorno seguro para todos los miembros de la familia."
+      ],
+      advertencia: "Evita confrontaciones físicas y consulta siempre con un especialista en conducta canina.",
+      enlace: "https://mivet.com/blog/agresividad-perro/"
+    }
+  ]
+};
+
+
+const modal = document.getElementById('servicioModal');
+modal.addEventListener('show.bs.modal', function (event) {
+  const button = event.relatedTarget;
+  const servicio = button.getAttribute('data-servicio');
+  const lista = modal.querySelector('#problemasLista');
+  lista.innerHTML = '';
+
+  if (problemasPorServicio[servicio]) {
+    problemasPorServicio[servicio].forEach(p => {
+      const div = document.createElement('div');
+      div.className = "mb-2";
+      div.innerHTML = `<button class="btn btn-sm btn-custom w-100">${p.nombre}</button>`;
+      div.querySelector('button').addEventListener('click', () => {
+  div.innerHTML = `
+    <h5>${p.nombre}</h5>
+    <p>${p.descripcion}</p>
+    ${p.tips ? `<ul>${p.tips.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+    ${p.advertencia ? `<p style="color:#ff6b6b"><strong>⚠️ Advertencia:</strong> ${p.advertencia}</p>` : ''}
+    <a href="${p.enlace}" target="_blank" class="btn btn-sm btn-custom mt-2">Más Información</a>
+  `;
+});
+
+      lista.appendChild(div);
+    });
+  } else {
+    lista.innerHTML = "<p>No hay información disponible para este servicio.</p>";
+  }
+});
+</script>
+
+
+<main>
+   <center><h1 class="blanco">Gatos</h1></center>
+  <div class="services-grid">
+
+    <div class="service-card">
+      <i class="bi bi-clipboard-data"></i>
+      <h3>Consulta de Salud</h3>
+      <p class="negro">Identificación de síntomas comunes como vómitos, diarrea, fiebre y otros problemas de salud en gatos.</p>
+      <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#servicioModalGatos" data-servicio="Consulta de Salud">Más Información</button>
+    </div>
+
+    <div class="service-card">
+      <i class="bi bi-egg-fried"></i>
+      <h3>Dieta y Nutrición</h3>
+      <p class="negro">Planes alimenticios personalizados según edad, condición de salud y estilo de vida del gato.</p>
+      <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#servicioModalGatos" data-servicio="Dieta y Nutrición">Más Información</button>
+    </div>
+
+    <div class="service-card">
+      <i class="bi bi-bricks"></i>
+      <h3>Entrenamiento y Comportamiento</h3>
+      <p class="negro">Asesoramiento en comportamiento, socialización y hábitos de higiene.</p>
+      <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#servicioModalGatos" data-servicio="Entrenamiento y Comportamiento">Más Información</button>
+    </div>
+
+    <!-- NUEVA CARD ENVENENAMIENTO -->
+    <div class="service-card envenenamiento-gatos">
+  <i class="bi bi-exclamation-triangle"></i>
+  <h3>Envenenamiento Gatos</h3>
+  <p class="negro">Identificación y primeros auxilios ante intoxicaciones o ingestión de sustancias peligrosas.</p>
+  <button class="btn btn-custom mt-3" data-bs-toggle="modal" data-bs-target="#envenenamientoModalGatos" data-servicio="Envenenamiento Gatos">Más Información</button>
+</div>
+
+  </div>
+</main>
+
+<!-- ====== MODAL SERVICIOS GATOS ====== -->
+<div class="modal fade" id="servicioModalGatos" tabindex="-1" aria-labelledby="servicioModalGatosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background-color:#1f2937; color:#f1f1f1; border-radius:12px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="servicioModalGatosLabel">Problemas Comunes</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="problemasListaGatos">
+          <!-- Aquí se cargan los problemas según el servicio -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const problemasPorServicioGatos = {
+  "Consulta de Salud": [
+    { 
+      nombre: "Vómitos", 
+      descripcion: "Los vómitos en gatos pueden deberse a bolas de pelo, cambios de dieta, infecciones gastrointestinales o intoxicaciones. Observa la frecuencia, consistencia y presencia de sangre.",
+      tips: [
+        "Cepilla a tu gato regularmente para reducir las bolas de pelo.",
+        "Ofrece comidas más pequeñas y frecuentes para evitar indigestión.",
+        "Mantén agua fresca disponible en todo momento."
+      ],
+      advertencia: "Consulta al veterinario si los vómitos son recurrentes, contienen sangre o van acompañados de letargo.",
+      enlace: "https://es.wikipedia.org/wiki/V%C3%B3mito"
+    },
+    { 
+      nombre: "Diarrea", 
+      descripcion: "Puede ser causada por infecciones, parásitos, intolerancias alimentarias o estrés. Vigila la consistencia y frecuencia.",
+      tips: [
+        "Mantén hidratación constante.",
+        "Ofrece dieta blanda temporalmente si tu gato lo tolera.",
+        "Evita cambios bruscos de alimento."
+      ],
+      advertencia: "Acude al veterinario si persiste más de 24-48 horas, hay sangre o signos de deshidratación.",
+      enlace: "https://es.wikipedia.org/wiki/Diarrea"
+    },
+    { 
+      nombre: "Fiebre y Letargo", 
+      descripcion: "Fiebre o letargo pueden indicar infecciones virales (ej. panleucopenia), problemas metabólicos o dolor.",
+      tips: [
+        "Monitorea la temperatura con un termómetro adecuado para gatos.",
+        "Asegura un lugar cálido y tranquilo para tu gato.",
+        "Evita automedicarlo."
+      ],
+      advertencia: "Acude de inmediato al veterinario si la temperatura supera 39.5°C o si hay otros síntomas graves.",
+      enlace: "https://es.wikipedia.org/wiki/Panleucopenia_felina"
+    },
+    { 
+      nombre: "Pérdida de apetito", 
+      descripcion: "La anorexia puede señalar enfermedades digestivas, dentales o sistémicas.",
+      tips: [
+        "Prueba ofrecer alimentos húmedos o con aroma fuerte para estimular el apetito.",
+        "Mantén horarios de comida regulares.",
+        "Controla otros síntomas como vómitos, diarrea o letargo."
+      ],
+      advertencia: "Si tu gato no come durante más de 24-48 horas, consulta al veterinario.",
+      enlace: "https://es.wikipedia.org/wiki/Apetito"
+    },
+    { 
+      nombre: "Tos o dificultad respiratoria", 
+      descripcion: "Podría indicar infecciones respiratorias, asma felina o neumonía.",
+      tips: [
+        "Evita humo, polvo y aerosoles cerca del gato.",
+        "Mantén el ambiente limpio y ventilado.",
+        "Observa la frecuencia y la severidad de la tos."
+      ],
+      advertencia: "Consulta al veterinario si la tos es persistente, hay dificultad para respirar o cianosis (encías azuladas).",
+      enlace: "https://es.wikipedia.org/wiki/Enfermedades_respiratorias_en_gatos"
+    }
+  ],
+
+  "Dieta y Nutrición": [
+    { 
+      nombre: "Gatos con sobrepeso", 
+      descripcion: "El sobrepeso puede causar problemas articulares, metabólicos y cardiacos.",
+      tips: [
+        "Controla las porciones y evita alimentos humanos altos en calorías.",
+        "Introduce juegos activos para fomentar movimiento.",
+        "Revisa periódicamente el peso de tu gato y ajusta la dieta según su edad y condición."
+      ],
+      advertencia: "Evita dietas extremas sin supervisión veterinaria.",
+      enlace: "https://es.wikipedia.org/wiki/Obesidad_en_gatos"
+    },
+    { 
+      nombre: "Alergias alimentarias", 
+      descripcion: "Se manifiestan con picazón, problemas digestivos o caída de pelo.",
+      tips: [
+        "Introduce alimentos hipoalergénicos de forma gradual.",
+        "Mantén un registro de los síntomas y alimentos consumidos.",
+        "Evita cambios bruscos de dieta."
+      ],
+      advertencia: "Consulta siempre al veterinario antes de cambiar la alimentación.",
+      enlace: "https://es.wikipedia.org/wiki/Alergia_alimentaria"
+    },
+    { 
+      nombre: "Cachorros en crecimiento", 
+      descripcion: "Necesitan dietas ricas en proteínas, calcio y grasas saludables.",
+      tips: [
+        "Alimenta varias veces al día según indicaciones de crecimiento.",
+        "Evita suplementos excesivos que puedan causar toxicidad.",
+        "Asegura acceso constante a agua fresca."
+      ],
+      advertencia: "Sigue las recomendaciones específicas de alimentación según raza y peso.",
+      enlace: "https://es.wikipedia.org/wiki/Gatito"
+    },
+    { 
+      nombre: "Gatos senior", 
+      descripcion: "Requieren menos calorías pero más nutrientes específicos para articulaciones, riñones y sistema inmunológico.",
+      tips: [
+        "Proporciona alimentos fáciles de masticar y ricos en antioxidantes.",
+        "Mantén controles veterinarios regulares para chequeo de órganos vitales.",
+        "Estimula el ejercicio suave para mantener movilidad."
+      ],
+      advertencia: "Evita cambios bruscos de dieta y suplementos sin supervisión.",
+      enlace: "https://es.wikipedia.org/wiki/Gato_mayor"
+    }
+  ],
+
+  "Entrenamiento y Comportamiento": [
+    { 
+      nombre: "Socialización temprana", 
+      descripcion: "Exponer a gatitos a personas, sonidos y entornos variados ayuda a prevenir miedos y favorecer un comportamiento equilibrado.",
+      tips: [
+        "Introduce gradualmente nuevos estímulos y personas.",
+        "Refuerza positivamente conductas valientes o curiosas.",
+        "Evita experiencias traumáticas durante la etapa de socialización."
+      ],
+      advertencia: "La socialización tardía puede requerir paciencia extra y asesoramiento profesional.",
+      enlace: "https://es.wikipedia.org/wiki/Socializaci%C3%B3n_en_gatos"
+    },
+    { 
+      nombre: "Uso de la caja de arena", 
+      descripcion: "Mantener hábitos de higiene adecuados evita problemas de conducta.",
+      tips: [
+        "Ubica la caja en un lugar tranquilo y accesible.",
+        "Limpia diariamente y cambia la arena regularmente.",
+        "Ten al menos una caja por cada gato más una adicional."
+      ],
+      advertencia: "Problemas persistentes de eliminación pueden indicar estrés o enfermedad.",
+      enlace: "https://es.wikipedia.org/wiki/Litter_training"
+    },
+    { 
+      nombre: "Rascado adecuado", 
+      descripcion: "Proporciona postes o superficies seguras para rascar y evitar daños a muebles.",
+      tips: [
+        "Coloca postes en zonas frecuentes de rascado.",
+        "Usa catnip o juguetes para incentivar el uso correcto.",
+        "Corta regularmente las uñas si es necesario."
+      ],
+      advertencia: "Nunca castigues al gato por rascar; puede aumentar estrés y agresividad.",
+      enlace: "https://es.wikipedia.org/wiki/Gato#Comportamiento"
+    },
+    { 
+      nombre: "Estimulación mental", 
+      descripcion: "Juguetes interactivos y juegos ayudan a mantener activo al gato y reducir problemas de conducta.",
+      tips: [
+        "Ofrece juguetes que simulen la caza (ratones de juguete, plumas).",
+        "Rotar juguetes para mantener interés.",
+        "Incluye rascadores, túneles y lugares elevados para explorar."
+      ],
+      advertencia: "La falta de estímulo puede provocar obesidad y comportamientos destructivos.",
+      enlace: "https://es.wikipedia.org/wiki/Enriquecimiento_en_gatos"
+    }
+  ]
+};
+
+
+const modalGatos = document.getElementById('servicioModalGatos');
+modalGatos.addEventListener('show.bs.modal', function (event) {
+  const button = event.relatedTarget;
+  const servicio = button.getAttribute('data-servicio');
+  const lista = modalGatos.querySelector('#problemasListaGatos');
+  lista.innerHTML = '';
+
+  if (problemasPorServicioGatos[servicio]) {
+    problemasPorServicioGatos[servicio].forEach(p => {
+      const div = document.createElement('div');
+      div.className = "mb-2";
+      div.innerHTML = `<button class="btn btn-sm btn-custom w-100">${p.nombre}</button>`;
+      div.querySelector('button').addEventListener('click', () => {
+  div.innerHTML = `
+    <h5>${p.nombre}</h5>
+    <p>${p.descripcion}</p>
+    ${p.tips ? `<ul>${p.tips.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+    ${p.advertencia ? `<p style="color:#ff6b6b"><strong>⚠️ Advertencia:</strong> ${p.advertencia}</p>` : ''}
+    <a href="${p.enlace}" target="_blank" class="btn btn-sm btn-custom mt-2">Más Información</a>
+  `;
+});
+
+      lista.appendChild(div);
+    });
+  } else {
+    lista.innerHTML = "<p>No hay información disponible para este servicio.</p>";
+  }
+});
+</script>
+
+
+<!-- ====== MODAL RESERVA ====== -->
+<div class="modal fade" id="reservarModal" tabindex="-1" aria-labelledby="reservarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reservarModalLabel">Reservar Servicio</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reservaForm">
+          <div class="mb-3">
+            <label for="servicio" class="form-label">Servicio</label>
+            <input type="text" class="form-control" id="servicio" readonly style="background:#0e1117; color:#fff;">
+          </div>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input type="text" class="form-control" id="nombre" required style="background:#0e1117; color:#fff;">
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" id="email" required style="background:#0e1117; color:#fff;">
+          </div>
+          <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha deseada</label>
+            <input type="date" class="form-control" id="fecha" required style="background:#0e1117; color:#fff;">
+          </div>
+          <div class="mb-3">
+            <label for="mensaje" class="form-label">Comentarios</label>
+            <textarea class="form-control" id="mensaje" rows="3" style="background:#0e1117; color:#fff;"></textarea>
+          </div>
+          <button type="submit" class="btn btn-custom w-100">Enviar Reserva</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+
+<!-- ====== NUEVOS MODALES ENVENENAMIENTO ====== -->
+<div class="modal fade" id="envenenamientoModalPerros" tabindex="-1" aria-labelledby="envenenamientoModalPerrosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background-color:#1f2937; color:#f1f1f1; border-radius:12px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="envenenamientoModalPerrosLabel">Envenenamiento - Perros</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="envenenamientoListaPerros">
+        <!-- Contenido cargado por script -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="envenenamientoModalGatos" tabindex="-1" aria-labelledby="envenenamientoModalGatosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="background-color:#1f2937; color:#f1f1f1; border-radius:12px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="envenenamientoModalGatosLabel">Envenenamiento - Gatos</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="envenenamientoListaGatos">
+        <!-- Contenido cargado por script -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="disclaimer" style="background-color:#1f2937; color:#f1f1f1; padding:1rem; border-radius:12px; text-align:center; margin-top:2rem;">
+  <p style="margin:0; font-size:0.95rem;">
+    ⚠️ Esta página ha sido creada únicamente con fines informativos sobre la salud, nutrición y comportamiento de mascotas. 
+    La información aquí presentada no sustituye la evaluación de un profesional veterinario. 
+    Ante cualquier emergencia, síntoma grave o preocupación sobre la salud de tu mascota, acude inmediatamente a un veterinario certificado.
+  </p>
+</section>
+<!-- Botón al final de la página -->
+<div style="text-align: center; margin: 2rem 0;">
+  <a class="btn btn-custom" href="#" onclick="history.back(); return false;">Atrás</a>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <p>&copy; 2025 PetWise Company. Todos los derechos reservados.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Coloca el servicio seleccionado en el modal
+  const modal = document.getElementById('reservarModal');
+  modal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const servicio = button.getAttribute('data-servicio');
+    const inputServicio = modal.querySelector('#servicio');
+    inputServicio.value = servicio;
+  });
+
+  // Manejo del formulario
+  document.getElementById('reservaForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    alert("¡Reserva enviada! Nos pondremos en contacto pronto.");
+    bootstrap.Modal.getInstance(modal).hide();
+    this.reset();
+  });
+
+  // Cierra el menú móvil al hacer clic en un enlace
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+      if (navbarToggler.offsetParent !== null && navbarCollapse.classList.contains('show')) {
+        navbarToggler.click();
+      }
+    });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Datos de envenenamiento para perros
+  const envenenamientoPerros = [
+    { 
+      nombre: "Chocolate", 
+      descripcion: "El chocolate puede causar vómitos, diarrea, hiperactividad, temblores y convulsiones.",
+      tips: [
+        "Lleva al perro al veterinario inmediatamente.",
+        "No inducir vómito sin indicación profesional."
+      ],
+      advertencia: "Puede ser mortal según la cantidad ingerida.",
+      enlace: "https://www.expertoanimal.com/intoxicacion-por-chocolate-en-perros-20847.html"
+    },
+    { 
+      nombre: "Plantas tóxicas", 
+      descripcion: "Plantas como lirios, azaleas o dieffenbachia pueden causar vómitos, diarrea y problemas renales.",
+      tips: [
+        "Retira la planta del alcance del perro.",
+        "Consulta con el veterinario si hay ingestión."
+      ],
+      advertencia: "Algunas plantas pueden causar daño irreversible.",
+      enlace: "https://es.wikipedia.org/wiki/Plantas_t%C3%B3xicas_para_mascotas"
+    },
+    { 
+      nombre: "Raticidas (anticoagulantes)", 
+      descripcion: "Pueden causar sangrado interno, anemia grave, debilidad y colapso.",
+      tips: [
+        "Lleva al perro al veterinario de inmediato.",
+        "No inducir vómito sin indicación profesional.",
+        "Si es posible, lleva el envase o nombre del veneno."
+      ],
+      advertencia: "Puede ser mortal incluso con pequeñas cantidades.",
+      enlace: "https://www.expertoanimal.com/intoxicacion-por-raticidas-en-perros-20851.html"
+    },
+    { 
+      nombre: "Insecticidas y pesticidas", 
+      descripcion: "Sustancias como organofosforados y carbamatos pueden provocar vómitos, temblores, convulsiones y paro respiratorio.",
+      tips: [
+        "Retira al perro del área contaminada.",
+        "Lava la piel con agua abundante si hubo contacto externo.",
+        "Acude inmediatamente al veterinario."
+      ],
+      advertencia: "Es una emergencia médica que puede causar la muerte.",
+      enlace: "https://es.wikipedia.org/wiki/Intoxicaci%C3%B3n_por_plaguicidas"
+    }
+  ];
+
+  // Datos de envenenamiento para gatos
+  const envenenamientoGatos = [
+    { 
+      nombre: "Anticongelante", 
+      descripcion: "El etilenglicol puede causar insuficiencia renal grave.",
+      tips: [
+        "Lleva al gato al veterinario inmediatamente."
+      ],
+      advertencia: "Altamente tóxico incluso en pequeñas cantidades.",
+      enlace: "https://es.wikipedia.org/wiki/Intoxicaci%C3%B3n_por_etilenglicol"
+    },
+    { 
+      nombre: "Plantas tóxicas", 
+      descripcion: "Lirios, azaleas y otras plantas pueden causar vómitos, diarrea y daño renal.",
+      tips: [
+        "Mantén las plantas fuera del alcance del gato.",
+        "Consulta con el veterinario si hay ingestión."
+      ],
+      advertencia: "Puede ser mortal.",
+      enlace: "https://es.wikipedia.org/wiki/Plantas_t%C3%B3xicas_para_mascotas"
+    },
+    { 
+      nombre: "Raticidas (anticoagulantes)", 
+      descripcion: "Provocan sangrado interno, anemia y debilidad extrema.",
+      tips: [
+        "Lleva al gato al veterinario inmediatamente.",
+        "No induzcas vómito sin indicación profesional.",
+        "Lleva el envase o nombre del producto si es posible."
+      ],
+      advertencia: "Puede ser letal incluso con cantidades mínimas.",
+      enlace: "https://www.expertoanimal.com/intoxicacion-por-raticidas-en-gatos-20852.html"
+    },
+    { 
+      nombre: "Insecticidas y pesticidas", 
+      descripcion: "Organofosforados y carbamatos provocan convulsiones, salivación excesiva y paro respiratorio.",
+      tips: [
+        "Retira al gato del área contaminada.",
+        "Lava con agua solo si hay contacto externo seguro.",
+        "Acude al veterinario de urgencia."
+      ],
+      advertencia: "Emergencia médica que puede ser mortal.",
+      enlace: "https://es.wikipedia.org/wiki/Intoxicaci%C3%B3n_por_plaguicidas"
+    }
+  ];
+
+  // Función para cargar datos en el modal
+  function cargarEnvenenamiento(modalId, datos) {
+    const modal = document.getElementById(modalId);
+    const lista = modal.querySelector('.modal-body');
+    lista.innerHTML = '';
+    datos.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'mb-3';
+      div.innerHTML = `<button class="btn btn-sm btn-custom w-100">${item.nombre}</button>`;
+      div.querySelector('button').addEventListener('click', () => {
+        div.innerHTML = `
+          <h5>${item.nombre}</h5>
+          <p>${item.descripcion}</p>
+          ${item.tips ? `<ul>${item.tips.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+          ${item.advertencia ? `<p style="color:#ff6b6b"><strong>⚠️ Advertencia:</strong> ${item.advertencia}</p>` : ''}
+          <a href="${item.enlace}" target="_blank" class="btn btn-sm btn-custom mt-2">Más Información</a>
+        `;
+      });
+      lista.appendChild(div);
+    });
+  }
+
+  // Eventos para abrir los modales de envenenamiento
+  document.getElementById('envenenamientoModalPerros').addEventListener('show.bs.modal', () => 
+    cargarEnvenenamiento('envenenamientoModalPerros', envenenamientoPerros)
+  );
+  document.getElementById('envenenamientoModalGatos').addEventListener('show.bs.modal', () => 
+    cargarEnvenenamiento('envenenamientoModalGatos', envenenamientoGatos)
+  );
+
+  // Script existente de reserva y navbar
+  const modalReserva = document.getElementById('reservarModal');
+  modalReserva.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const servicio = button.getAttribute('data-servicio');
+    const inputServicio = modalReserva.querySelector('#servicio');
+    inputServicio.value = servicio;
+  });
+
+  document.getElementById('reservaForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    alert("¡Reserva enviada! Nos pondremos en contacto pronto.");
+    bootstrap.Modal.getInstance(modalReserva).hide();
+    this.reset();
+  });
+
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+      if (navbarToggler.offsetParent !== null && navbarCollapse.classList.contains('show')) {
+        navbarToggler.click();
+      }
+    });
+  });
+</script>
+<script>
+  // Eventos para abrir los modales de envenenamiento
+  document.getElementById('envenenamientoModalPerros').addEventListener('show.bs.modal', () => {
+    cargarEnvenenamiento('envenenamientoModalPerros', envenenamientoPerros);
+  });
+
+  document.getElementById('envenenamientoModalGatos').addEventListener('show.bs.modal', () => {
+    cargarEnvenenamiento('envenenamientoModalGatos', envenenamientoGatos);
+  });
+</script>
+
+</body>
+</html>

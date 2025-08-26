@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Codificación y vista adaptable -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Verificación de Google Search Console -->
+  <meta name="google-site-verification" content="YVMSVH6LA3ZY-Z4NBdyS7aP1Efr7r-0CYpZ73qWTcoE" />
+
+  <!-- SEO básico -->
+  <meta name="description" content="PetWise: productos, atención veterinaria y tecnología para el bienestar de tus mascotas. Conectamos innovación y amor animal en una sola plataforma." />
+  <meta name="keywords" content="PetWise, mascotas, tecnología para mascotas, cuidado animal, tienda mascotas, bienestar animal" />
+  <meta name="author" content="PetWise Company" />
+
+  <!-- SEO para compartir en redes sociales (Open Graph) -->
+  <meta property="og:title" content="PetWise | Cuidado animal moderno" />
+  <meta property="og:description" content="Conectamos tecnología, productos y atención veterinaria para el bienestar de tu mascota." />
+  <meta property="og:image" content="https://lautaroarce.github.io/petwise.arg.proyec/img/logo.png" />
+  <meta property="og:url" content="https://lautaroarce.github.io/petwise.arg.proyec/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Título en pestaña -->
+  <title>Contacto PetWise</title>
+
+  <!-- Fuentes y estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="estilo.css" />
+<link rel="icon" href="img/logo2.png" type="image/png">
+
+  <!-- Fuentes y estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="estilo.css" rel="stylesheet" />
+
+  <!-- Estilos específicos para esta página -->
+  <style>
+    main {
+      max-width: 900px;
+      margin: 3rem auto;
+      background-color: #1f2937;
+      color: #f1f1f1;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    main h2 {
+      color: #69aa2d;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+
+    .contact-item {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .contact-item i {
+      margin-right: 10px;
+      color: #69aa2d;
+    }
+
+    a.contact-link {
+      color: hsl(108, 60%, 53%);
+      text-decoration: none;
+    }
+
+    a.contact-link:hover {
+      text-decoration: underline;
+    }
+
+    @media screen and (max-width: 768px) {
+      main {
+        padding: 2rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="img/logo.png" alt="PetWise Logo" class="img-fluid" />
+      <span>PetWise Company</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="history.back(); return false;">Atrás</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<header class="hero">
+  <h1 class="display-4 fw-bold">¿Necesitás contactarnos?</h1>
+  <p class="lead">Estamos disponibles para consultas, sugerencias y colaboraciones.</p>
+  <a href="#" onclick="history.back(); return false;" class="btn btn-lg btn-custom mt-4">Volver atrás</a>
+</header>
+
+<!-- ====== CONTENIDO PRINCIPAL ====== -->
+<main>
+  <h2>Datos de Contacto</h2>
+
+  <div class="contact-item">
+    <i class="bi bi-envelope-fill"></i>
+    <strong>Email:</strong>
+    <a href="mailto:petwise.arg@gmail.com" class="contact-link">petwise.arg@gmail.com</a>
+  </div>
+
+  <div class="contact-item">
+    <i class="bi bi-telephone-fill"></i>
+    <strong>Teléfono:</strong>
+    <a href="tel:+543777823789" class="contact-link">+54 3777-823789</a>
+  </div>
+
+  <div class="contact-item">
+    <i class="bi bi-instagram"></i>
+    <strong>Instagram:</strong>
+    <a href="https://instagram.com/petwise_arg" target="_blank" class="contact-link">@petwise_arg</a>
+  </div>
+
+  <div class="contact-item">
+    <i class="bi bi-geo-alt-fill"></i>
+    <strong>Ubicación:</strong> Goya, Corrientes, Argentina
+  </div>
+</main>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <p>&copy; 2025 PetWise Company. Todos los derechos reservados.</p>
+</footer>
+<script>
+  // Cierra el menú al hacer clic en un enlace de la navbar (modo móvil)
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+
+      if (navbarToggler.offsetParent !== null && navbarCollapse.classList.contains('show')) {
+        navbarToggler.click(); // simula click para cerrar el menú
+      }
+    });
+  });
+</script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap icons (opcional, para los íconos de contacto) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+</body>
+</html>

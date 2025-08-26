@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="YVMSVH6LA3ZY-Z4NBdyS7aP1Efr7r-0CYpZ73qWTcoE" />
+  
+  <meta name="description" content="PetWise: productos, atención veterinaria y tecnología para el bienestar de tus mascotas. Conectamos innovación y amor animal en una sola plataforma." />
+  <meta name="keywords" content="PetWise, mascotas, tecnología para mascotas, cuidado animal, tienda mascotas, bienestar animal" />
+  <meta name="author" content="PetWise Company" />
+
+  <meta property="og:title" content="PetWise | Cuidado animal moderno" />
+  <meta property="og:description" content="Conectamos tecnología, productos y atención veterinaria para el bienestar de tu mascota." />
+  <meta property="og:image" content="https://lautaroarce.github.io/petwise.arg.proyec/img/logo.png" />
+  <meta property="og:url" content="https://lautaroarce.github.io/petwise.arg.proyec/" />
+  <meta property="og:type" content="website" />
+
+  <title>PetWise | Cuidado animal</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="estilo.css" />
+  <link rel="icon" href="img/logo2.png" type="image/png">
+
+  <style>
+    footer a {
+      display: inline-block;
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+    footer a:hover {
+      transform: scale(1.05);
+      color: #0ea5e9 !important;
+    }
+    nav li {
+      display: inline-block;
+      transition: transform 0.50s ease, color 0.50s ease;
+    }
+    nav li:hover {
+      transform: scale(1.1);
+      color: #0ea5e9 !important;
+    }
+    h2, p, li { transition: transform 0.50s ease; }
+    h6 { color: #69aa2d; }
+    h2:hover, p:hover, li:hover { transform: scale(1.02); }
+    footer h6 { color: #69aa2d !important; }
+    footer a i { color: #69aa2d !important; }
+
+    .extra-text {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.4s ease;
+  
+  /* Estilos visuales */
+  background: #fff;
+  color: #000;
+  border-radius: 12px;
+  padding: 0 1rem; /* padding lateral (no ocupa espacio mientras está oculto) */
+  margin-top: 0.5rem;
+}
+
+/* Cuando la card está activa */
+.pw-card.active .extra-text {
+  max-height: 200px; /* ajusta según lo largo del texto */
+  opacity: 1;
+  padding: 1rem; /* ahora sí se muestra el padding completo */
+}
+
+/* Cursor tipo botón */
+.toggle-card {
+  cursor: pointer;
+}
+
+
+/* Botón deslizador dentro del hero */
+.hero-toggle-btn {
+  position: absolute;        /* dentro del header */
+  top: 50%;                  /* centrado verticalmente */
+  right: 20px;               /* margen derecho */
+  transform: translateY(-50%);
+  z-index: 999;
+  width: 50px;
+  height: 50px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-toggle-btn:hover {
+  background: rgba(0,0,0,0.7);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Flecha */
+.hero-toggle-btn::before {
+  content: "➜";              /* o → */
+  font-size: 1.5rem;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.hero-toggle-btn:hover::before {
+  transform: translateX(5px);
+}
+/* Ajuste del botón para móviles */
+@media (max-width: 768px) {
+  .hero-toggle-btn {
+    width: 35px;             /* más pequeño */
+    height: 35px;
+    top: auto;               /* para no tapar texto */
+    bottom: 230px;            /* lo bajamos */
+    right: 10px;             /* un poco más hacia adentro */
+    background: rgba(0,0,0,0.3); /* más transparente */
+  }
+
+  .hero-toggle-btn::before {
+    font-size: 1rem;         /* flecha más pequeña */
+  }
+}
+
+/* Hero2 hereda estilos de hero1 */
+.hero2 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 0 1.5rem;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #ff7f50, #ffb347);
+  background-size: 400% 400%;
+  animation: gradientShift2 15s ease infinite;
+}
+
+/* Contenido central hero2 */
+.hero2-content {
+  width: 100%;
+  max-width: 720px;
+  z-index: 2;
+  animation: fadeInUpScaleStrong 1.5s ease forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+/* Imagen decorativa inferior izquierda para hero2 */
+.hero2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 400px; /* ajustá según tu imagen */
+  height: 400px;
+  background-image: url('https://png.pngtree.com/png-vector/20231111/ourmid/pngtree-dog-in-doctor-uniform-sitting-like-a-hero-png-image_10549462.png'); /* tu imagen */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Responsive hero2 */
+@media screen and (max-width: 768px) {
+  .hero2::after {
+    width: 300px;
+    height: 300px;
+    opacity: 0.6;
+  }
+}
+
+  </style>
+</head>
+<body style="visibility: hidden;">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="img/logo.png" alt="PetWise Logo" class="img-fluid" />
+      <span>PetWise Company</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="img/qrpet.jpg" target="-blank">QR</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="informacion.html">Información</a></li>
+        <li class="nav-item"><a class="nav-link" href="consultas.html">Consultas</a></li>
+        <li class="nav-item"><a class="nav-link" href="tienda.html">Tienda</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Contenedor general -->
+<div class="hero-wrapper">
+  <!-- Hero 1 -->
+  <header id="hero1" class="hero1">
+    <div class="hero1-content">
+      <h1 id="typed-text">Bienvenidos a <span class="highlight">PetWise</span></h1>
+      <p>Transformamos el cuidado de tus mascotas combinando tecnología, diseño y amor animal.</p>
+      <a href="conocenosmas.html" class="btn hero1-btn">Conocé más</a>
+    </div>
+    <div class="hero1-decor"></div>
+  </header>
+
+  <!-- Hero 2 -->
+<header id="hero2" class="hero2" style="display: none;">
+  <div class="hero2-content">
+    <h1>Accedé a <span class="highlight">Consultas Veterinarias</span> en línea</h1>
+    <p>Resolvemos tus dudas de salud animal con asesoramiento rápido y confiable.</p>
+    <a href="consultas.html" class="btn hero1-btn">Ir a Consultas</a>
+  </div>
+  <div class="hero1-decor"></div>
+</header>
+
+
+  <!-- Botón deslizador fijo sobre ambos -->
+  <button id="toggleHeroBtn" class="hero-toggle-btn"></button>
+</div>
+
+
+
+<script>
+const btn = document.getElementById("toggleHeroBtn");
+const hero1 = document.getElementById("hero1");
+const hero2 = document.getElementById("hero2");
+
+btn.addEventListener("click", () => {
+  if (hero1.style.display !== "none") {
+    hero1.style.display = "none";
+    hero2.style.display = "flex";
+  } else {
+    hero1.style.display = "flex";
+    hero2.style.display = "none";
+  }
+});
+
+</script>
+
+
+<!-- Empresa -->
+<section id="empresa">
+  <h2>Nuestra Empresa</h2>
+  <p><strong>Nombre:</strong> PetWise Company</p>
+  <p><strong>Logo:</strong> <a href="img/logo2.png" target="_blank"><img src="img/logo.png" alt="Logo de PetWise" style="height: 30px; vertical-align: middle; margin-left: 8px;"></a></p>
+  <p><strong>Historia:</strong> Proyecto de estudiantes que decidieron combinar conocimientos y pasión por los animales. PetWise nació para crear un vínculo entre tecnología y bienestar animal.</p>
+  <p><strong>Misión:</strong> Digitalizar y facilitar el cuidado animal de forma moderna, cálida y accesible.</p>
+  <p><strong>Objetivo General:</strong> Superar expectativas ofreciendo herramientas que mejoren la vida de humanos y mascotas.</p>
+  <p><strong>Problematica Central:</strong> Muchos dueños de mascotas enfrentan dificultades para mantener un cuidado organizado y completo de sus animales, porque los servicios, información y controles están dispersos, poco centralizados y a veces son difíciles de acceder.</p>
+  <p><strong>PetWise surge para resolver esto,</strong> ofreciendo una plataforma que centraliza la información, digitaliza registros de salud y vacunación, facilita la reserva de servicios, permite consultas veterinarias en línea y conecta a adoptantes con refugios, todo en un solo lugar.</p>
+</section>
+
+<!-- Principios -->
+<section id="principios-petwise" class="pw-values">
+  <div class="container-fluid">
+    <h2>¿Qué Ofrece PetWise?</h2>
+    <br>
+    <div class="row g-4 align-items-stretch">
+      <div class="col-12 col-lg-5">
+        <div class="pw-photo-wrap">
+          <img src="img/gatoperro2.png" alt="Equipo PetWise" class="pw-photo">
+        </div>
+      </div>
+      <div class="col-12 col-lg-7 d-flex flex-column justify-content-center">
+
+        <!-- CARD 1 -->
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-shield-check"></i></div>
+          <div class="pw-content">
+            <h5 class="pw-title">Seguridad</h5>
+            <p>Todos nuestros servicios y productos cumplen con los estándares de seguridad más exigentes. Nos aseguramos de que sean seguros, confiables y fáciles de usar, priorizando la tranquilidad tanto de las mascotas como de sus familias.</p>
+            <!-- TEXTO OCULTO -->
+            <div class="extra-text">
+              Protegemos la información usando encriptación (los datos se codifican y solo se leen con una clave) y autenticación segura, con bases de datos confiables, respaldos automáticos y productos certificados.
+        </article>
+
+        <!-- CARD 2 -->
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-journal-medical"></i></div>
+          <div class="pw-content">
+            <h5 class="pw-title">Registro Digital de Vacunación</h5>
+            <p>Guardá en un solo lugar vacunas, controles y consultas médicas de tu mascota. La libreta digital de PetWise te permite acceder desde cualquier dispositivo, recibir recordatorios y compartir fácilmente la información con tu veterinario de confianza.</p>
+            <div class="extra-text">
+              Podés activar notificaciones personalizadas para nunca olvidar una cita importante.
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 3 -->
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-calendar-check"></i></div>
+          <div class="pw-content">
+            <h5 class="pw-title">Agenda tu servicio</h5>
+            <p>Reservá turnos de manera rápida y sencilla con veterinarias, peluquerías, paseadores y cuidadores. Nuestra plataforma centraliza la gestión de servicios para que siempre tengas a mano las mejores opciones para tu mascota.</p>
+            <div class="extra-text">
+              Incluso podés sincronizar tu calendario personal con PetWise.
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 4 -->
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-heart-fill"></i></div>
+          <div class="pw-content">
+            <h5 class="pw-title">Adopción y Rescate</h5>
+            <p>Conectamos a rescatistas, adoptantes y organizaciones en un mismo espacio. Podés publicar, adoptar y encontrar mascotas en tu zona, generando una red solidaria que fomenta el bienestar animal y promueve hogares responsables.</p>
+            <div class="extra-text">
+              Nuestro sistema permite filtrar por zona, tamaño y características de la mascota.
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  // Activar desplegable al hacer clic en cada card
+  document.querySelectorAll(".toggle-card").forEach(card => {
+    card.addEventListener("click", () => {
+      card.classList.toggle("active");
+    });
+  });
+</script>
+
+
+
+
+
+
+<!-- Público -->
+<section id="publico" class="pw-target">
+  <div class="container">
+    <h2 class="text-center mb-5">¿A Quién Está Dirigido?</h2>
+    <div class="row g-4 justify-content-center">
+
+      <!-- Dueños -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-heart-fill"></i></div>
+            <h5 class="pw-title">Dueños de Mascotas</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Personas que buscan un cuidado más organizado y completo para sus mascotas.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Veterinarias -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-hospital-fill"></i></div>
+            <h5 class="pw-title">Veterinarias</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Clínicas y profesionales que brindan servicios de salud animal.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Refugios -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-house-heart-fill"></i></div>
+            <h5 class="pw-title">Refugios</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Organizaciones dedicadas al rescate, cuidado y adopción de animales.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuidadores -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-people-fill"></i></div>
+            <h5 class="pw-title">Cuidadores</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Servicios de estética, paseadores y cuidadores que ofrecen atención personalizada.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Diferenciador -->
+<section id="diferenciador">
+  <h2>¿Qué Nos Hace Diferentes?</h2>
+  <ul>
+    <li><strong>Diseño intuitivo:</strong> Accesible para cualquier edad.</li>
+    <li><strong>Solución completa:</strong> Todo lo que necesitas en un solo lugar.</li>
+    <li><strong>Enfoque emocional:</strong> Pensado desde el amor por los animales.</li>
+    <li><strong>Compromiso académico:</strong> Proyecto con base educativa y social.</li>
+  </ul>
+</section>
+
+<!-- App Demo -->
+<section id="app-demo">
+  <h2>Un vistazo a nuestra app</h2>
+  <p>PetWise ofrece una interfaz moderna, simple y centrada en la experiencia del usuario. Mirá un adelanto:</p>
+  <div class="row g-4 mt-4">
+    <div class="col-12 col-md-6">
+      <a href="img/imagenapp1.png" target="_blank">
+        <img src="img/imagenapp1.png" alt="Vista de la app PetWise" class="img-fluid rounded">
+      </a>
+    </div>
+    <div class="col-12 col-md-6">
+      <a href="img/imagenapp2.png" target="_blank">
+        <img src="img/imagenapp2.png" alt="Funcionalidades de PetWise" class="img-fluid rounded">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Descarga -->
+<section id="descarga" class="text-center mt-5">
+  <h2>Descargá PetWise</h2>
+  <p class="mb-5">Llevá el cuidado de tu mascota en tu bolsillo. Nuestra app está disponible para Android y iOS.</p>
+  <div class="row justify-content-center g-4">
+    <div class="col-12 col-md-5">
+      <div class="tarjeta-descarga p-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Logo Android" class="logo-sistema mb-3">
+        <h5 class="mb-3">Versión para Android</h5>
+        <p>Compatible con Android 8.0 o superior. Instalá la app y empezá a cuidar a tu mascota desde cualquier lugar.</p>
+      </div>
+    </div>
+    <div class="col-12 col-md-5">
+      <div class="tarjeta-descarga p-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Logo iOS" class="logo-sistema mb-3">
+        <h5 class="mb-3">Versión para iOS</h5>
+        <p>Disponible en la App Store para iPhone y iPad. Accedé a todas las funciones desde tu dispositivo Apple.</p>
+      </div>
+    </div>
+    <div class="col-12">
+      <h2 class="mt-5">Descargá PetWise en tu celular</h2>
+      <p>Escaneá el código QR con tu teléfono y accedé directamente a la app.</p>
+      <img src="img/qr.png" alt="QR para descargar PetWise" class="img-fluid rounded mt-4" style="max-width: 200px;">
+      <p class="mt-3 text-muted">Disponible para Android e iOS</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="pt-5 pb-4" style="background-color: #1f2937; color: #f1f1f1;">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      <div class="col-12 col-md-4 mb-4">
+        <h5 style="color: #69aa2d;"><b>PetWise</b></h5>
+        <p style="font-size: 0.95rem;">Unimos tecnología y amor por los animales para transformar el cuidado de las mascotas.</p>
+        <small class="text-muted">Proyecto educativo • Argentina</small>
+      </div>
+      <div class="col-12 col-md-4 mb-4">
+        <h6><b>Contacto</b></h6>
+        <ul class="list-unstyled" style="font-size: 0.95rem;">
+          <li class="mb-2"><i class="bi bi-envelope-fill me-2"></i><a href="mailto:petwise.arg@gmail.com" class="text-decoration-none text-white">petwise.arg@gmail.com</a></li>
+          <li class="mb-2"><i class="bi bi-telephone-fill me-2"></i><a href="tel:+543777823789" class="text-decoration-none text-white">+54 3777 823789</a></li>
+          <li><i class="bi bi-geo-alt-fill me-2"></i>Goya, Corrientes</li>
+        </ul>
+      </div>
+      <div class="col-12 col-md-4 mb-4">
+        <h6><b>Enlaces útiles</b></h6>
+        <ul class="list-unstyled" style="font-size: 0.95rem;">
+          <li class="mb-2"><a href="index.html" class="text-decoration-none text-white">Inicio</a></li>
+          <li class="mb-2"><a href="conocenosmas.html" class="text-decoration-none text-white">Sobre Nosotros</a></li>
+          <li class="mb-2"><a href="conocenosmas.html" class="text-decoration-none text-white">Sobre Nosotros</a></li>
+          <li class="mb-2"><a href="consultas.html" class="text-decoration-none text-white">Consultas</a></li>
+          <li class="mb-2"><a href="tienda.html" class="text-decoration-none text-white">Tienda</a></li>
+          <li><a href="contacto.html" class="text-decoration-none text-white">Contacto</a></li>
+        </ul>
+        <div class="mt-3">
+          <a href="https://instagram.com/petwise_arg" target="_blank" class="text-info me-3 fs-5"><i class="bi bi-instagram"></i></a>
+          <a href="mailto:petwise.arg@gmail.com" class="text-info me-3 fs-5"><i class="bi bi-envelope"></i></a>
+          <a href="https://wa.me/543777823789" target="blank" class="text-info fs-5"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="border-secondary mt-4" />
+    <div class="text-center text-muted small">
+      <p style="color: white;">&copy; 2025 PetWise Company — Todos los derechos reservados.</p>
+      <p style="color: white;">Creador: <a href="https://www.instagram.com/lauty_arcee" target="_blank" class="text-decoration-none text-white">Arce Lautaro</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/scrollreveal"></script>
+<script>
+  // ==============================
+  // Navbar móvil
+  // ==============================
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      const collapseEl = document.getElementById('navbarNav');
+      const bsCollapse = bootstrap.Collapse.getInstance(collapseEl);
+      if (!bsCollapse) { new bootstrap.Collapse(collapseEl, { toggle: true }); }
+      else { bsCollapse.hide(); }
+    });
+  });
+// Cierra la navbar al hacer clic o desplazar la página
+function cerrarNavbarSiAbierta() {
+  const collapseEl = document.getElementById('navbarNav');
+  const bsCollapse = bootstrap.Collapse.getInstance(collapseEl);
+  if (bsCollapse && collapseEl.classList.contains('show')) {
+    bsCollapse.hide();
+  }
+}
+
+// Cierra al hacer scroll
+window.addEventListener('scroll', cerrarNavbarSiAbierta);
+
+// Cierra al hacer clic en cualquier parte de la página
+document.addEventListener('click', (e) => {
+  // Evita cerrar si el clic es sobre el menú o el botón toggler
+  if (!e.target.closest('.navbar') && !e.target.closest('.navbar-toggler')) {
+    cerrarNavbarSiAbierta();
+  }
+});
+
+  // ==============================
+  // Cards plegables
+  // ==============================
+  document.querySelectorAll('.pw-card .pw-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const card = header.parentElement;
+      card.classList.toggle('active');
+      const arrow = card.querySelector('.arrow i');
+      if (arrow) arrow.style.transform = card.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+  });
+
+  // ==============================
+// Typed Text con borrado y repetición
+// ==============================
+document.addEventListener("DOMContentLoaded", () => {
+  const typedText = document.getElementById("typed-text");
+  if (!typedText) return;
+
+  const fullText = typedText.textContent;
+  const typingSpeed = 100;       // velocidad de escritura por letra
+  const deleteDuration = 2000;   // duración total del borrado (2 segundos)
+  const pauseAfterWrite = 30000;  // tiempo que permanece el texto completo (1 segundo)
+  const pauseBeforeRewrite = 2000; // espera antes de volver a escribir (2 segundos)
+
+  function typeText() {
+    typedText.textContent = "";
+    let index = 0;
+
+    function type() {
+      if (index < fullText.length) {
+        typedText.textContent += fullText.charAt(index);
+        index++;
+        setTimeout(type, typingSpeed);
+      } else {
+        // después de escribir todo, espera 1 segundo y borra
+        setTimeout(deleteText, pauseAfterWrite);
+      }
+    }
+
+    type();
+  }
+
+  function deleteText() {
+    const currentText = typedText.textContent;
+    let i = currentText.length;
+    const interval = deleteDuration / i;
+
+    function erase() {
+      if (i > 0) {
+        typedText.textContent = currentText.substring(0, i - 1);
+        i--;
+        setTimeout(erase, interval);
+      } else {
+        // espera 2 segundos antes de volver a escribir
+        setTimeout(typeText, pauseBeforeRewrite);
+      }
+    }
+
+    erase();
+  }
+
+  // iniciar ciclo
+  typeText();
+
+  document.body.style.visibility = "visible";
+});
+
+
+  // ==============================
+  // ScrollReveal
+  // ==============================
+  const sr = ScrollReveal({ distance:'40px', duration:950, easing:'cubic-bezier(0.65, 0, 0.35, 1)', opacity:0, scale:0.95, reset:false });
+  function revealSection(selector, interval=150, origin='bottom'){ sr.reveal(selector,{origin:origin,interval:interval}); }
+  revealSection('.hero1 h1',200); revealSection('.hero1 p',300); revealSection('.hero1 .btn',400);
+  revealSection('#principios-petwise .pw-photo-wrap',200,'left'); revealSection('#principios-petwise .pw-card',150,'bottom');
+  revealSection('#empresa h2',200); revealSection('#empresa p',150);
+  revealSection('#publico h2',200); revealSection('#publico .pw-card',150,'bottom');
+  revealSection('#diferenciador h2',200); revealSection('#diferenciador ul li',150,'bottom');
+  revealSection('#app-demo h2',200); revealSection('#app-demo p',300); revealSection('#app-demo .col-12.col-md-6',150,'bottom');
+  revealSection('#descarga h2',200); revealSection('#descarga p',300); revealSection('#descarga .tarjeta-descarga',150,'bottom'); revealSection('#descarga img',300,'bottom');
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const hero1 = document.getElementById("hero1");
+  const hero2 = document.getElementById("hero2");
+  const toggleBtn = document.getElementById("toggleHeroBtn");
+  const heroWrapper = document.querySelector(".hero-wrapper");
+
+  let currentHero = 1;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+
+  // 🔄 función para cambiar hero
+  function cambiarHero() {
+    if (currentHero === 1) {
+      hero1.style.display = "none";
+      hero2.style.display = "flex"; // usar flex para mantener diseño
+      currentHero = 2;
+    } else {
+      hero2.style.display = "none";
+      hero1.style.display = "flex";
+      currentHero = 1;
+    }
+  }
+
+  // ✅ Botón funciona
+  toggleBtn.addEventListener("click", cambiarHero);
+
+  // ✅ Swipe funciona
+  heroWrapper.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  });
+
+  heroWrapper.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
+
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    const threshold = 50; // mínimo 50px para contar swipe
+
+    // 🔹 solo si es horizontal y supera el threshold
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+      cambiarHero();
+    }
+  });
+});
+</script>
+
+
+
+</body>
+</html>
