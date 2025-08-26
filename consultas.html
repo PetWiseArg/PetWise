@@ -167,12 +167,56 @@
         font-size: 1rem;
       }
     }
-  
+  #chatbot { position: fixed; bottom: 20px; right: 20px; width: 300px; background: #1f2937; color: white; border-radius: 10px; padding: 10px; font-family: Inter, sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+#chat-header { font-weight: bold; text-align: center; margin-bottom: 8px; }
+#chat-messages { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
+#chat-messages div { margin-bottom: 5px; }
+#chat-input { width: calc(100% - 60px); padding: 5px; border-radius: 5px; border: none; }
+#chat-send { width: 50px; padding: 5px; border: none; border-radius: 5px; background: #4ade80; color: black; cursor: pointer; }
+
 
   </style>
 </head>
 <body>
+  <script>const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSend = document.getElementById("chat-send");
 
+chatSend.addEventListener("click", async () => {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  // Muestra mensaje del usuario
+  const userDiv = document.createElement("div");
+  userDiv.textContent = "Tú: " + msg;
+  chatMessages.appendChild(userDiv);
+  chatInput.value = "";
+
+  try {
+    const res = await fetch("https://TU_URL_DE_VERCEL.vercel.app/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await res.json();
+
+    const botDiv = document.createElement("div");
+    botDiv.textContent = "VetBot: " + (data.reply || "Error al responder");
+    chatMessages.appendChild(botDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } catch (err) {
+    const botDiv = document.createElement("div");
+    botDiv.textContent = "VetBot: Error de conexión";
+    chatMessages.appendChild(botDiv);
+  }
+});
+</script>
+<div id="chatbot">
+  <div id="chat-header">Chat Veterinario 🐶🐱</div>
+  <div id="chat-messages"></div>
+  <input type="text" id="chat-input" placeholder="Escribe tu pregunta...">
+  <button id="chat-send">Enviar</button>
+</div>
 <!-- ====== NAVBAR ====== -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
   <div class="container-fluid px-4">
@@ -456,11 +500,11 @@
 };
 
 
-const modal = document.getElementById('servicioModal');
-modal.addEventListener('show.bs.modal', function (event) {
+const modalServicios = document.getElementById('servicioModal');
+modalServicios.addEventListener('show.bs.modal', function (event) {
   const button = event.relatedTarget;
   const servicio = button.getAttribute('data-servicio');
-  const lista = modal.querySelector('#problemasLista');
+  const lista = modalServicios.querySelector('#problemasLista');
   lista.innerHTML = '';
 
   if (problemasPorServicio[servicio]) {
@@ -555,7 +599,7 @@ const problemasPorServicioGatos = {
         "Mantén agua fresca disponible en todo momento."
       ],
       advertencia: "Consulta al veterinario si los vómitos son recurrentes, contienen sangre o van acompañados de letargo.",
-      enlace: "https://es.wikipedia.org/wiki/V%C3%B3mito"
+      enlace: "https://es.cats.com/vomitos-en-gatos"
     },
     { 
       nombre: "Diarrea", 
@@ -566,7 +610,7 @@ const problemasPorServicioGatos = {
         "Evita cambios bruscos de alimento."
       ],
       advertencia: "Acude al veterinario si persiste más de 24-48 horas, hay sangre o signos de deshidratación.",
-      enlace: "https://es.wikipedia.org/wiki/Diarrea"
+      enlace: "https://es.cats.com/diarrea-en-gatos"
     },
     { 
       nombre: "Fiebre y Letargo", 
@@ -577,7 +621,7 @@ const problemasPorServicioGatos = {
         "Evita automedicarlo."
       ],
       advertencia: "Acude de inmediato al veterinario si la temperatura supera 39.5°C o si hay otros síntomas graves.",
-      enlace: "https://es.wikipedia.org/wiki/Panleucopenia_felina"
+      enlace: "https://humac.es/salud/fiebre-en-gatos-sintomas-causas-y-tratamiento/"
     },
     { 
       nombre: "Pérdida de apetito", 
@@ -588,7 +632,7 @@ const problemasPorServicioGatos = {
         "Controla otros síntomas como vómitos, diarrea o letargo."
       ],
       advertencia: "Si tu gato no come durante más de 24-48 horas, consulta al veterinario.",
-      enlace: "https://es.wikipedia.org/wiki/Apetito"
+      enlace: "https://canapets.com.mx/perdida-de-apetito-en-gatos-causas-sintomas-y-que-hacer/"
     },
     { 
       nombre: "Tos o dificultad respiratoria", 
@@ -599,12 +643,25 @@ const problemasPorServicioGatos = {
         "Observa la frecuencia y la severidad de la tos."
       ],
       advertencia: "Consulta al veterinario si la tos es persistente, hay dificultad para respirar o cianosis (encías azuladas).",
-      enlace: "https://es.wikipedia.org/wiki/Enfermedades_respiratorias_en_gatos"
+      enlace: "https://www.expertoanimal.com/enfermedades-respiratorias-en-gatos-24746.html"
     }
   ],
 
-  "Dieta y Nutrición": [
+    "Dieta y Nutrición": [
     { 
+  nombre: "Alimentación balanceada", 
+  descripcion: "Una dieta equilibrada es clave para la salud, desarrollo y energía de tu gato.",
+  tips: [
+    "Ofrece alimento balanceado de buena calidad específico para gatos según su edad y peso.",
+    "Mantén horarios regulares de comida y evita dejar comida fuera todo el día, especialmente alimentos húmedos que se descomponen rápido.",
+    "Asegúrate de que siempre tenga agua fresca disponible; los gatos suelen beber poco, considera usar fuentes de agua.",
+    "Consulta con tu veterinario antes de introducir suplementos o cambios en la dieta."
+  ],
+  advertencia: "Evita dar chocolate, cebolla, ajo, uvas, leche en exceso y otros alimentos tóxicos para gatos.",
+  enlace: "https://www.ambito.com/lifestyle/alimento-gatos-claves-una-dieta-equilibrada-y-saludable-n6177220"
+    },
+    
+    {
       nombre: "Gatos con sobrepeso", 
       descripcion: "El sobrepeso puede causar problemas articulares, metabólicos y cardiacos.",
       tips: [
@@ -613,7 +670,7 @@ const problemasPorServicioGatos = {
         "Revisa periódicamente el peso de tu gato y ajusta la dieta según su edad y condición."
       ],
       advertencia: "Evita dietas extremas sin supervisión veterinaria.",
-      enlace: "https://es.wikipedia.org/wiki/Obesidad_en_gatos"
+      enlace: "https://www.zooplus.es/magazine/gatos/salud-del-gato-y-cuidados/sobrepeso-en-gatos-causas-y-consecuencias"
     },
     { 
       nombre: "Alergias alimentarias", 
@@ -624,7 +681,7 @@ const problemasPorServicioGatos = {
         "Evita cambios bruscos de dieta."
       ],
       advertencia: "Consulta siempre al veterinario antes de cambiar la alimentación.",
-      enlace: "https://es.wikipedia.org/wiki/Alergia_alimentaria"
+      enlace: "https://es.cats.com/alergias-alimentarias-en-gatos"
     },
     { 
       nombre: "Cachorros en crecimiento", 
@@ -635,10 +692,10 @@ const problemasPorServicioGatos = {
         "Asegura acceso constante a agua fresca."
       ],
       advertencia: "Sigue las recomendaciones específicas de alimentación según raza y peso.",
-      enlace: "https://es.wikipedia.org/wiki/Gatito"
+      enlace: "https://wakyma.com/blog/alimentacion-de-gatos-cachorros/"
     },
     { 
-      nombre: "Gatos senior", 
+      nombre: "Gatos Mayores", 
       descripcion: "Requieren menos calorías pero más nutrientes específicos para articulaciones, riñones y sistema inmunológico.",
       tips: [
         "Proporciona alimentos fáciles de masticar y ricos en antioxidantes.",
@@ -646,7 +703,7 @@ const problemasPorServicioGatos = {
         "Estimula el ejercicio suave para mantener movilidad."
       ],
       advertencia: "Evita cambios bruscos de dieta y suplementos sin supervisión.",
-      enlace: "https://es.wikipedia.org/wiki/Gato_mayor"
+      enlace: "https://blog.fridapets.com.mx/mejores-alimentos-para-gatos-senior/"
     }
   ],
 
@@ -864,7 +921,7 @@ modalGatos.addEventListener('show.bs.modal', function (event) {
         "No inducir vómito sin indicación profesional."
       ],
       advertencia: "Puede ser mortal según la cantidad ingerida.",
-      enlace: "https://www.expertoanimal.com/intoxicacion-por-chocolate-en-perros-20847.html"
+      enlace: "https://www.petdarling.com/chocolate-perros/"
     },
     { 
       nombre: "Plantas tóxicas", 
@@ -874,7 +931,7 @@ modalGatos.addEventListener('show.bs.modal', function (event) {
         "Consulta con el veterinario si hay ingestión."
       ],
       advertencia: "Algunas plantas pueden causar daño irreversible.",
-      enlace: "https://es.wikipedia.org/wiki/Plantas_t%C3%B3xicas_para_mascotas"
+      enlace: "https://www.purina.com/es/articulos/perro/salud/cuidado-de-rutina/plantas-venenosas-para-los-perros"
     },
     { 
       nombre: "Raticidas (anticoagulantes)", 
