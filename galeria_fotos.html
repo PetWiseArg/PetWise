@@ -43,71 +43,85 @@
     <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
   </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <script>
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js";
+
+    // Configuración de tu Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCQWbMPSX_dzDx23nKxILlrx38WTzDi2sI",
+      authDomain: "petwise-gallery.firebaseapp.com",
+      databaseURL: "https://petwise-gallery-default-rtdb.firebaseio.com",
+      projectId: "petwise-gallery",
+      storageBucket: "petwise-gallery.appspot.com",
+      messagingSenderId: "191172364914",
+      appId: "1:191172364914:web:043d72621fcbafb2b710eb",
+      measurementId: "G-37FZKXXFQD"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+
     const gallery = document.getElementById('gallery');
     const uploadBtn = document.getElementById('uploadBtn');
     const fileInput = document.getElementById('fileInput');
 
-    // Cambia estos datos por los tuyos de Cloudinary
-    const CLOUD_NAME = "TU_CLOUD_NAME";
-    const UPLOAD_PRESET = "TU_UPLOAD_PRESET";
+    // Subir foto y guardar metadata en Firebase
+    async function subirFoto(file, username) {
+      const storageRef = sRef(storage, 'fotos/' + Date.now() + '_' + file.name);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
 
-    async function uploadToCloudinary(file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', UPLOAD_PRESET);
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-        method: 'POST',
-        body: formData
-      });
-      const data = await res.json();
-      return data.secure_url; // URL pública de la imagen
+      await push(ref(db, 'photos'), { username, url, likes: 0 });
     }
 
-    async function agregarFoto(url, username) {
-      // Guardamos en un JSON en Cloudinary: para que todos vean necesitamos un backend o DB
-      // Aquí simulamos usando un JSON alojado en GitHub Pages: en la práctica, se reemplaza por Firestore, Supabase, etc.
-      // Para demo local, se usa localStorage solo para test:
-      const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
-      photos.push({url, username, likes:0});
-      localStorage.setItem('petwise_photos', JSON.stringify(photos));
-      renderGallery();
-    }
-
-    function renderGallery() {
+    // Renderizar galería
+    function renderGallery(photos) {
       gallery.innerHTML = '';
-      const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
-      photos.forEach((photo, index) => {
+      photos.forEach(({ key, username, url, likes }) => {
         const card = document.createElement('div');
         card.className = 'pw-card';
         card.innerHTML = `
           <div class="pw-header">
-            <div class="pw-title">${photo.username}</div>
+            <div class="pw-title">${username}</div>
           </div>
           <div class="pw-photo-wrap">
-            <img src="${photo.url}" class="pw-photo" style="width:100%; border-radius:8px;" />
+            <img src="${url}" class="pw-photo" style="width:100%; border-radius:8px;" />
           </div>
           <div style="margin-top:8px; display:flex; justify-content: space-between; align-items:center;">
-            <button class="btn-custom like-btn">${photo.likes || 0} ❤️</button>
+            <button class="btn-custom like-btn">${likes || 0} ❤️</button>
             <button class="btn-custom delete-btn">🗑 Eliminar</button>
           </div>
         `;
+
+        // Likes
         card.querySelector('.like-btn').addEventListener('click', () => {
-          photo.likes = (photo.likes || 0) + 1;
-          localStorage.setItem('petwise_photos', JSON.stringify(photos));
-          renderGallery();
+          update(ref(db, 'photos/' + key), { likes: (likes || 0) + 1 });
         });
+
+        // Eliminar
         card.querySelector('.delete-btn').addEventListener('click', () => {
-          photos.splice(index, 1);
-          localStorage.setItem('petwise_photos', JSON.stringify(photos));
-          renderGallery();
+          remove(ref(db, 'photos/' + key));
         });
+
         gallery.appendChild(card);
       });
     }
 
+    // Escuchar cambios en tiempo real
+    onValue(ref(db, 'photos'), (snapshot) => {
+      const photos = [];
+      snapshot.forEach(childSnap => {
+        const data = childSnap.val();
+        photos.push({ key: childSnap.key, ...data });
+      });
+      renderGallery(photos);
+    });
+
+    // Subir foto al hacer click
     uploadBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', async () => {
@@ -115,12 +129,11 @@
       if (!file) return;
       const usernameInput = document.getElementById('username').value.trim();
       const username = usernameInput || "Anónimo";
-      const url = await uploadToCloudinary(file);
-      await agregarFoto(url, username);
+      await subirFoto(file, username);
       fileInput.value = '';
     });
-
-    renderGallery();
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
