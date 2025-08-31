@@ -7,6 +7,46 @@
   <!-- Bootstrap solo para navbar -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="estilo.css"> <!-- tu CSS existente -->
+  <style>
+    /* Mejoras para la galería */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .pw-card {
+      background-color: #1f2937;
+      padding: 1rem;
+      border-radius: 8px;
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    .pw-photo-wrap img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .card-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .btn-custom {
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      background-color: #ff5c5c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn-custom:hover {
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
   <!-- NAVBAR -->
@@ -41,7 +81,7 @@
   <!-- GALERÍA -->
   <section class="pw-target">
     <h2>Galería de Fotos</h2>
-    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
+    <div id="gallery" class="gallery-grid"></div>
   </section>
 
   <!-- Bootstrap JS -->
@@ -52,41 +92,65 @@
     const uploadBtn = document.getElementById('uploadBtn');
     const fileInput = document.getElementById('fileInput');
 
+    const CLOUD_NAME = "TU_CLOUD_NAME"; // reemplazar por tu cloud name de Cloudinary
+    const UPLOAD_PRESET = "TU_UPLOAD_PRESET"; // reemplazar por tu upload preset
+
+    function getPhotos() {
+      return JSON.parse(localStorage.getItem('petwise_photos') || '[]');
+    }
+
+    function savePhotos(photos) {
+      localStorage.setItem('petwise_photos', JSON.stringify(photos));
+    }
+
     function renderGallery() {
       gallery.innerHTML = '';
-      const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
+      const photos = getPhotos();
+
+      if (photos.length === 0) {
+        gallery.innerHTML = '<p>No hay fotos aún. ¡Subí la primera!</p>';
+        return;
+      }
 
       photos.forEach((photo, index) => {
         const card = document.createElement('div');
         card.className = 'pw-card';
 
-        // Crear contenido del card usando template literal correctamente
         card.innerHTML = `
           <div class="pw-header">
             <div class="pw-title">${photo.username}</div>
           </div>
           <div class="pw-photo-wrap">
-            <img src="${photo.url}" class="pw-photo" style="width:100%; border-radius:8px;" />
+            <img src="${photo.url}" alt="Foto subida por ${photo.username}" />
           </div>
-          <div style="margin-top:8px; display:flex; justify-content: space-between; align-items:center;">
+          <div class="card-actions">
             <button class="btn-custom like-btn">${photo.likes || 0} ❤️</button>
+            <button class="btn-custom share-btn">📤 Compartir</button>
             <button class="btn-custom delete-btn">🗑 Eliminar</button>
           </div>
         `;
 
-        // Evento para likes
+        // Like
         const likeBtn = card.querySelector('.like-btn');
         likeBtn.addEventListener('click', () => {
           photo.likes = (photo.likes || 0) + 1;
-          localStorage.setItem('petwise_photos', JSON.stringify(photos));
+          savePhotos(photos);
           renderGallery();
         });
 
-        // Evento para eliminar
+        // Share
+        const shareBtn = card.querySelector('.share-btn');
+        shareBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(photo.url).then(() => {
+            alert('¡URL copiada al portapapeles!');
+          });
+        });
+
+        // Delete
         const deleteBtn = card.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', () => {
           photos.splice(index, 1);
-          localStorage.setItem('petwise_photos', JSON.stringify(photos));
+          savePhotos(photos);
           renderGallery();
         });
 
@@ -97,22 +161,38 @@
     // Abrir selector de archivos
     uploadBtn.addEventListener('click', () => fileInput.click());
 
-    // Subida de fotos
-    fileInput.addEventListener('change', () => {
+    // Subida de fotos a Cloudinary
+    fileInput.addEventListener('change', async () => {
       const file = fileInput.files[0];
       if (!file) return;
 
+      if (file.size > 5 * 1024 * 1024) {
+        alert("El archivo es demasiado grande (máx 5MB).");
+        return;
+      }
+
       const username = document.getElementById('username').value.trim() || "Anónimo";
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
-        photos.push({ url: e.target.result, username, likes: 0 });
-        localStorage.setItem('petwise_photos', JSON.stringify(photos));
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
+
+      try {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        const photos = getPhotos();
+        photos.push({ url: data.secure_url, username, likes: 0 });
+        savePhotos(photos);
         renderGallery();
-        fileInput.value = ''; // limpiar input
-      };
-      reader.readAsDataURL(file);
+        fileInput.value = '';
+        document.getElementById('username').value = '';
+      } catch (err) {
+        console.error(err);
+        alert("Error al subir la foto.");
+      }
     });
 
     // Mostrar galería al cargar
