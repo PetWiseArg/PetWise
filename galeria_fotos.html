@@ -102,7 +102,7 @@
     </div>
   </nav>
 
-  <header class="hero">
+  <header class="hero" style="margin-top:80px;">
     <h1>Galería de Fotos <span class="highlight">PetWise</span></h1>
     <p>Galería de fotos pública (beta)</p>
     <input type="text" id="username" placeholder="Nombre de la foto" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
@@ -126,6 +126,7 @@
     const supabaseUrl = "https://tilsnvckijrgnjzylgof.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbHNudmNraWpyZ25qenlsZ29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NTI3MjIsImV4cCI6MjA3MjIyODcyMn0.HMnClyn3fnPP16H_UqxKvEhyD3Iv4_g1F9b_0_3b1mw";
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
     const galeria = document.getElementById("galeria");
     const archivoInput = document.getElementById("archivo");
     const subirBtn = document.getElementById("subirFoto");
@@ -134,10 +135,13 @@
     const lightboxClose = lightbox.querySelector(".lightbox-close");
 
     async function cargarFotos() {
-      galeria.innerHTML = "Cargando fotos...";
-      const { data, error } = await supabase.storage.from("fotos").list("", { limit: 100 });
       galeria.innerHTML = "";
+      const { data, error } = await supabase.storage.from("fotos").list("", { limit: 100 });
       if (error) return galeria.innerHTML = "Error al cargar fotos";
+
+      if(data.length === 0) {
+        galeria.innerHTML = '<p class="no-photos">No hay fotos aún. ¡Subí la primera!</p>';
+      }
 
       data.forEach(f => {
         const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
