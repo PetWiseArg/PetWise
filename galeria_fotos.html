@@ -8,7 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="estilo.css"> <!-- tu CSS existente -->
   <style>
-    /* Mejoras para la galería */
+    /* GALERÍA ESTILO MODERNO */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -17,17 +17,37 @@
     }
     .pw-card {
       background-color: #1f2937;
-      padding: 1rem;
-      border-radius: 8px;
-      color: white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s;
+    }
+    .pw-card:hover {
+      transform: translateY(-5px);
+    }
+    .pw-photo-wrap {
+      width: 100%;
+      overflow: hidden;
+      flex-shrink: 0;
     }
     .pw-photo-wrap img {
       width: 100%;
-      border-radius: 8px;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .pw-photo-wrap img:hover {
+      transform: scale(1.05);
+    }
+    .pw-header {
+      padding: 0.6rem 1rem;
+      font-weight: bold;
+      color: #fefefe;
+      background-color: rgba(0,0,0,0.3);
     }
     .card-actions {
-      margin-top: 8px;
+      padding: 0.6rem 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -41,10 +61,18 @@
       color: white;
       border: none;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, background-color 0.2s;
+      font-size: 0.9rem;
     }
     .btn-custom:hover {
       transform: scale(1.05);
+      background-color: #ff4444;
+    }
+    .no-photos {
+      color: #ccc;
+      text-align: center;
+      margin-top: 1rem;
+      font-style: italic;
     }
   </style>
 </head>
@@ -72,7 +100,7 @@
   <!-- HERO -->
   <header class="hero">
     <h1>Galería de Fotos <span class="highlight">PetWise</span></h1>
-    <p>Galeria de fotos personal (beta)</p>
+    <p>Galería de fotos personal (beta)</p>
     <input type="text" id="username" placeholder="Nombre de la foto" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
     <input type="file" id="fileInput" accept="image/*" style="display:none;">
     <button id="uploadBtn" class="hero1-btn">Subir Foto</button>
@@ -92,9 +120,6 @@
     const uploadBtn = document.getElementById('uploadBtn');
     const fileInput = document.getElementById('fileInput');
 
-    const CLOUD_NAME = "TU_CLOUD_NAME"; // reemplazar por tu cloud name de Cloudinary
-    const UPLOAD_PRESET = "TU_UPLOAD_PRESET"; // reemplazar por tu upload preset
-
     function getPhotos() {
       return JSON.parse(localStorage.getItem('petwise_photos') || '[]');
     }
@@ -108,7 +133,7 @@
       const photos = getPhotos();
 
       if (photos.length === 0) {
-        gallery.innerHTML = '<p>No hay fotos aún. ¡Subí la primera!</p>';
+        gallery.innerHTML = '<p class="no-photos">No hay fotos aún. ¡Subí la primera!</p>';
         return;
       }
 
@@ -117,9 +142,7 @@
         card.className = 'pw-card';
 
         card.innerHTML = `
-          <div class="pw-header">
-            <div class="pw-title">${photo.username}</div>
-          </div>
+          <div class="pw-header">${photo.username}</div>
           <div class="pw-photo-wrap">
             <img src="${photo.url}" alt="Foto subida por ${photo.username}" />
           </div>
@@ -142,7 +165,7 @@
         const shareBtn = card.querySelector('.share-btn');
         shareBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(photo.url).then(() => {
-            alert('¡URL copiada al portapapeles!');
+            alert('¡URL copiada al portapapeles! Podés enviarla a quien quieras.');
           });
         });
 
@@ -161,8 +184,8 @@
     // Abrir selector de archivos
     uploadBtn.addEventListener('click', () => fileInput.click());
 
-    // Subida de fotos a Cloudinary
-    fileInput.addEventListener('change', async () => {
+    // Subida de fotos local (Data URL)
+    fileInput.addEventListener('change', () => {
       const file = fileInput.files[0];
       if (!file) return;
 
@@ -173,29 +196,18 @@
 
       const username = document.getElementById('username').value.trim() || "Anónimo";
 
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', UPLOAD_PRESET);
-
-      try {
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
+      const reader = new FileReader();
+      reader.onload = (e) => {
         const photos = getPhotos();
-        photos.push({ url: data.secure_url, username, likes: 0 });
+        photos.push({ url: e.target.result, username, likes: 0 });
         savePhotos(photos);
         renderGallery();
         fileInput.value = '';
         document.getElementById('username').value = '';
-      } catch (err) {
-        console.error(err);
-        alert("Error al subir la foto.");
-      }
+      };
+      reader.readAsDataURL(file);
     });
 
-    // Mostrar galería al cargar
     renderGallery();
   </script>
 </body>
