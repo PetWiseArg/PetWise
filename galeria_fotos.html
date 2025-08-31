@@ -44,24 +44,25 @@
   </section>
 
   <script type="module">
-    // Firebase imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js";
+    // Firebase SDK desde CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
 
-    // Configuración de tu Firebase
+    // Configuración de Firebase corregida
     const firebaseConfig = {
       apiKey: "AIzaSyCQWbMPSX_dzDx23nKxILlrx38WTzDi2sI",
       authDomain: "petwise-gallery.firebaseapp.com",
-      databaseURL: "https://petwise-gallery-default-rtdb.firebaseio.com",
       projectId: "petwise-gallery",
-      storageBucket: "petwise-gallery.appspot.com",
+      storageBucket: "petwise-gallery.appspot.com", // 🔹 corregido
       messagingSenderId: "191172364914",
       appId: "1:191172364914:web:043d72621fcbafb2b710eb",
       measurementId: "G-37FZKXXFQD"
     };
 
     const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
     const db = getDatabase(app);
     const storage = getStorage(app);
 
@@ -69,7 +70,7 @@
     const uploadBtn = document.getElementById('uploadBtn');
     const fileInput = document.getElementById('fileInput');
 
-    // Subir foto y guardar metadata en Firebase
+    // Subir foto a Storage y guardar metadata en Realtime Database
     async function subirFoto(file, username) {
       const storageRef = sRef(storage, 'fotos/' + Date.now() + '_' + file.name);
       await uploadBytes(storageRef, file);
@@ -121,7 +122,7 @@
       renderGallery(photos);
     });
 
-    // Subir foto al hacer click
+    // Subir foto
     uploadBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', async () => {
