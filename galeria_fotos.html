@@ -33,7 +33,7 @@ const gallery = document.getElementById('gallery');
 const uploadBtn = document.getElementById('uploadBtn');
 const fileInput = document.getElementById('fileInput');
 
-// Función para mostrar galería desde backend
+// Mostrar galería desde backend
 async function renderGallery() {
   try {
     const res = await fetch(backendURL);
@@ -72,7 +72,7 @@ async function renderGallery() {
   }
 }
 
-// Subir foto directamente con fetch a Cloudinary
+// Subir foto directamente a Cloudinary
 uploadBtn.addEventListener('click', async () => {
   const username = document.getElementById('username').value.trim();
   if (!username) return alert('Por favor ingresa tu nombre.');
@@ -83,23 +83,25 @@ uploadBtn.addEventListener('click', async () => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('upload_preset', uploadPreset);
-  formData.append('context', `username=${username}`);
   formData.append('folder', 'petwise');
+  formData.append('context', `username=${username}`);
 
   try {
     const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
       method: 'POST',
       body: formData
     });
-
     const data = await res.json();
+
     if (data.secure_url) {
-      alert('Foto subida con éxito!');
-      renderGallery();
+      console.log('Foto subida:', data.secure_url);
+      // Esperamos 1.5 segundos para asegurar que Cloudinary procese la imagen
+      setTimeout(renderGallery, 1500);
       fileInput.value = ''; // limpiar input
+      alert('Foto subida con éxito!');
     } else {
-      alert('Error al subir la foto.');
       console.error(data);
+      alert('Error al subir la foto.');
     }
   } catch (err) {
     console.error('Error al subir la foto:', err);
@@ -107,7 +109,7 @@ uploadBtn.addEventListener('click', async () => {
   }
 });
 
-// Mostrar galería al cargar
+// Mostrar galería al cargar la página
 renderGallery();
 </script>
 </body>
