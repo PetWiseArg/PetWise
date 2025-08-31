@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galería PetWise</title>
-  <link rel="stylesheet" href="estilo.css"> <!-- tu CSS existente -->
-  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
   <!-- Hero / Encabezado -->
@@ -14,6 +13,7 @@
       <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
       <p>Subí tu foto y compartila con todos</p>
       <input type="text" id="username" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
+      <input type="file" id="fileInput" accept="image/*" style="margin-bottom:1rem;">
       <button id="uploadBtn" class="hero1-btn">Subir Foto</button>
     </div>
   </section>
@@ -31,8 +31,9 @@ const backendURL = 'https://pet-wise-8qib-qo95sggwg-lautaro-arces-projects.verce
 
 const gallery = document.getElementById('gallery');
 const uploadBtn = document.getElementById('uploadBtn');
+const fileInput = document.getElementById('fileInput');
 
-// Mostrar galería desde el backend
+// Función para mostrar galería desde backend
 async function renderGallery() {
   try {
     const res = await fetch(backendURL);
@@ -55,12 +56,10 @@ async function renderGallery() {
         </div>
       `;
 
-      // Likes (opcional: sincronizar con backend)
       card.querySelector('.like-btn').addEventListener('click', () => {
         alert('Likes sincronizados con backend (opcional)');
       });
 
-      // Eliminar (opcional: sincronizar con backend)
       card.querySelector('.delete-btn').addEventListener('click', () => {
         alert('Eliminar foto sincronizado con backend (opcional)');
       });
@@ -73,41 +72,39 @@ async function renderGallery() {
   }
 }
 
-// Subir foto con Cloudinary Upload Widget mejorado
-uploadBtn.addEventListener('click', () => {
+// Subir foto directamente con fetch a Cloudinary
+uploadBtn.addEventListener('click', async () => {
   const username = document.getElementById('username').value.trim();
   if (!username) return alert('Por favor ingresa tu nombre.');
 
-  // Crear el widget solo una vez
-  if (!window.myWidget) {
-    window.myWidget = cloudinary.createUploadWidget({
-      cloudName: cloudName,
-      uploadPreset: uploadPreset,
-      multiple: false,
-      maxFileSize: 10485760, // 10MB
-      sources: ['local', 'url', 'camera'],
-      cropping: false,
-      folder: 'petwise',
-      context: { username },
-      clientAllowedFormats: ["png", "jpg", "jpeg"],
-      maxImageWidth: 2000,
-      theme: 'minimal'
-    }, (error, result) => {
-      if (error) {
-        console.error('Error al subir la imagen:', error);
-        alert('Ocurrió un error al subir la foto.');
-        return;
-      }
-      if (result && result.event === "success") {
-        console.log('Foto subida con éxito:', result.info.secure_url);
-        renderGallery(); // Refresca la galería
-      }
-    });
-  }
+  const file = fileInput.files[0];
+  if (!file) return alert('Selecciona un archivo para subir.');
 
-  // Actualizamos el contexto con el nombre del usuario antes de abrir
-  window.myWidget.update({ context: { username } });
-  window.myWidget.open();
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', uploadPreset);
+  formData.append('context', `username=${username}`);
+  formData.append('folder', 'petwise');
+
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+    if (data.secure_url) {
+      alert('Foto subida con éxito!');
+      renderGallery();
+      fileInput.value = ''; // limpiar input
+    } else {
+      alert('Error al subir la foto.');
+      console.error(data);
+    }
+  } catch (err) {
+    console.error('Error al subir la foto:', err);
+    alert('Error al subir la foto.');
+  }
 });
 
 // Mostrar galería al cargar
