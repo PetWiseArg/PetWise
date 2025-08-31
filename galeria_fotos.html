@@ -1,174 +1,162 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galería de Mascotas - PetWise</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Fuente Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- CSS estilo PetWise -->
   <style>
     body {
+      margin: 0;
       font-family: 'Inter', sans-serif;
       background-color: #0e1117;
       color: #fff;
-      margin: 0;
-      padding: 0;
     }
+
     header {
+      padding: 20px;
       text-align: center;
-      padding: 2rem;
       background-color: #1f2937;
+      font-size: 2rem;
+      font-weight: 700;
     }
-    h1 { margin: 0; font-size: 2rem; }
-    main { padding: 2rem; max-width: 1000px; margin: auto; }
-    form {
+
+    main {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 10px;
+    }
+
+    /* Formulario */
+    .upload-form {
       display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .upload-form input[type="file"] {
       background-color: #1f2937;
-      padding: 1rem;
-      border-radius: 10px;
-    }
-    input[type="file"] {
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: none;
-      background-color: #0e1117;
       color: #fff;
-    }
-    button {
-      padding: 0.7rem;
+      padding: 8px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+    }
+
+    .upload-form button {
       background-color: #3b82f6;
       color: white;
-      font-weight: 600;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
-      transition: 0.2s;
+      font-weight: 600;
     }
-    button:hover { background-color: #2563eb; }
+
+    .upload-form button:hover {
+      background-color: #2563eb;
+    }
+
+    /* Galería */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
     }
-    .card {
+
+    .photo-card {
       background-color: #1f2937;
       border-radius: 10px;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0.5rem;
+      position: relative;
     }
-    .card img {
+
+    .photo-card img {
       width: 100%;
-      height: auto;
-      border-radius: 10px;
+      display: block;
     }
-    .likes {
-      margin-top: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+
+    .like-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: rgba(0,0,0,0.6);
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      cursor: pointer;
     }
-    .likes button {
-      padding: 0.3rem 0.5rem;
-      font-size: 0.9rem;
+
+    .like-btn:hover {
+      background-color: rgba(59,130,246,0.8);
     }
   </style>
 </head>
 <body>
+  <header>Galería de Mascotas 🐾</header>
 
-<header>
-  <h1>Galería de Mascotas - PetWise</h1>
-</header>
+  <main>
+    <!-- Formulario de subida -->
+    <form class="upload-form">
+      <input type="file" id="fileInput" accept="image/*" required>
+      <button type="submit">Subir Foto</button>
+    </form>
 
-<main>
-  <form id="upload-form">
-    <input type="file" id="photo" accept="image/*" required />
-    <button type="submit">Subir Foto</button>
-  </form>
+    <!-- Galería de fotos -->
+    <div class="gallery" id="gallery"></div>
+  </main>
 
-  <div class="gallery" id="gallery"></div>
-</main>
+  <!-- Script Cloudinary -->
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+  <script>
+    // Cloudinary configuración
+    const cloudName = "petwise.arg"; // Tu cloud name
+    const uploadPreset = "petwise_upload"; // Tu preset sin autenticación
 
-<script src="https://unpkg.com/@supabase/supabase-js"></script>
-<script>
-  // Configuración Supabase
-  const supabaseUrl = 'https://oqartpaqmrsjfjcxztvj.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXJ0cGFxbXJzamZqY3h6dHZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1OTIxNDQsImV4cCI6MjA3MjE2ODE0NH0.Z9aA19a6Egs1s-t0axwaYZDeRM1MvMAMXBWKj6GlMbA';
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const form = document.querySelector('.upload-form');
+    const fileInput = document.getElementById('fileInput');
+    const gallery = document.getElementById('gallery');
 
-  const form = document.getElementById('upload-form');
-  const gallery = document.getElementById('gallery');
+    // Cargar imágenes existentes al inicio
+    let photos = [];
 
-  async function fetchGallery() {
-    gallery.innerHTML = '';
-    const { data, error } = await supabase
-      .from('mascotas')
-      .select('*')
-      .order('creado_en', { ascending: false });
-
-    if (error) { console.error(error); return; }
-
-    data.forEach(item => {
-      if (!item.url) return;
+    function addPhoto(url) {
       const card = document.createElement('div');
-      card.className = 'card';
+      card.className = 'photo-card';
       card.innerHTML = `
-        <img src="${item.url}" alt="Mascota">
-        <div class="likes">
-          <span>${item.likes || 0} ❤️</span>
-          <button onclick="addLike('${item.id}', this)">Like</button>
-        </div>
+        <img src="${url}" alt="Mascota">
+        <button class="like-btn">❤️ 0</button>
       `;
-      gallery.appendChild(card);
+      gallery.prepend(card);
+    }
+
+    // Manejar subida
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return alert("Selecciona una foto");
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      if (data.secure_url) {
+        addPhoto(data.secure_url);
+        fileInput.value = "";
+      } else {
+        alert("Error al subir la foto");
+      }
     });
-  }
-
-  async function addLike(id, btn) {
-    const span = btn.previousElementSibling;
-    const current = parseInt(span.textContent) || 0;
-    const { error } = await supabase
-      .from('mascotas')
-      .update({ likes: current + 1 })
-      .eq('id', id);
-    if (!error) span.textContent = `${current + 1} ❤️`;
-  }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fileInput = document.getElementById('photo');
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    const fileName = `${Date.now()}_${file.name}`;
-    const { data: uploadData, error: uploadError } = await supabase
-      .storage
-      .from('fotos-mascotas')
-      .upload(fileName, file);
-
-    if (uploadError) { console.error(uploadError); return; }
-
-    const { data: publicUrlData } = supabase
-      .storage
-      .from('fotos-mascotas')
-      .getPublicUrl(fileName);
-
-    // Guardar en tabla
-    const { error: insertError } = await supabase
-      .from('mascotas')
-      .insert([{ fotos: file.name, url: publicUrlData.publicUrl, likes: 0 }]);
-
-    if (insertError) { console.error(insertError); return; }
-
-    fileInput.value = '';
-    fetchGallery();
-  });
-
-  fetchGallery();
-</script>
-
+  </script>
 </body>
 </html>
