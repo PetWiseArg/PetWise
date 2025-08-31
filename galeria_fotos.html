@@ -1,115 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galería PetWise</title>
-  <link rel="stylesheet" href="estilo.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galería PetWise</title>
+<link rel="stylesheet" href="estilo.css">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
 </head>
 <body>
-  <!-- Hero / Encabezado -->
-  <section class="hero1">
-    <div class="hero1-content">
-      <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
-      <p>Subí tu foto y compartila con todos</p>
-      <input type="text" id="username" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
-      <input type="file" id="fileInput" accept="image/*" style="margin-bottom:1rem;">
-      <button id="uploadBtn" class="hero1-btn">Subir Foto</button>
-    </div>
-  </section>
 
-  <!-- Galería -->
-  <section class="pw-target">
-    <h2>Galería de Fotos</h2>
-    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
-  </section>
+<section class="hero1">
+  <div class="hero1-content">
+    <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
+    <p>Subí tu foto y compartila con todos</p>
+    <input type="text" id="username" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
+    <button id="uploadBtn" class="hero1-btn">Subir Foto</button>
+  </div>
+</section>
+
+<section class="pw-target">
+  <h2>Galería de Fotos</h2>
+  <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
+</section>
 
 <script>
 const cloudName = 'dbjiwrxhg';
 const uploadPreset = 'petwise_upload';
-const backendURL = 'https://pet-wise-8qib-qo95sggwg-lautaro-arces-projects.vercel.app/api/photos';
-
 const gallery = document.getElementById('gallery');
 const uploadBtn = document.getElementById('uploadBtn');
-const fileInput = document.getElementById('fileInput');
 
-// Mostrar galería desde backend
+// Función para mostrar la galería desde Cloudinary
 async function renderGallery() {
+  gallery.innerHTML = '<p>Cargando fotos...</p>';
   try {
-    const res = await fetch(backendURL);
-    const photos = await res.json();
+    const res = await fetch(`https://res.cloudinary.com/${cloudName}/image/list/petwise.json`);
+    const data = await res.json();
     gallery.innerHTML = '';
 
-    photos.forEach(photo => {
+    data.resources.forEach(photo => {
       const card = document.createElement('div');
       card.className = 'pw-card';
+      const username = photo.context?.custom?.username || 'Anónimo';
       card.innerHTML = `
-        <div class="pw-header">
-          <div class="pw-title">${photo.username}</div>
-        </div>
+        <div class="pw-header"><div class="pw-title">${username}</div></div>
         <div class="pw-photo-wrap">
-          <img src="${photo.url}" class="pw-photo" />
-        </div>
-        <div style="margin-top:8px; display:flex; justify-content: space-between; align-items:center;">
-          <button class="btn-custom like-btn">${photo.likes || 0} ❤️</button>
-          <button class="btn-custom delete-btn">🗑 Eliminar</button>
+          <img src="${photo.url}" class="pw-photo"/>
         </div>
       `;
-
-      card.querySelector('.like-btn').addEventListener('click', () => {
-        alert('Likes sincronizados con backend (opcional)');
-      });
-
-      card.querySelector('.delete-btn').addEventListener('click', () => {
-        alert('Eliminar foto sincronizado con backend (opcional)');
-      });
-
       gallery.appendChild(card);
     });
 
   } catch (err) {
-    console.error('Error al cargar la galería:', err);
+    gallery.innerHTML = '<p>No se pudieron cargar las fotos.</p>';
+    console.error(err);
   }
 }
 
-// Subir foto directamente a Cloudinary
-uploadBtn.addEventListener('click', async () => {
+// Subir fotos usando el widget de Cloudinary
+uploadBtn.addEventListener('click', () => {
   const username = document.getElementById('username').value.trim();
   if (!username) return alert('Por favor ingresa tu nombre.');
 
-  const file = fileInput.files[0];
-  if (!file) return alert('Selecciona un archivo para subir.');
-
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', uploadPreset);
-  formData.append('folder', 'petwise');
-  formData.append('context', `username=${username}`);
-
-  try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
-      method: 'POST',
-      body: formData
-    });
-    const data = await res.json();
-
-    if (data.secure_url) {
-      console.log('Foto subida:', data.secure_url);
-      // Esperamos 1.5 segundos para asegurar que Cloudinary procese la imagen
-      setTimeout(renderGallery, 1500);
-      fileInput.value = ''; // limpiar input
+  const myWidget = cloudinary.createUploadWidget({
+    cloudName,
+    uploadPreset,
+    folder: 'petwise',
+    multiple: false,
+    sources: ['local','url','camera'],
+    context: { username }
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
       alert('Foto subida con éxito!');
-    } else {
-      console.error(data);
-      alert('Error al subir la foto.');
+      // Esperamos 1-2 segundos y recargamos la galería
+      setTimeout(renderGallery, 1500);
     }
-  } catch (err) {
-    console.error('Error al subir la foto:', err);
-    alert('Error al subir la foto.');
-  }
+  });
+  myWidget.open();
 });
 
-// Mostrar galería al cargar la página
+// Mostrar galería al cargar
 renderGallery();
 </script>
 </body>
