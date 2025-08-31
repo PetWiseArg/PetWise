@@ -1,190 +1,173 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Galería de Mascotas - PetWise</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@supabase/supabase-js"></script>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: #0e1117;
-    color: #fff;
-  }
-
-  header {
-    background-color: #1f2937;
-    padding: 1rem 2rem;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #fff;
-  }
-
-  main {
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-  }
-
-  form {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-
-  input[type="file"] {
-    flex: 1;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: none;
-    background-color: #1f2937;
-    color: #fff;
-  }
-
-  button {
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    background-color: #2563eb;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  button:hover {
-    background-color: #1e40af;
-  }
-
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-  }
-
-  .card {
-    background-color: #1f2937;
-    border-radius: 1rem;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-  }
-
-  .info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-  }
-
-  .like-btn {
-    background: #ef4444;
-    border: none;
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    color: #fff;
-    font-weight: 600;
-  }
-
-  .like-btn:hover {
-    background: #b91c1c;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería de Mascotas - PetWise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0e1117;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+      background-color: #1f2937;
+    }
+    h1 { margin: 0; font-size: 2rem; }
+    main { padding: 2rem; max-width: 1000px; margin: auto; }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background-color: #1f2937;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    input[type="file"] {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: none;
+      background-color: #0e1117;
+      color: #fff;
+    }
+    button {
+      padding: 0.7rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #3b82f6;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover { background-color: #2563eb; }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+      gap: 1rem;
+    }
+    .card {
+      background-color: #1f2937;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.5rem;
+    }
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .likes {
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .likes button {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
 
-<header>Galería de Mascotas - PetWise</header>
+<header>
+  <h1>Galería de Mascotas - PetWise</h1>
+</header>
 
 <main>
-  <form id="uploadForm">
-    <input type="file" id="fileInput" accept="image/*">
+  <form id="upload-form">
+    <input type="file" id="photo" accept="image/*" required />
     <button type="submit">Subir Foto</button>
   </form>
 
   <div class="gallery" id="gallery"></div>
 </main>
 
+<script src="https://unpkg.com/@supabase/supabase-js"></script>
 <script>
-  // Conecta a tu proyecto Supabase
+  // Configuración Supabase
   const supabaseUrl = 'https://oqartpaqmrsjfjcxztvj.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXJ0cGFxbXJzamZqY3h6dHZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1OTIxNDQsImV4cCI6MjA3MjE2ODE0NH0.Z9aA19a6Egs1s-t0axwaYZDeRM1MvMAMXBWKj6GlMbA';
   const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  const form = document.getElementById('uploadForm');
-  const input = document.getElementById('fileInput');
+  const form = document.getElementById('upload-form');
   const gallery = document.getElementById('gallery');
 
-  async function cargarGaleria() {
+  async function fetchGallery() {
     gallery.innerHTML = '';
-    const { data: mascotas, error } = await supabase
+    const { data, error } = await supabase
       .from('mascotas')
       .select('*')
       .order('creado_en', { ascending: false });
 
-    if (error) return console.error(error);
+    if (error) { console.error(error); return; }
 
-    mascotas.forEach(mascota => {
+    data.forEach(item => {
+      if (!item.url) return;
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-        <img src="${mascota.url}" alt="Mascota">
-        <div class="info">
-          <span>${mascota.likes || 1} ❤️</span>
-          <button class="like-btn">Like</button>
+        <img src="${item.url}" alt="Mascota">
+        <div class="likes">
+          <span>${item.likes || 0} ❤️</span>
+          <button onclick="addLike('${item.id}', this)">Like</button>
         </div>
       `;
-      const likeBtn = card.querySelector('.like-btn');
-      likeBtn.addEventListener('click', async () => {
-        await supabase
-          .from('mascotas')
-          .update({ likes: (mascota.likes || 1) + 1 })
-          .eq('id', mascota.id);
-        cargarGaleria();
-      });
       gallery.appendChild(card);
     });
   }
 
-  form.addEventListener('submit', async e => {
+  async function addLike(id, btn) {
+    const span = btn.previousElementSibling;
+    const current = parseInt(span.textContent) || 0;
+    const { error } = await supabase
+      .from('mascotas')
+      .update({ likes: current + 1 })
+      .eq('id', id);
+    if (!error) span.textContent = `${current + 1} ❤️`;
+  }
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const file = input.files[0];
-    if (!file) return alert('Selecciona una foto');
+    const fileInput = document.getElementById('photo');
+    const file = fileInput.files[0];
+    if (!file) return;
 
     const fileName = `${Date.now()}_${file.name}`;
-
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabase
+      .storage
       .from('fotos-mascotas')
-      .upload(fileName, file, { cacheControl: '3600', upsert: false });
+      .upload(fileName, file);
 
-    if (uploadError) return console.error('Error al subir:', uploadError);
+    if (uploadError) { console.error(uploadError); return; }
 
-    const { data: publicData } = supabase.storage
+    const { data: publicUrlData } = supabase
+      .storage
       .from('fotos-mascotas')
       .getPublicUrl(fileName);
 
+    // Guardar en tabla
     const { error: insertError } = await supabase
       .from('mascotas')
-      .insert([{ url: publicData.publicUrl, likes: 1 }]);
+      .insert([{ fotos: file.name, url: publicUrlData.publicUrl, likes: 0 }]);
 
-    if (insertError) return console.error('Error al guardar en tabla:', insertError);
+    if (insertError) { console.error(insertError); return; }
 
-    input.value = '';
-    cargarGaleria();
+    fileInput.value = '';
+    fetchGallery();
   });
 
-  // Cargar la galería al iniciar la página
-  cargarGaleria();
+  fetchGallery();
 </script>
 
 </body>
