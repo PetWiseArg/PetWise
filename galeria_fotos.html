@@ -32,7 +32,7 @@ const backendURL = 'https://pet-wise-8qib-qo95sggwg-lautaro-arces-projects.verce
 const gallery = document.getElementById('gallery');
 const uploadBtn = document.getElementById('uploadBtn');
 
-// Función para mostrar todas las fotos desde el backend
+// Mostrar galería desde el backend
 async function renderGallery() {
   try {
     const res = await fetch(backendURL);
@@ -73,28 +73,44 @@ async function renderGallery() {
   }
 }
 
-// Subir foto con Cloudinary Upload Widget
+// Subir foto con Cloudinary Upload Widget mejorado
 uploadBtn.addEventListener('click', () => {
   const username = document.getElementById('username').value.trim();
   if (!username) return alert('Por favor ingresa tu nombre.');
 
-  const myWidget = cloudinary.createUploadWidget({
-    cloudName: cloudName,
-    uploadPreset: uploadPreset,
-    multiple: false,
-    maxFileSize: 10485760, // 10MB
-    sources: ['local','url','camera'],
-    context: { username } // Guardamos el nombre
-  }, (error, result) => {
-    if (!error && result && result.event === "success") {
-      renderGallery(); // Refresca la galería al subir nueva foto
-    }
-  });
+  // Crear el widget solo una vez
+  if (!window.myWidget) {
+    window.myWidget = cloudinary.createUploadWidget({
+      cloudName: cloudName,
+      uploadPreset: uploadPreset,
+      multiple: false,
+      maxFileSize: 10485760, // 10MB
+      sources: ['local', 'url', 'camera'],
+      cropping: false,
+      folder: 'petwise',
+      context: { username },
+      clientAllowedFormats: ["png", "jpg", "jpeg"],
+      maxImageWidth: 2000,
+      theme: 'minimal'
+    }, (error, result) => {
+      if (error) {
+        console.error('Error al subir la imagen:', error);
+        alert('Ocurrió un error al subir la foto.');
+        return;
+      }
+      if (result && result.event === "success") {
+        console.log('Foto subida con éxito:', result.info.secure_url);
+        renderGallery(); // Refresca la galería
+      }
+    });
+  }
 
-  myWidget.open();
+  // Actualizamos el contexto con el nombre del usuario antes de abrir
+  window.myWidget.update({ context: { username } });
+  window.myWidget.open();
 });
 
-// Mostrar galería al cargar la página
+// Mostrar galería al cargar
 renderGallery();
 </script>
 </body>
