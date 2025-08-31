@@ -269,6 +269,9 @@
     margin: 0.5rem auto;
   }
 }
+#autor::placeholder {
+  color: #aaa;   /* gris claro */
+}
 
   </style>
 </head>
@@ -305,7 +308,7 @@
   <!-- NUEVO: campo de nombre/Instagram -->
    <!-- CAMBIO en el input -->
 <!-- Input Instagram con @ fijo -->
-<input type="text" id="autor" placeholder="usuario" maxlength="50" aria-label="Instagram (@usuario)">
+<input type="text" id="autor" placeholder="Usuario de Instagram"-label="Instagram (@usuario)">
 
   <input type="file" id="archivo" accept="image/*">
   <button id="subirFoto">Subir Foto</button>
@@ -337,15 +340,6 @@
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = lightbox.querySelector("img");
   const lightboxClose = lightbox.querySelector(".lightbox-close");
-// Forzar que siempre empiece con @
-autorInput.addEventListener("input", () => {
-  if (!autorInput.value.startsWith("@")) {
-    autorInput.value = "@" + autorInput.value.replace(/^@+/, "");
-  }
-});
-
-// Al cargar la página, aseguramos que empiece con @ vacío
-autorInput.value = "@";
 
   // Utilidad para evitar XSS
   function escaparHTML(str) {
@@ -443,16 +437,22 @@ autorInput.value = "@";
     });
   }
 
- // Subir foto
+// Subir foto
 subirBtn.addEventListener("click", async () => {
   const archivo = archivoInput.files[0];
   let autorBruto = limpiarAutorNombre(autorInput.value || "").trim();
 
-  // Validar formato de Instagram
-  const regexIG = /^@[a-zA-Z0-9._]{2,30}$/; 
-  if (!regexIG.test(autorBruto)) {
-    alert("Debes ingresar un Instagram válido (ejemplo: @usuario).");
-    return;
+  // Validar formato de Instagram SOLO si escribió algo
+  if (autorBruto.length > 0) {
+    const regexIG = /^@?[a-zA-Z0-9._]{2,30}$/; 
+    if (!regexIG.test(autorBruto)) {
+      alert("Debes ingresar un Instagram válido (ejemplo: @usuario o usuario).");
+      return;
+    }
+    // Si no puso @, se lo agregamos para el link
+    if (!autorBruto.startsWith("@")) {
+      autorBruto = "@" + autorBruto;
+    }
   }
 
   if (!archivo) {
@@ -471,9 +471,11 @@ subirBtn.addEventListener("click", async () => {
   }
   guardarToken(uuid);
   archivoInput.value = "";
-  autorInput.value = "@";
+  autorInput.value = ""; // limpiar input
+
   cargarFotos();
 });
+
 
 
   // Inicial
