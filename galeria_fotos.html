@@ -5,111 +5,270 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galería PetWise</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="estilo.css" />
   <style>
-   body {
-  background-color: #121212;
-  color: white;
-  font-family: 'Arial', sans-serif;
+   html, body {
   margin: 0;
   padding: 0;
-  text-align: center;
 }
 
-h1 {
-  margin-top: 1rem;
-  font-weight: 600;
-}
+    .negro { color: #000}
+    .blanco { color: #ffffffff}
+    .btn-custom {
+      background-color: #216ec5ff;
+      color: #fff;
+      border-radius: 50px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
 
-/* Inputs */
-#archivo, #subirFoto {
-  margin: 1rem auto;
-  display: block;
-}
+    .btn-custom:hover {
+      background-color: #8ed849;
+      color: #1f2937;
+    }
 
-/* Galería estilo Instagram */
-.gallery-grid {
+    /* SECCION SERVICIOS */
+    main {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 1rem;
+    }
+/* === CARDS UNIFORMES === */
+.services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
 }
-
-.pw-card {
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  transition: transform 0.3s;
+.service-card {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: linear-gradient(#c5c5c5ff 100%);
+  gap: 0.5rem; /* espacio entre elementos, más compacto */
 }
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 18px 35px rgba(0,0,0,.45);
+}
+
+.service-card i {
+  font-size: 2.5rem;
+  color: #218f97ff;
+  margin-bottom: 0.8rem;
+}
+
+.service-card h3 {
+  font-size: 1.4rem;
+  color: #26909eff;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+.service-card p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  flex-grow: 1; /* ocupa el espacio disponible para alinear botones */
+}
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+  .service-card {
+    width: 90%;      /* que no sea demasiado ancho */
+    margin: 0 auto;  /* centra horizontalmente */
+  }
+  .service-card button {
+    width: 80%;      /* botón más pequeño en móvil */
+    margin: 0.5rem auto 0 auto; /* centrado y cerca del texto */
+    display: block;  /* necesario para que margin auto funcione */
+  }
+}
+/* --- GALERÍA TIPO GRID LIMITADA --- */
+#galeria {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* máximo 4 columnas */
+  gap: 1rem; /* espacio entre fotos */
+  margin-top: 2rem;
+}
+
+@media (max-width: 1024px) {
+  #galeria {
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas en tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  #galeria {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+  }
+}
+
+@media (max-width: 480px) {
+  #galeria {
+    grid-template-columns: 1fr; /* 1 columna en móvil pequeño */
+  }
+}
+
+/* --- CARD INDIVIDUAL --- */
+.pw-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f0f0f0;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pw-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
 .pw-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
 }
 
-/* Encabezado con usuario encima de la foto */
-.pw-photo-wrap::before {
-  content: attr(data-usuario);
-  display: block;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  color: #ccc;
-  font-weight: bold;
-  text-align: left;
-}
-
-/* Imagen */
-.pw-photo-wrap img {
-  width: 100%;
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-.pw-photo-wrap img:hover {
+.pw-card:hover img {
   transform: scale(1.05);
 }
 
-/* LIGHTBOX */
+/* --- LIGHTBOX POR ENCIMA DE TODO --- */
 .lightbox-overlay {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.9);
-  display: flex; justify-content: center; align-items: center;
-  visibility: hidden; opacity: 0; transition: opacity 0.3s; z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 9999; /* siempre arriba */
 }
+
 .lightbox-overlay.active {
-  visibility: visible;
   opacity: 1;
+  visibility: visible;
 }
+
 .lightbox-overlay img {
   max-width: 90%;
   max-height: 90%;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.7);
+  border-radius: 10px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
 }
+
 .lightbox-close {
   position: absolute;
   top: 20px;
   right: 30px;
   font-size: 2rem;
+  color: #fff;
   cursor: pointer;
-  color: white;
+  transition: color 0.3s ease;
 }
 
-/* Responsive */
-@media(max-width: 600px){
-  .pw-photo-wrap::before {
-    padding: 0.3rem 0.5rem;
-    font-size: 0.8rem;
+.lightbox-close:hover {
+  color: #8ed849;
+}
+
+/* --- ESTILO INPUT SUBIR FOTO --- */
+#archivo {
+  display: inline-block;
+  margin: 1rem 0.5rem 1rem 0;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #070707;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#archivo:hover {
+  border-color: #216ec5ff;
+}
+
+#archivo:focus {
+  outline: none;
+  border-color: #216ec5ff;
+  box-shadow: 0 0 5px #216ec5ff;
+}
+
+/* --- BOTÓN SUBIR FOTO --- */
+#subirFoto {
+  display: inline-block;
+  background-color: #216ec5ff;
+  color: #e0e0e0;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#subirFoto:hover {
+  background-color: #8ed849;
+  color: #0f0f0f;
+  transform: translateY(-2px);
+}
+
+/* --- CENTRAR EN MÓVILES --- */
+@media (max-width: 768px) {
+  #archivo, #subirFoto {
+    display: block;
+    width: 90%;
+    margin: 0.5rem auto;
   }
 }
 
   </style>
 </head>
 <body>
-  <h1>Galería de Fotos (Beta)</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="img/logo.png" alt="PetWise Logo" class="img-fluid" />
+      <span>PetWise Company</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="history.back(); return false;">Atrás</a>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="hero">
+  <h1 class="display-4 fw-bold">Fotos</h1>
+  <p class="lead">Comparte las fotos de tus mascotas</p>
+    <input type="file" id="archivo" accept="image/*">
+  <button id="subirFoto">Subir Foto</button>
+</header>
+<br>
+  <center><h3><b>Galería de Fotos (Beta)</b></h3></center>
 
   <!-- Subida -->
-  <input type="file" id="archivo" accept="image/*">
-  <button id="subirFoto">Subir Foto</button>
+
 
   <!-- Galería -->
   <div id="galeria" class="gallery-grid"></div>
