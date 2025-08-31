@@ -1,11 +1,13 @@
+Tú dijiste:
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galería PetWise</title>
+  <!-- Bootstrap solo para navbar -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="estilo.css"> <!-- tu CSS existente -->
 </head>
 <body>
   <!-- NAVBAR -->
@@ -13,7 +15,7 @@
     <div class="container-fluid px-4">
       <a class="navbar-brand d-flex align-items-center" href="index.html">
         <img src="img/logo.png" alt="PetWise Logo" class="img-fluid" />
-        <span>PetWise Company...</span>
+        <span>PetWise Company</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -28,7 +30,7 @@
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO (manteniendo exactamente tu estilo original) -->
   <header class="hero">
     <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
     <p>Subí tu foto y compartila con todos</p>
@@ -43,88 +45,75 @@
     <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
   </section>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+  <!-- Bootstrap JS solo para navbar -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    // Configuración Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyCQWbMPSX_dzDx23nKxILlrx38WTzDi2sI",
-      storageBucket: "petwise-gallery.appspot.com",
-      projectId: "petwise-gallery",
-      storageBucket: "petwise-gallery.appspot.com", // CORREGIDO
-      messagingSenderId: "191172364914",
-      appId: "1:191172364914:web:043d72621fcbafb2b710eb"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const storage = getStorage(app);
-
+  <script>
     const gallery = document.getElementById('gallery');
     const uploadBtn = document.getElementById('uploadBtn');
     const fileInput = document.getElementById('fileInput');
 
-    // Subir foto y guardar metadata
-    async function subirFoto(file, username) {
-      const storageRef = sRef(storage, 'fotos/' + Date.now() + '_' + file.name);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      await push(ref(db, 'photos'), { username, url, likes: 0 });
-    }
-
-    // Renderizar galería
-    function renderGallery(photos) {
+    function renderGallery() {
       gallery.innerHTML = '';
-      photos.forEach(({ key, username, url, likes }) => {
+      const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
+      photos.forEach((photo, index) => {
         const card = document.createElement('div');
         card.className = 'pw-card';
-        card.innerHTML = `
+        card.innerHTML = 
           <div class="pw-header">
-            <div class="pw-title">${username}</div>
+            <div class="pw-title">${photo.username}</div>
           </div>
           <div class="pw-photo-wrap">
-            <img src="${url}" class="pw-photo" style="width:100%; border-radius:8px;" />
+            <img src="${photo.url}" class="pw-photo" style="width:100%; border-radius:8px;" />
           </div>
           <div style="margin-top:8px; display:flex; justify-content: space-between; align-items:center;">
-            <button class="btn-custom like-btn">${likes || 0} ❤️</button>
+            <button class="btn-custom like-btn">${photo.likes || 0} ❤️</button>
             <button class="btn-custom delete-btn">🗑 Eliminar</button>
           </div>
-        `;
+        ;
+        // Likes
         card.querySelector('.like-btn').addEventListener('click', () => {
-          update(ref(db, 'photos/' + key), { likes: (likes || 0) + 1 });
+          photo.likes = (photo.likes || 0) + 1;
+          localStorage.setItem('petwise_photos', JSON.stringify(photos));
+          renderGallery();
         });
+        // Eliminar
         card.querySelector('.delete-btn').addEventListener('click', () => {
-          remove(ref(db, 'photos/' + key));
+          photos.splice(index, 1);
+          localStorage.setItem('petwise_photos', JSON.stringify(photos));
+          renderGallery();
         });
+
         gallery.appendChild(card);
       });
     }
 
-    // Escuchar cambios en tiempo real
-    onValue(ref(db, 'photos'), (snapshot) => {
-      const photos = [];
-      snapshot.forEach(childSnap => {
-        const data = childSnap.val();
-        photos.push({ key: childSnap.key, ...data });
-      });
-      renderGallery(photos);
+    // Abrir selector de archivos
+    uploadBtn.addEventListener('click', () => {
+      fileInput.click();
     });
 
-    // Abrir selector de archivos
-    uploadBtn.addEventListener('click', () => fileInput.click());
-
-    fileInput.addEventListener('change', async () => {
+    // Subida de fotos con nombre opcional
+    fileInput.addEventListener('change', () => {
       const file = fileInput.files[0];
       if (!file) return;
-      const usernameInput = document.getElementById('username').value.trim();
-      const username = usernameInput || "Anónimo";
-      await subirFoto(file, username);
-      fileInput.value = '';
-    });
-  </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      const usernameInput = document.getElementById('username').value.trim();
+      const username = usernameInput || "Anónimo"; // Nombre opcional
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
+        photos.push({url: e.target.result, username, likes:0});
+        localStorage.setItem('petwise_photos', JSON.stringify(photos));
+        renderGallery();
+        fileInput.value = ''; // Reset para otra subida
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Mostrar galería al cargar
+    renderGallery();
+  </script>
 </body>
 </html>
