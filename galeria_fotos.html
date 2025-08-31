@@ -1,4 +1,3 @@
-Tú dijiste:
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -30,7 +29,7 @@ Tú dijiste:
     </div>
   </nav>
 
-  <!-- HERO (manteniendo exactamente tu estilo original) -->
+  <!-- HERO -->
   <header class="hero">
     <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
     <p>Subí tu foto y compartila con todos</p>
@@ -45,7 +44,7 @@ Tú dijiste:
     <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
   </section>
 
-  <!-- Bootstrap JS solo para navbar -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
@@ -56,10 +55,13 @@ Tú dijiste:
     function renderGallery() {
       gallery.innerHTML = '';
       const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
+
       photos.forEach((photo, index) => {
         const card = document.createElement('div');
         card.className = 'pw-card';
-        card.innerHTML = 
+
+        // Crear contenido del card usando template literal correctamente
+        card.innerHTML = `
           <div class="pw-header">
             <div class="pw-title">${photo.username}</div>
           </div>
@@ -70,15 +72,19 @@ Tú dijiste:
             <button class="btn-custom like-btn">${photo.likes || 0} ❤️</button>
             <button class="btn-custom delete-btn">🗑 Eliminar</button>
           </div>
-        ;
-        // Likes
-        card.querySelector('.like-btn').addEventListener('click', () => {
+        `;
+
+        // Evento para likes
+        const likeBtn = card.querySelector('.like-btn');
+        likeBtn.addEventListener('click', () => {
           photo.likes = (photo.likes || 0) + 1;
           localStorage.setItem('petwise_photos', JSON.stringify(photos));
           renderGallery();
         });
-        // Eliminar
-        card.querySelector('.delete-btn').addEventListener('click', () => {
+
+        // Evento para eliminar
+        const deleteBtn = card.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => {
           photos.splice(index, 1);
           localStorage.setItem('petwise_photos', JSON.stringify(photos));
           renderGallery();
@@ -89,25 +95,22 @@ Tú dijiste:
     }
 
     // Abrir selector de archivos
-    uploadBtn.addEventListener('click', () => {
-      fileInput.click();
-    });
+    uploadBtn.addEventListener('click', () => fileInput.click());
 
-    // Subida de fotos con nombre opcional
+    // Subida de fotos
     fileInput.addEventListener('change', () => {
       const file = fileInput.files[0];
       if (!file) return;
 
-      const usernameInput = document.getElementById('username').value.trim();
-      const username = usernameInput || "Anónimo"; // Nombre opcional
+      const username = document.getElementById('username').value.trim() || "Anónimo";
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = (e) => {
         const photos = JSON.parse(localStorage.getItem('petwise_photos') || '[]');
-        photos.push({url: e.target.result, username, likes:0});
+        photos.push({ url: e.target.result, username, likes: 0 });
         localStorage.setItem('petwise_photos', JSON.stringify(photos));
         renderGallery();
-        fileInput.value = ''; // Reset para otra subida
+        fileInput.value = ''; // limpiar input
       };
       reader.readAsDataURL(file);
     });
