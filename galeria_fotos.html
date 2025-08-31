@@ -119,9 +119,6 @@
   box-shadow: 0 15px 35px rgba(0,0,0,0.25);
 }
 
-.pw-card:hover img {
-  transform: scale(1.05);
-}
 
 /* Nombre estilo Instagram */
 .pw-name {
@@ -130,11 +127,19 @@
   left: 0;
   width: 100%;
   background: rgba(0,0,0,0.6);
-  color: #fff;
-  font-weight: 600;
   padding: 0.4rem 0.6rem;
   font-size: 0.9rem;
+  font-weight: 600;
   text-align: left;
+}
+
+.pw-name a {
+  color: #ffffff !important;    /* siempre blanco */
+  text-decoration: none;        /* sin subrayado */
+}
+
+.pw-name a:hover {
+  color: #8ed849;               /* opcional: verde al pasar el mouse */
 }
 
 /* --- RESPONSIVE --- */
@@ -298,7 +303,10 @@
   <h1 class="display-4 fw-bold">Fotos</h1>
   <p class="lead">Comparte las fotos de tus mascotas</p>
   <!-- NUEVO: campo de nombre/Instagram -->
-  <input type="text" id="autor" placeholder="Tu nombre o Instagram (@usuario)" maxlength="50" aria-label="Nombre o Instagram">
+   <!-- CAMBIO en el input -->
+<!-- Input Instagram con @ fijo -->
+<input type="text" id="autor" placeholder="usuario" maxlength="50" aria-label="Instagram (@usuario)">
+
   <input type="file" id="archivo" accept="image/*">
   <button id="subirFoto">Subir Foto</button>
 </header>
@@ -316,106 +324,167 @@
 
   <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script>
-    const supabaseUrl = "https://tilsnvckijrgnjzylgof.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbHNudmNraWpyZ25qenlsZ29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NTI3MjIsImV4cCI6MjA3MjIyODcyMn0.HMnClyn3fnPP16H_UqxKvEhyD3Iv4_g1F9b_0_3b1mw";
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+<script>
+  const supabaseUrl = "https://tilsnvckijrgnjzylgof.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbHNudmNraWpyZ25qenlsZ29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NTI3MjIsImV4cCI6MjA3MjIyODcyMn0.HMnClyn3fnPP16H_UqxKvEhyD3Iv4_g1F9b_0_3b1mw";
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-    const autorInput = document.getElementById("autor");
-    const archivoInput = document.getElementById("archivo");
-    const subirBtn = document.getElementById("subirFoto");
-    const galeria = document.getElementById("galeria");
+  const autorInput = document.getElementById("autor");
+  const archivoInput = document.getElementById("archivo");
+  const subirBtn = document.getElementById("subirFoto");
+  const galeria = document.getElementById("galeria");
 
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImg = lightbox.querySelector("img");
-    const lightboxClose = lightbox.querySelector(".lightbox-close");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = lightbox.querySelector("img");
+  const lightboxClose = lightbox.querySelector(".lightbox-close");
+// Forzar que siempre empiece con @
+autorInput.addEventListener("input", () => {
+  if (!autorInput.value.startsWith("@")) {
+    autorInput.value = "@" + autorInput.value.replace(/^@+/, "");
+  }
+});
 
-    // Utilidad: escapado simple para evitar inyección al renderizar nombres
-    function escaparHTML(str) {
-      return String(str).replace(/[&<>"']/g, (m) => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      })[m]);
+// Al cargar la página, aseguramos que empiece con @ vacío
+autorInput.value = "@";
+
+  // Utilidad para evitar XSS
+  function escaparHTML(str) {
+    return String(str).replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[m]);
+  }
+
+  function limpiarAutorNombre(str) {
+    return String(str).replace(/__/g, "-").trim();
+  }
+
+  // Generar UUID simple
+  function generarUUID() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+  }
+
+  // Guardar tokens en localStorage
+  function guardarToken(id) {
+    const fotos = JSON.parse(localStorage.getItem("misFotos") || "[]");
+    fotos.push(id);
+    localStorage.setItem("misFotos", JSON.stringify(fotos));
+  }
+
+  function esMia(id) {
+    const fotos = JSON.parse(localStorage.getItem("misFotos") || "[]");
+    return fotos.includes(id);
+  }
+
+  // Cargar fotos
+  async function cargarFotos() {
+    galeria.innerHTML = "Cargando fotos...";
+    let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
+    if (error) {
+      galeria.innerHTML = "Error al cargar fotos";
+      return;
     }
+    galeria.innerHTML = "";
+    data.forEach(f => {
+      const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
 
-    // Evitamos secuencia "__" en el nombre para no romper el parseo
-    function limpiarAutorNombre(str) {
-      return String(str).replace(/__/g, '-').trim();
-    }
-
-    // Cargar fotos públicas
-    async function cargarFotos() {
-      galeria.innerHTML = "Cargando fotos...";
-      let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
-      if (error) {
-        galeria.innerHTML = "Error al cargar fotos";
-        return;
+      // Parsear nombre: autor__uuid__archivo
+      let autor = "Anónimo";
+      let uuid = null;
+      const partes = f.name.split("__");
+      if (partes.length >= 3) {
+        try { autor = decodeURIComponent(partes[0]); } catch(e) { autor = partes[0]; }
+        uuid = partes[1];
       }
-      galeria.innerHTML = "";
-      data.forEach(f => {
-        const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
 
-        // Obtener autor desde el prefijo del nombre de archivo: <autor>__<timestamp>-archivo.ext
-        let autor = "Anónimo";
-        const sep = f.name.indexOf("__");
-        if (sep > -1) {
-          const encoded = f.name.slice(0, sep);
-          try { autor = decodeURIComponent(encoded); } catch(e) { autor = encoded; }
-        }
-        const autorSeguro = escaparHTML(autor);
+      const autorSeguro = escaparHTML(autor);
+      const usuarioIG = autorSeguro.startsWith("@") ? autorSeguro.substring(1) : autorSeguro;
+      const linkIG = usuarioIG ? `https://instagram.com/${usuarioIG}` : "#";
 
-        const card = document.createElement("div");
-        card.className = "pw-card";
-        card.innerHTML = `
-          <div class="pw-photo-wrap">
-            <div class="pw-name">${autorSeguro}</div>
-            <img src="${url}" alt="foto de ${autorSeguro}" />
+      const card = document.createElement("div");
+      card.className = "pw-card";
+      card.innerHTML = `
+        <div class="pw-photo-wrap">
+          <div class="pw-name">
+            <a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>
+            ${uuid && esMia(uuid) ? '<button class="btn btn-sm btn-danger float-end eliminar-btn">❌</button>' : ""}
           </div>
-        `;
-        card.querySelector("img").addEventListener("click", () => {
-          lightboxImg.src = url;
-          lightbox.classList.add("active");
-        });
-        galeria.prepend(card); // más reciente primero
+          <img src="${url}" alt="foto de ${autorSeguro}" />
+        </div>
+      `;
+
+      // Lightbox
+      card.querySelector("img").addEventListener("click", () => {
+        lightboxImg.src = url;
+        lightbox.classList.add("active");
       });
-    };
 
-    // Subir foto (con nombre/Instagram incluido en el nombre del archivo)
-    subirBtn.addEventListener("click", async () => {
-      const archivo = archivoInput.files[0];
-      const autorBruto = limpiarAutorNombre(autorInput.value || "");
-
-      if (!autorBruto) {
-        alert("Escribe tu nombre o Instagram");
-        return;
+      // Eliminar si es mía
+      if (uuid && esMia(uuid)) {
+        card.querySelector(".eliminar-btn").addEventListener("click", async (e) => {
+          e.stopPropagation();
+          if (confirm("¿Eliminar esta foto?")) {
+            const { error } = await supabaseClient.storage.from("fotos").remove([f.name]);
+            if (error) {
+              alert("Error al eliminar: " + error.message);
+            } else {
+              card.remove();
+            }
+          }
+        });
       }
-      if (!archivo) {
-        alert("Elegí un archivo primero");
-        return;
-      }
 
-      const autorEncoded = encodeURIComponent(autorBruto);
-      const nombreArchivo = `${autorEncoded}__${Date.now()}-${archivo.name}`;
-
-      const { error } = await supabaseClient.storage.from("fotos").upload(nombreArchivo, archivo);
-      if (error) {
-        alert("Error al subir: " + error.message);
-        return;
-      }
-      archivoInput.value = "";
-      autorInput.value = "";
-      cargarFotos();
+      galeria.prepend(card);
     });
+  }
 
-    // Lightbox cerrar
-    lightboxClose.addEventListener("click", () => lightbox.classList.remove("active"));
-    lightbox.addEventListener("click", (e) => { if(e.target === lightbox) lightbox.classList.remove("active"); });
+ // Subir foto
+subirBtn.addEventListener("click", async () => {
+  const archivo = archivoInput.files[0];
+  let autorBruto = limpiarAutorNombre(autorInput.value || "").trim();
 
-    // Inicial
-    cargarFotos();
-  </script>
+  // Validar formato de Instagram
+  const regexIG = /^@[a-zA-Z0-9._]{2,30}$/; 
+  if (!regexIG.test(autorBruto)) {
+    alert("Debes ingresar un Instagram válido (ejemplo: @usuario).");
+    return;
+  }
+
+  if (!archivo) {
+    alert("Elegí un archivo primero");
+    return;
+  }
+
+  const uuid = generarUUID();
+  const autorEncoded = encodeURIComponent(autorBruto);
+  const nombreArchivo = `${autorEncoded}__${uuid}__${Date.now()}-${archivo.name}`;
+
+  const { error } = await supabaseClient.storage.from("fotos").upload(nombreArchivo, archivo);
+  if (error) {
+    alert("Error al subir: " + error.message);
+    return;
+  }
+  guardarToken(uuid);
+  archivoInput.value = "";
+  autorInput.value = "@";
+  cargarFotos();
+});
+
+
+  // Inicial
+  cargarFotos();
+
+  // Cerrar lightbox
+  lightboxClose.addEventListener("click", () => {
+    lightbox.classList.remove("active");
+    lightboxImg.src = "";
+  });
+</script>
+
 </body>
 </html>
