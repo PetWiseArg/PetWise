@@ -13,72 +13,71 @@
     <div class="hero1-content">
       <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
       <p>Subí tu foto y compartila con todos</p>
-      <input type="text" id="username" placeholder="Tu nombre" 
-             style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
-      <button id="uploadBtn" class="hero1-btn">Subir Foto</button>
+      <input type="text" id="username" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
+      <button id="uploadBtn" class="hero1-btn">📷 Subir desde galería</button>
     </div>
   </section>
 
   <!-- Galería -->
   <section class="pw-target">
     <h2>Galería de Fotos</h2>
-    <div id="gallery" 
-         style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;">
-    </div>
+    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
   </section>
 
   <script>
-    const cloudName = "dbjiwrxhg";
-    const uploadPreset = "petwise_upload";
+    const cloudName = "dbjiwrxhg";  // Tu cloud name
+    const uploadPreset = "petwise_upload"; // Tu upload preset
     const gallery = document.getElementById("gallery");
     const uploadBtn = document.getElementById("uploadBtn");
 
-    // Renderizar la galería desde Cloudinary (JSON público)
-    async function renderGallery() {
+    // 1️⃣ Cargar fotos desde Cloudinary (búsqueda por tag "petwise")
+    async function fetchGallery() {
       gallery.innerHTML = "<p>Cargando fotos...</p>";
       try {
         const res = await fetch(`https://res.cloudinary.com/${cloudName}/image/list/petwise.json`);
         const data = await res.json();
         gallery.innerHTML = "";
-        data.resources.forEach(photo => {
+        data.resources.forEach(item => {
           const card = document.createElement("div");
           card.className = "pw-card";
           card.innerHTML = `
             <div class="pw-photo-wrap">
-              <img src="https://res.cloudinary.com/${cloudName}/image/upload/${photo.public_id}.jpg" 
-                   class="pw-photo" />
+              <img src="${item.secure_url}" class="pw-photo" />
             </div>
           `;
           gallery.appendChild(card);
         });
       } catch (err) {
-        gallery.innerHTML = "<p>No hay fotos aún. ¡Sé el primero en subir una! 🐾</p>";
+        gallery.innerHTML = "<p>No hay fotos todavía</p>";
       }
     }
 
-    // Botón de subida
+    // 2️⃣ Subir imagen solo desde galería (sin cámara ni URL)
     uploadBtn.addEventListener("click", () => {
       const username = document.getElementById("username").value.trim();
       if (!username) return alert("Por favor ingresa tu nombre.");
 
-      const myWidget = cloudinary.createUploadWidget({
-        cloudName: cloudName,
-        uploadPreset: uploadPreset,
-        tags: ["petwise"], // 👈 Muy importante: todas las fotos llevan este tag
-        multiple: false,
-        maxFileSize: 10485760, // 10MB
-        sources: ["local", "url", "camera"],
-        cropping: false
-      }, (error, result) => {
-        if (!error && result && result.event === "success") {
-          renderGallery(); // refresca la galería para todos
+      const myWidget = cloudinary.createUploadWidget(
+        {
+          cloudName: cloudName,
+          uploadPreset: uploadPreset,
+          sources: ["local"], // 👈 Solo galería/archivos
+          multiple: false,
+          tags: ["petwise"], // 👈 todas las fotos van con este tag
+          maxFileSize: 10485760 // 10MB
+        },
+        (error, result) => {
+          if (!error && result && result.event === "success") {
+            console.log("Imagen subida:", result.info.secure_url);
+            fetchGallery(); // recargar galería después de subir
+          }
         }
-      });
+      );
       myWidget.open();
     });
 
     // Mostrar galería al cargar
-    renderGallery();
+    fetchGallery();
   </script>
 </body>
 </html>
