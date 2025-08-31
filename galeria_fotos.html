@@ -1,83 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galería PetWise</title>
-  <link rel="stylesheet" href="estilo.css">
-  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galería PetWise</title>
+<link rel="stylesheet" href="estilo.css">
 </head>
 <body>
-  <!-- Hero / Encabezado -->
-  <section class="hero1">
-    <div class="hero1-content">
-      <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
-      <p>Subí tu foto y compartila con todos</p>
-      <input type="text" id="username" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
-      <button id="uploadBtn" class="hero1-btn">📷 Subir desde galería</button>
-    </div>
-  </section>
+<section class="hero1">
+  <div class="hero1-content">
+    <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
+    <p>Subí tu foto y compartila con todos</p>
+    <input id="username" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
+    <button id="uploadBtn" class="hero1-btn">📷 Subir desde galería</button>
+    <input type="file" id="fileInput" accept="image/*" style="display:none">
+  </div>
+</section>
 
-  <!-- Galería -->
-  <section class="pw-target">
-    <h2>Galería de Fotos</h2>
-    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
-  </section>
+<section class="pw-target">
+  <h2>Galería de Fotos</h2>
+  <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;"></div>
+</section>
 
-  <script>
-    const cloudName = "dbjiwrxhg";  // Tu cloud name
-    const uploadPreset = "petwise_upload"; // Tu upload preset
-    const gallery = document.getElementById("gallery");
-    const uploadBtn = document.getElementById("uploadBtn");
+<script>
+const cloudName = "dbjiwrxhg";
+const uploadPreset = "petwise_upload";
+const gallery = document.getElementById("gallery");
+const uploadBtn = document.getElementById("uploadBtn");
+const fileInput = document.getElementById("fileInput");
+const usernameInput = document.getElementById("username");
 
-    // 1️⃣ Cargar fotos desde Cloudinary (búsqueda por tag "petwise")
-    async function fetchGallery() {
-      gallery.innerHTML = "<p>Cargando fotos...</p>";
-      try {
-        const res = await fetch(`https://res.cloudinary.com/${cloudName}/image/list/petwise.json`);
-        const data = await res.json();
-        gallery.innerHTML = "";
-        data.resources.forEach(item => {
-          const card = document.createElement("div");
-          card.className = "pw-card";
-          card.innerHTML = `
-            <div class="pw-photo-wrap">
-              <img src="${item.secure_url}" class="pw-photo" />
-            </div>
-          `;
-          gallery.appendChild(card);
-        });
-      } catch (err) {
-        gallery.innerHTML = "<p>No hay fotos todavía</p>";
-      }
-    }
-
-    // 2️⃣ Subir imagen solo desde galería (sin cámara ni URL)
-    uploadBtn.addEventListener("click", () => {
-      const username = document.getElementById("username").value.trim();
-      if (!username) return alert("Por favor ingresa tu nombre.");
-
-      const myWidget = cloudinary.createUploadWidget(
-        {
-          cloudName: cloudName,
-          uploadPreset: uploadPreset,
-          sources: ["local"], // 👈 Solo galería/archivos
-          multiple: false,
-          tags: ["petwise"], // 👈 todas las fotos van con este tag
-          maxFileSize: 10485760 // 10MB
-        },
-        (error, result) => {
-          if (!error && result && result.event === "success") {
-            console.log("Imagen subida:", result.info.secure_url);
-            fetchGallery(); // recargar galería después de subir
-          }
-        }
-      );
-      myWidget.open();
+// 1️⃣ Cargar galería desde Cloudinary
+async function fetchGallery() {
+  gallery.innerHTML = "<p>Cargando fotos...</p>";
+  try {
+    const res = await fetch(`https://res.cloudinary.com/${cloudName}/image/list/petwise.json`);
+    const data = await res.json();
+    gallery.innerHTML = "";
+    data.resources.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "pw-card";
+      card.innerHTML = `
+        <div style="padding:4px;font-weight:600;">${item.context?.custom?.username || ''}</div>
+        <div class="pw-photo-wrap">
+          <img src="${item.secure_url}" class="pw-photo" />
+        </div>
+      `;
+      gallery.appendChild(card);
     });
+  } catch(err) {
+    gallery.innerHTML = "<p>No hay fotos aún</p>";
+  }
+}
 
-    // Mostrar galería al cargar
+// 2️⃣ Botón abre galería local
+uploadBtn.addEventListener("click", () => {
+  fileInput.click();
+});
+
+// 3️⃣ Subir imagen seleccionada
+fileInput.addEventListener("change", async () => {
+  const file = fileInput.files[0];
+  const username = usernameInput.value.trim();
+  if (!file) return;
+  if (!username) return alert("Por favor ingresa tu nombre");
+
+  const form = new FormData();
+  form.append("file", file);
+  form.append("upload_preset", uploadPreset);
+  form.append("tags", "petwise");
+  form.append("context", `username=${username}`);
+
+  uploadBtn.disabled = true;
+  uploadBtn.textContent = "Subiendo...";
+
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+      method: "POST",
+      body: form
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || "Error subiendo la foto");
+
+    // Refrescar galería
     fetchGallery();
-  </script>
+    fileInput.value = "";
+  } catch(e) {
+    alert("Error subiendo la foto: " + e.message);
+  } finally {
+    uploadBtn.disabled = false;
+    uploadBtn.textContent = "📷 Subir desde galería";
+  }
+});
+
+// 4️⃣ Inicial
+fetchGallery();
+</script>
 </body>
 </html>
