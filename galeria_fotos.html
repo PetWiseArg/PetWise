@@ -376,71 +376,92 @@
   }
 
   // Cargar fotos
-  async function cargarFotos() {
-    galeria.innerHTML = "Cargando fotos...";
-    let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
-    if (error) {
-      galeria.innerHTML = "Error al cargar fotos";
-      return;
-    }
-    galeria.innerHTML = "";
-    data.forEach(f => {
-      const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
-
-      // Parsear nombre: autor__uuid__archivo
-      let autor = "Anónimo";
-      let uuid = null;
-      const partes = f.name.split("__");
-      if (partes.length >= 3) {
-        try { autor = decodeURIComponent(partes[0]); } catch(e) { autor = partes[0]; }
-        uuid = partes[1];
-      }
-
-      const autorSeguro = escaparHTML(autor);
-      const usuarioIG = autorSeguro.startsWith("@") ? autorSeguro.substring(1) : autorSeguro;
-      const linkIG = usuarioIG ? `https://instagram.com/${usuarioIG}` : "#";
-
-      const card = document.createElement("div");
-      card.className = "pw-card";
-      card.innerHTML = `
-        <div class="pw-photo-wrap">
-          <div class="pw-name">
-            <a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>
-            ${uuid && esMia(uuid) ? '<button class="btn btn-sm btn-danger float-end eliminar-btn">❌</button>' : ""}
-          </div>
-          <img src="${url}" alt="foto de ${autorSeguro}" />
-        </div>
-      `;
-
-      // Lightbox
-      card.querySelector("img").addEventListener("click", () => {
-        lightboxImg.src = url;
-        lightbox.classList.add("active");
-      });
-
-      // Eliminar si es mía
-      if (uuid && esMia(uuid)) {
-        card.querySelector(".eliminar-btn").addEventListener("click", async (e) => {
-          e.stopPropagation();
-          if (confirm("¿Eliminar esta foto?")) {
-            const { error } = await supabaseClient.storage.from("fotos").remove([f.name]);
-            if (error) {
-              alert("Error al eliminar: " + error.message);
-            } else {
-              card.remove();
-            }
-          }
-        });
-      }
-
-      galeria.prepend(card);
-    });
+async function cargarFotos() {
+  galeria.innerHTML = "Cargando fotos...";
+  let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
+  if (error) {
+    galeria.innerHTML = "Error al cargar fotos";
+    return;
   }
+
+  // 🔥 Ordenar por timestamp en el nombre (más recientes primero)
+  data.sort((a, b) => {
+    const partesA = a.name.split("__");
+    const partesB = b.name.split("__");
+
+    const timeA = partesA.length >= 3 ? parseInt(partesA[2].split("-")[0]) : 0;
+    const timeB = partesB.length >= 3 ? parseInt(partesB[2].split("-")[0]) : 0;
+
+    return timeB - timeA; // 👈 ahora sí: más nuevas arriba
+  });
+
+  galeria.innerHTML = "";
+  data.forEach(f => {
+    const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
+
+    // Parsear nombre: autor__uuid__timestamp-archivo
+    let autor = "Anónimo";
+    let uuid = null;
+    const partes = f.name.split("__");
+    if (partes.length >= 3) {
+      try { autor = decodeURIComponent(partes[0]); } catch(e) { autor = partes[0]; }
+      uuid = partes[1];
+    }
+
+    const autorSeguro = escaparHTML(autor);
+    const usuarioIG = autorSeguro.startsWith("@") ? autorSeguro.substring(1) : autorSeguro;
+    const linkIG = usuarioIG ? `https://instagram.com/${usuarioIG}` : "#";
+
+    const card = document.createElement("div");
+    card.className = "pw-card";
+    card.innerHTML = `
+      <div class="pw-photo-wrap">
+        <div class="pw-name">
+          <a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>
+          ${uuid && esMia(uuid) ? '<button class="btn btn-sm btn-danger float-end eliminar-btn">❌</button>' : ""}
+        </div>
+        <img src="${url}" alt="foto de ${autorSeguro}" />
+      </div>
+    `;
+
+    // Lightbox
+    card.querySelector("img").addEventListener("click", () => {
+      lightboxImg.src = url;
+      lightbox.classList.add("active");
+    });
+
+    // Eliminar si es mía
+    if (uuid && esMia(uuid)) {
+      card.querySelector(".eliminar-btn").addEventListener("click", async (e) => {
+        e.stopPropagation();
+        if (confirm("¿Eliminar esta foto?")) {
+          const { error } = await supabaseClient.storage.from("fotos").remove([f.name]);
+          if (error) {
+            alert("Error al eliminar: " + error.message);
+          } else {
+            card.remove();
+          }
+        }
+      });
+    }
+
+    galeria.appendChild(card);
+  });
+}
 
 // Subir foto
 subirBtn.addEventListener("click", async () => {
   const archivo = archivoInput.files[0];
   let autorBruto = limpiarAutorNombre(autorInput.value || "").trim();
+
+  // ⚡ Preguntar si olvidó escribir IG
+  if (!autorBruto) {
+    const quiereAgregar = confirm("No ingresaste tu Instagram. ¿Querés escribirlo antes de subir?");
+    if (quiereAgregar) {
+      autorInput.focus();
+      return; // no sube, deja al usuario escribir
+    }
+  }
 
   // Validar formato de Instagram SOLO si escribió algo
   if (autorBruto.length > 0) {
@@ -449,7 +470,6 @@ subirBtn.addEventListener("click", async () => {
       alert("Debes ingresar un Instagram válido (ejemplo: @usuario o usuario).");
       return;
     }
-    // Si no puso @, se lo agregamos para el link
     if (!autorBruto.startsWith("@")) {
       autorBruto = "@" + autorBruto;
     }
@@ -469,13 +489,13 @@ subirBtn.addEventListener("click", async () => {
     alert("Error al subir: " + error.message);
     return;
   }
+
   guardarToken(uuid);
   archivoInput.value = "";
-  autorInput.value = ""; // limpiar input
+  autorInput.value = "";
 
   cargarFotos();
 });
-
 
 
   // Inicial
