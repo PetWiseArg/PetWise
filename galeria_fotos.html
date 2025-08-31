@@ -14,6 +14,7 @@
     <h1>Galería de Mascotas <span class="highlight">PetWise</span></h1>
     <p>Subí tu foto y compartila con todos</p>
     <input type="text" id="username" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;margin-bottom:1rem;width:200px;">
+    <button id="uploadBtn" class="hero1-btn">Subir Foto</button>
   </div>
 </section>
 
@@ -26,6 +27,7 @@
 const cloudName = 'dbjiwrxhg';
 const uploadPreset = 'petwise_upload';
 const gallery = document.getElementById('gallery');
+const uploadBtn = document.getElementById('uploadBtn');
 
 // Función para mostrar la galería desde Cloudinary
 async function renderGallery() {
@@ -54,10 +56,10 @@ async function renderGallery() {
   }
 }
 
-// Abrir widget automáticamente al cargar la página
-window.addEventListener('load', () => {
-  const username = prompt("Ingresa tu nombre:").trim();
-  if (!username) return alert('Nombre obligatorio para subir la foto');
+// Subir foto con botón
+uploadBtn.addEventListener('click', () => {
+  const username = document.getElementById('username').value.trim();
+  if (!username) return alert('Por favor ingresa tu nombre.');
 
   const myWidget = cloudinary.createUploadWidget({
     cloudName,
@@ -65,11 +67,14 @@ window.addEventListener('load', () => {
     folder: 'petwise',
     multiple: false,
     sources: ['local','url','camera'],
-    context: { username }
+    context: { username },
+    clientAllowedFormats: ["png","jpg","jpeg"],
+    maxImageFileSize: 10485760 // 10MB
   }, (error, result) => {
     if (!error && result && result.event === "success") {
       alert('Foto subida con éxito!');
-      setTimeout(renderGallery, 1500);
+      // Esperar un segundo y actualizar galería
+      setTimeout(renderGallery, 1000);
     }
   });
 
