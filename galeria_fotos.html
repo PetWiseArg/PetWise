@@ -304,21 +304,23 @@
       }
       galeria.innerHTML = "";
       data.forEach(f => {
-        const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
-        const card = document.createElement("div");
-        card.className = "pw-card";
-        card.innerHTML = `
-          <div class="pw-photo-wrap">
-            <img src="${url}" alt="foto" />
-          </div>
-        `;
-        card.querySelector("img").addEventListener("click", () => {
-          lightboxImg.src = url;
-          lightbox.classList.add("active");
-        });
-        galeria.appendChild(card);
-      });
-    }
+  const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
+  const card = document.createElement("div");
+  card.className = "pw-card";
+  card.innerHTML = `
+    <div class="pw-photo-wrap">
+      <img src="${url}" alt="foto" />
+    </div>
+  `;
+  card.querySelector("img").addEventListener("click", () => {
+    lightboxImg.src = url;
+    lightbox.classList.add("active");
+  });
+  galeria.prepend(card); // <- así se agrega al inicio
+});
+
+      };
+    
 
     // Subir foto
     subirBtn.addEventListener("click", async () => {
