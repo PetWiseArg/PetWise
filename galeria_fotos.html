@@ -34,7 +34,7 @@
 
 <section class="pw-target">
   <h2>Galería de Fotos</h2>
-  <div id="gallery"></div>
+  <div id="gallery"><p style="text-align:center;color:#555;">Cargando fotos...</p></div>
 </section>
 
 <script>
@@ -43,24 +43,35 @@ const uploadPreset = 'petwise_upload';
 const gallery = document.getElementById('gallery');
 const uploadBtn = document.getElementById('uploadBtn');
 
-// Mostrar todas las fotos
+// URL de tu backend en Vercel
+const backendUrl = 'https://pet-wise-jbwf.vercel.app/api/photos';
+
+// Función para mostrar todas las fotos
 async function renderGallery() {
-  gallery.innerHTML = "<p style='text-align:center;color:#555;'>Cargando fotos...</p>";
   try {
-    const res = await fetch('/api/photos'); // endpoint en Vercel
+    const res = await fetch(backendUrl);
     const photos = await res.json();
+
+    if (!photos || photos.length === 0) {
+      gallery.innerHTML = "<p style='text-align:center;color:#555;'>No hay fotos todavía</p>";
+      return;
+    }
+
     gallery.innerHTML = '';
     photos.forEach(photo => {
       const card = document.createElement('div');
       card.className = 'pw-card';
       card.innerHTML = `
         <div class="pw-header">${photo.username}</div>
-        <div class="pw-photo-wrap"><img src="${photo.url}" alt="Foto de ${photo.username}"></div>
+        <div class="pw-photo-wrap">
+          <img src="${photo.url}" alt="Foto de ${photo.username}">
+        </div>
       `;
       gallery.appendChild(card);
     });
   } catch (e) {
-    gallery.innerHTML = "<p style='text-align:center;color:#555;'>No hay fotos todavía</p>";
+    gallery.innerHTML = "<p style='text-align:center;color:#555;'>Error cargando fotos</p>";
+    console.error(e);
   }
 }
 
@@ -77,14 +88,14 @@ uploadBtn.addEventListener('click', () => {
     context: { username }
   }, (error, result) => {
     if (!error && result && result.event === "success") {
-      renderGallery(); // refresca galería
+      renderGallery(); // refresca galería al subir
     }
   });
 
   widget.open();
 });
 
-// Cargar galería al abrir la página
+// Mostrar galería al abrir la página
 renderGallery();
 </script>
 
