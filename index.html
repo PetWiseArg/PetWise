@@ -230,7 +230,29 @@
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
-// Guardamos el evento cuando el navegador lo lance (Android)
+// Función para chequear si ya está instalada
+function checkIfInstalled() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                    || window.navigator.standalone === true;
+
+  if (isStandalone) {
+    installBtn.innerText = "✅ Ya la tenés instalada";
+    installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+    return true;
+  }
+
+  if ('getInstalledRelatedApps' in navigator) {
+    navigator.getInstalledRelatedApps().then(apps => {
+      if (apps.length > 0) {
+        installBtn.innerText = "✅ Ya la tenés instalada";
+        installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+      }
+    });
+  }
+  return false;
+}
+
+// Guardamos el evento para Android
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
@@ -238,14 +260,22 @@ window.addEventListener("beforeinstallprompt", (e) => {
 
 // Acción al hacer clic en el botón
 installBtn.onclick = async () => {
-  // 📲 Si es Android con soporte de instalación
+  // Si ya está instalada (Android o iPhone standalone)
+  if (checkIfInstalled()) return;
+
+  // 📲 Android con soporte
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     console.log(`Instalación: ${outcome}`);
     deferredPrompt = null;
+
+    if (outcome === "accepted") {
+      installBtn.innerText = "✅ Ya la tenés instalada";
+      installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+    }
   } 
-  // 🍏 Si es iPhone/iPad (Safari)
+  // 🍏 iPhone/iPad (Safari)
   else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
     alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
   } 
@@ -254,7 +284,11 @@ installBtn.onclick = async () => {
     alert("Tu navegador no soporta instalación directa.\nPodés usar la opción 'Agregar a pantalla de inicio' desde el menú.");
   }
 };
+
+// Revisar estado al cargar la página
+checkIfInstalled();
 </script>
+
 
   <!-- Hero 2 -->
 <header id="hero2" class="hero2" style="display: none;">
@@ -719,6 +753,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
