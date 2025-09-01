@@ -541,12 +541,7 @@ async function cargarFotos() {
       return;
     }
 
-    // Validar IG si escribió algo
-    const regexIG = /^@?[a-zA-Z0-9._]{2,30}$/; 
-    if (!regexIG.test(autorBruto)) {
-      notificar("⚠️ Debes ingresar un Instagram válido (ejemplo: @usuario o usuario)", "warning");
-      return;
-    }
+    
     if (!autorBruto.startsWith("@")) {
       autorBruto = "@" + autorBruto;
     }
