@@ -236,16 +236,16 @@ function checkIfInstalled() {
                     || window.navigator.standalone === true;
 
   if (isStandalone) {
-    installBtn.innerText = "✅ Ya la tenés instalada";
-    installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+    installBtn.innerText = "✅";
+    installBtn.onclick = () => alert("Disfruta de PetWise");
     return true;
   }
 
   if ('getInstalledRelatedApps' in navigator) {
     navigator.getInstalledRelatedApps().then(apps => {
       if (apps.length > 0) {
-        installBtn.innerText = "✅ Ya la tenés instalada";
-        installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+        installBtn.innerText = "✅";
+        installBtn.onclick = () => alert("Disfruta de PetWise");
       }
     });
   }
@@ -271,8 +271,9 @@ installBtn.onclick = async () => {
     deferredPrompt = null;
 
     if (outcome === "accepted") {
-      installBtn.innerText = "✅ Ya la tenés instalada";
-      installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+      installBtn.innerText = "✅";
+    installBtn.onclick = () => alert("Disfruta de PetWise");
+     
     }
   } 
   // 🍏 iPhone/iPad (Safari)
@@ -753,6 +754,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
