@@ -12,6 +12,23 @@ html, body {
   padding: 0;
 }
 
+/* ❤️ Botón de like */
+.btn-like {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.btn-like:hover { background: #ffe4e4; }
+.btn-like.liked { background: #ff4d6d; color: #fff; }
+
 .negro { color: #000}
 .blanco { color: #ffffffff}
 .btn-custom {
@@ -411,7 +428,6 @@ main {
     <span class="lightbox-close">&times;</span>
     <img src="" alt="Imagen ampliada">
   </div>
-
 <!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
@@ -420,7 +436,7 @@ main {
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
   const autorInput = document.getElementById("autor");
-  const descripcionInput = document.getElementById("descripcion"); // nuevo
+  const descripcionInput = document.getElementById("descripcion");
   const archivoInput = document.getElementById("archivo");
   const subirBtn = document.getElementById("subirFoto");
   const galeria = document.getElementById("galeria");
@@ -429,13 +445,19 @@ main {
   const lightboxImg = lightbox.querySelector("img");
   const lightboxClose = lightbox.querySelector(".lightbox-close");
 
-  // 🔹 Sistema de notificaciones bonitas
+  // Identificador de usuario local
+  let userId = localStorage.getItem("userId");
+  if (!userId) {
+    userId = crypto.randomUUID();
+    localStorage.setItem("userId", userId);
+  }
+
+  // 🔹 Notificación
   function notificar(texto, tipo="info") {
     const div = document.createElement("div");
     div.className = `notificacion ${tipo}`;
     div.textContent = texto;
     document.body.appendChild(div);
-
     setTimeout(() => div.classList.add("mostrar"), 100);
     setTimeout(() => {
       div.classList.remove("mostrar");
@@ -443,65 +465,45 @@ main {
     }, 3000);
   }
 
-  // 🔹 Confirm personalizado con Sí/No
+  // 🔹 Preguntar
   function preguntar(pregunta, callback) {
     const div = document.createElement("div");
     div.className = "notificacion info";
     div.innerHTML = `
-      ${pregunta}
-      <br>
+      ${pregunta}<br>
       <button id="btnSi">Sí</button>
       <button id="btnNo">No</button>
     `;
     document.body.appendChild(div);
-
     setTimeout(() => div.classList.add("mostrar"), 100);
-
-    div.querySelector("#btnSi").onclick = () => {
-      callback(true);
-      div.remove();
-    };
-    div.querySelector("#btnNo").onclick = () => {
-      callback(false);
-      div.remove();
-    };
+    div.querySelector("#btnSi").onclick = () => { callback(true); div.remove(); };
+    div.querySelector("#btnNo").onclick = () => { callback(false); div.remove(); };
   }
 
-  // Utilidad para evitar XSS
   function escaparHTML(str) {
     return String(str).replace(/[&<>"']/g, (m) => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     })[m]);
   }
-
   function limpiarAutorNombre(str) {
     return String(str).replace(/__/g, "-").trim();
   }
-
-  // Generar UUID simple
   function generarUUID() {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
       (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     );
   }
-
-  // Guardar tokens en localStorage
   function guardarToken(id) {
     const fotos = JSON.parse(localStorage.getItem("misFotos") || "[]");
     fotos.push(id);
     localStorage.setItem("misFotos", JSON.stringify(fotos));
   }
-
   function esMia(id) {
     const fotos = JSON.parse(localStorage.getItem("misFotos") || "[]");
     return fotos.includes(id);
   }
 
-  // Cargar fotos
+  // 🔹 Cargar fotos con likes
   async function cargarFotos() {
     galeria.innerHTML = "Cargando fotos...";
     let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
@@ -513,10 +515,8 @@ main {
 
     data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    data.forEach(f => {
+    for (const f of data) {
       const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
-
-      // Parsear nombre: autor__uuid__descripcion__archivo
       let autor = "Anónimo", uuid = null, descripcion = "";
       const partes = f.name.split("__");
       if (partes.length >= 4) {
@@ -530,15 +530,37 @@ main {
       const usuarioIG = autorSeguro.startsWith("@") ? autorSeguro.substring(1) : autorSeguro;
       const linkIG = usuarioIG ? `https://instagram.com/${usuarioIG}` : "#";
 
+      // 🔹 Traer likes de la BD
+      const { data: likesData, error: likesError } = await supabaseClient
+        .from("likes")
+        .select("*")
+        .eq("foto_id", uuid);
+
+      if (likesError) {
+        console.error("Error cargando likes:", likesError.message, "uuid:", uuid);
+      }
+      console.log("LikesData para", uuid, likesData);
+
+      const totalLikes = likesData ? likesData.length : 0;
+      const yoLike = likesData?.some(l => l.user_id === userId);
+
       const card = document.createElement("div");
       card.className = "pw-card";
       card.innerHTML = `
-        <div class="pw-photo-wrap">
+        <div class="pw-photo-wrap" style="position:relative;">
           <div class="pw-name">
             <a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>
             ${uuid && esMia(uuid) ? '<button class="btn btn-sm btn-danger float-end eliminar-btn">❌</button>' : ""}
           </div>
           <img src="${url}" alt="foto de ${autorSeguro}" />
+          <div class="like-btn" data-id="${uuid}" style="
+            position:absolute; bottom:10px; right:10px;
+            background:rgba(0,0,0,0.6); color:white; padding:5px 10px;
+            border-radius:20px; cursor:pointer; display:flex; align-items:center; gap:5px;
+          ">
+            <span class="heart">${yoLike ? "❤️" : "🤍"}</span>
+            <span class="count">${totalLikes}</span>
+          </div>
         </div>
         ${descSeguro ? `<div class="pw-desc">${descSeguro}</div>` : ""}
       `;
@@ -567,8 +589,35 @@ main {
         });
       }
 
+      // 🔹 Manejar likes
+      const likeBtn = card.querySelector(".like-btn");
+      likeBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const heart = likeBtn.querySelector(".heart");
+        const countSpan = likeBtn.querySelector(".count");
+        const fotoId = likeBtn.dataset.id;
+
+        if (heart.textContent === "🤍") {
+          const { error: insertError } = await supabaseClient.from("likes").insert({ foto_id: fotoId, user_id: userId });
+          if (insertError) {
+            console.error("Error insertando like:", insertError.message, "fotoId:", fotoId, "userId:", userId);
+            return;
+          }
+          heart.textContent = "❤️";
+          countSpan.textContent = parseInt(countSpan.textContent) + 1;
+        } else {
+          const { error: deleteError } = await supabaseClient.from("likes").delete().eq("foto_id", fotoId).eq("user_id", userId);
+          if (deleteError) {
+            console.error("Error borrando like:", deleteError.message, "fotoId:", fotoId, "userId:", userId);
+            return;
+          }
+          heart.textContent = "🤍";
+          countSpan.textContent = parseInt(countSpan.textContent) - 1;
+        }
+      });
+
       galeria.append(card);
-    });
+    }
   }
 
   // Subir foto
@@ -577,7 +626,6 @@ main {
     let autorBruto = limpiarAutorNombre(autorInput.value || "").trim();
     let descripcionBruta = limpiarAutorNombre(descripcionInput.value || "").trim();
 
-    // Si no escribió nada en IG → preguntar
     if (!autorBruto) {
       preguntar("¿Querés agregar tu Instagram?", (quiereAgregar) => {
         if (quiereAgregar) {
@@ -590,37 +638,26 @@ main {
       });
       return;
     }
-
-    if (!autorBruto.startsWith("@")) {
-      autorBruto = "@" + autorBruto;
-    }
-
+    if (!autorBruto.startsWith("@")) autorBruto = "@" + autorBruto;
     seguirSubida(archivo, autorBruto, descripcionBruta);
   });
 
-  // Función auxiliar para subir
   async function seguirSubida(archivo, autorBruto, descripcionBruta) {
     if (!archivo) {
       notificar("⚠️ Elegí un archivo primero", "warning");
       return;
     }
-
     const uuid = generarUUID();
     const autorEncoded = encodeURIComponent(autorBruto);
     const descEncoded = encodeURIComponent(descripcionBruta || "");
     const nombreArchivo = `${autorEncoded}__${uuid}__${descEncoded}__${Date.now()}-${archivo.name}`;
-
     const { error } = await supabaseClient.storage.from("fotos").upload(nombreArchivo, archivo);
     if (error) {
       notificar("❌ Error al subir: " + error.message, "danger");
       return;
     }
-
     guardarToken(uuid);
-    archivoInput.value = "";
-    autorInput.value = "";
-    descripcionInput.value = "";
-
+    archivoInput.value = ""; autorInput.value = ""; descripcionInput.value = "";
     notificar("✅ Foto subida correctamente", "success");
     cargarFotos();
   }
@@ -633,14 +670,15 @@ main {
     lightbox.classList.remove("active");
     lightboxImg.src = "";
   });
-  // ✅ Limitar descripción a 40 caracteres en tiempo real
-descripcionInput.addEventListener("input", () => {
-  if (descripcionInput.value.length > 40) {
-    descripcionInput.value = descripcionInput.value.slice(0, 40);
-  }
-});
 
+  // Limitar descripción a 40 caracteres
+  descripcionInput.addEventListener("input", () => {
+    if (descripcionInput.value.length > 40) {
+      descripcionInput.value = descripcionInput.value.slice(0, 40);
+    }
+  });
 </script>
+
 
 
 </body>
