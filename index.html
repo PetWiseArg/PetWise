@@ -230,57 +230,32 @@
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
-// 🔹 Función para ocultar el botón si ya está instalada
-function checkIfInstalled() {
-  // Modo standalone (cuando se abre desde pantalla de inicio)
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-                    || window.navigator.standalone === true;
-
-  if (isStandalone) {
-    installBtn.style.display = "none";
-    return true;
-  }
-
-  // Chrome y navegadores que soportan getInstalledRelatedApps
-  if ('getInstalledRelatedApps' in navigator) {
-    navigator.getInstalledRelatedApps().then(apps => {
-      if (apps.length > 0) {
-        installBtn.style.display = "none";
-        return true;
-      }
-    });
-  }
-  return false;
-}
-
-// 🔹 Evento en navegadores Android
+// Guardamos el evento cuando el navegador lo lance (Android)
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
-  if (!checkIfInstalled()) {
-    installBtn.style.display = "inline-block";
-    installBtn.onclick = async () => {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`Instalación: ${outcome}`);
-      deferredPrompt = null;
-      installBtn.style.display = "none";
-    };
-  }
 });
 
-// 🔹 Detectar iPhone/iPad
-if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-  if (!checkIfInstalled()) {
-    installBtn.style.display = "inline-block";
-    installBtn.innerText = "📲 Agregar a inicio";
-    installBtn.onclick = () => {
-      alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
-    };
+// Acción al hacer clic en el botón
+installBtn.onclick = async () => {
+  // 📲 Si es Android con soporte de instalación
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`Instalación: ${outcome}`);
+    deferredPrompt = null;
+  } 
+  // 🍏 Si es iPhone/iPad (Safari)
+  else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
+  } 
+  // 💻 Otros navegadores sin soporte
+  else {
+    alert("Tu navegador no soporta instalación directa.\nPodés usar la opción 'Agregar a pantalla de inicio' desde el menú.");
   }
-}
+};
 </script>
+
   <!-- Hero 2 -->
 <header id="hero2" class="hero2" style="display: none;">
   <div class="hero2-content">
@@ -744,5 +719,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
