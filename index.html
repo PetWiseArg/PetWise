@@ -221,11 +221,18 @@
       <h1 id="typed-text">Bienvenidos a <span class="highlight">PetWise</span></h1>
       <p>Transformamos el cuidado de tus mascotas combinando tecnología, diseño y amor animal.</p>
       <a href="conocenosmas.html" class="btn hero1-btn">Conocé más</a>
-<button id="installBtn" class="btn hero1-btn mt-3">📲 Instalar</button>
-
+      <button id="gotoInstallBtn" class="btn hero1-btn mt-3">📲 Instalar</button>
     </div>
     <div class="hero1-decor"></div>
   </header>
+  <script>const gotoBtn = document.getElementById("gotoInstallBtn");
+const installBtn = document.getElementById("installBtn");
+
+gotoBtn.onclick = () => {
+  installBtn.scrollIntoView({ behavior: "smooth" });
+};
+  </script>
+  
 <script>
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
@@ -754,6 +761,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
