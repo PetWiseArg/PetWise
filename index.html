@@ -221,30 +221,66 @@
       <h1 id="typed-text">Bienvenidos a <span class="highlight">PetWise</span></h1>
       <p>Transformamos el cuidado de tus mascotas combinando tecnología, diseño y amor animal.</p>
       <a href="conocenosmas.html" class="btn hero1-btn">Conocé más</a>
-<button id="downloadBtn" class="btn hero1-btn mt-3">Descargar</button>
+<button id="installBtn" class="btn hero1-btn mt-3" style="display:none;">📲 Instalar</button>
 
     </div>
     <div class="hero1-decor"></div>
   </header>
 <script>
-document.getElementById("downloadBtn").addEventListener("click", () => {
-  // Obtener el contenido de la página actual
-  const contenido = document.documentElement.outerHTML;
-  
-  // Crear un archivo Blob con ese contenido
-  const blob = new Blob([contenido], { type: "text/html" });
-  
-  // Crear un enlace de descarga
-  const enlace = document.createElement("a");
-  enlace.href = URL.createObjectURL(blob);
-  enlace.download = "PetWise.html"; // nombre del archivo
-  enlace.click();
-  
-  // Liberar la URL
-  URL.revokeObjectURL(enlace.href);
-});
-</script>
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
 
+// 🔹 Función para ocultar el botón si ya está instalada
+function checkIfInstalled() {
+  // Modo standalone (cuando se abre desde pantalla de inicio)
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                    || window.navigator.standalone === true;
+
+  if (isStandalone) {
+    installBtn.style.display = "none";
+    return true;
+  }
+
+  // Chrome y navegadores que soportan getInstalledRelatedApps
+  if ('getInstalledRelatedApps' in navigator) {
+    navigator.getInstalledRelatedApps().then(apps => {
+      if (apps.length > 0) {
+        installBtn.style.display = "none";
+        return true;
+      }
+    });
+  }
+  return false;
+}
+
+// 🔹 Evento en navegadores Android
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  if (!checkIfInstalled()) {
+    installBtn.style.display = "inline-block";
+    installBtn.onclick = async () => {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`Instalación: ${outcome}`);
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    };
+  }
+});
+
+// 🔹 Detectar iPhone/iPad
+if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+  if (!checkIfInstalled()) {
+    installBtn.style.display = "inline-block";
+    installBtn.innerText = "📲 Agregar a inicio";
+    installBtn.onclick = () => {
+      alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
+    };
+  }
+}
+</script>
   <!-- Hero 2 -->
 <header id="hero2" class="hero2" style="display: none;">
   <div class="hero2-content">
