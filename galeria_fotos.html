@@ -7,33 +7,33 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="estilo.css" />
   <style>
-   html, body {
+html, body {
   margin: 0;
   padding: 0;
 }
 
-    .negro { color: #000}
-    .blanco { color: #ffffffff}
-    .btn-custom {
-      background-color: #216ec5ff;
-      color: #fff;
-      border-radius: 50px;
-      padding: 0.75rem 2rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
+.negro { color: #000}
+.blanco { color: #ffffffff}
+.btn-custom {
+  background-color: #216ec5ff;
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
 
-    .btn-custom:hover {
-      background-color: #8ed849;
-      color: #1f2937;
-    }
+.btn-custom:hover {
+  background-color: #8ed849;
+  color: #1f2937;
+}
 
-    /* SECCION SERVICIOS */
-    main {
-      max-width: 1200px;
-      margin: 4rem auto;
-      padding: 0 1rem;
-    }
+/* SECCION SERVICIOS */
+main {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+}
 /* === CARDS UNIFORMES === */
 .services-grid {
   display: grid;
@@ -87,7 +87,8 @@
     margin: 0.5rem auto 0 auto; /* centrado y cerca del texto */
     display: block;  /* necesario para que margin auto funcione */
   }
-}/* --- GALERÍA TIPO MASONRY --- */
+}
+/* --- GALERÍA TIPO MASONRY --- */
 #galeria {
   display: flex;
   flex-wrap: wrap;
@@ -271,7 +272,8 @@
 }
 #autor::placeholder {
   color: #aaa;   /* gris claro */
-}.notificacion {
+}
+.notificacion {
   position: fixed;          /* La notificación se queda fija en pantalla aunque hagas scroll */
   top: 70px;           /* Distancia desde la parte superior */
   right: 20px;              /* Distancia desde el lado derecho */
@@ -308,6 +310,52 @@
   background: #17a2b8;      /* Celeste: información */
 }
 
+/* Estilo para el input descripción (igual que autor) */
+#descripcion {
+  display: inline-block;
+  margin: 1rem 0.5rem 0.2rem 0; /* espacio reducido abajo para el contador */
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #070707;
+  font-size: 1rem;
+  color: #e0e0e0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#descripcion::placeholder { color: #aaa; }
+
+/* Ajuste responsive */
+@media (max-width: 768px) {
+  #autor, #archivo, #descripcion, #subirFoto {
+    display: block;
+    width: 90%;
+    margin: 0.5rem auto;
+  }
+}
+
+/* Descripción estilo overlay (abajo de la foto) */
+.pw-desc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* ✅ Contador de caracteres */
+#contador {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-left: 0.5rem;
+  display: block;
+  text-align: right;
+  margin-bottom: 1rem;
+}
 
   </style>
 </head>
@@ -344,10 +392,12 @@
   <!-- NUEVO: campo de nombre/Instagram -->
    <!-- CAMBIO en el input -->
 <!-- Input Instagram con @ fijo -->
-<input type="text" id="autor" placeholder="Usuario de Instagram"-label="Instagram (@usuario)">
+<!-- En el HEADER, junto al input de Instagram -->
+<input type="text" id="autor" placeholder="Usuario de Instagram" label="Instagram (@usuario)">
+<input type="text" id="descripcion" placeholder="Descripción (opcional)" maxlength="40">
+<input type="file" id="archivo" accept="image/*">
+<button id="subirFoto">Subir Foto</button>
 
-  <input type="file" id="archivo" accept="image/*">
-  <button id="subirFoto">Subir Foto</button>
 </header>
 <br>
   <center><h3><b>Galería de Fotos </b></h3></center>
@@ -362,7 +412,6 @@
     <img src="" alt="Imagen ampliada">
   </div>
 
-  <!-- Supabase JS SDK -->
 <!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
@@ -371,6 +420,7 @@
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
   const autorInput = document.getElementById("autor");
+  const descripcionInput = document.getElementById("descripcion"); // nuevo
   const archivoInput = document.getElementById("archivo");
   const subirBtn = document.getElementById("subirFoto");
   const galeria = document.getElementById("galeria");
@@ -450,107 +500,106 @@
     const fotos = JSON.parse(localStorage.getItem("misFotos") || "[]");
     return fotos.includes(id);
   }
-// Cargar fotos
-async function cargarFotos() {
-  galeria.innerHTML = "Cargando fotos...";
-  let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
-  if (error) {
-    galeria.innerHTML = "Error al cargar fotos";
-    return;
-  }
-  galeria.innerHTML = "";
 
-  // 🔹 ORDENAR por fecha (descendente)
-  // usa `created_at` si Supabase lo trae
-  data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-  data.forEach(f => {
-    const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
-
-    // Parsear nombre: autor__uuid__archivo
-    let autor = "Anónimo";
-    let uuid = null;
-    const partes = f.name.split("__");
-    if (partes.length >= 3) {
-      try { autor = decodeURIComponent(partes[0]); } catch(e) { autor = partes[0]; }
-      uuid = partes[1];
+  // Cargar fotos
+  async function cargarFotos() {
+    galeria.innerHTML = "Cargando fotos...";
+    let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
+    if (error) {
+      galeria.innerHTML = "Error al cargar fotos";
+      return;
     }
+    galeria.innerHTML = "";
 
-    const autorSeguro = escaparHTML(autor);
-    const usuarioIG = autorSeguro.startsWith("@") ? autorSeguro.substring(1) : autorSeguro;
-    const linkIG = usuarioIG ? `https://instagram.com/${usuarioIG}` : "#";
+    data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    const card = document.createElement("div");
-    card.className = "pw-card";
-    card.innerHTML = `
-      <div class="pw-photo-wrap">
-        <div class="pw-name">
-          <a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>
-          ${uuid && esMia(uuid) ? '<button class="btn btn-sm btn-danger float-end eliminar-btn">❌</button>' : ""}
+    data.forEach(f => {
+      const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
+
+      // Parsear nombre: autor__uuid__descripcion__archivo
+      let autor = "Anónimo", uuid = null, descripcion = "";
+      const partes = f.name.split("__");
+      if (partes.length >= 4) {
+        try { autor = decodeURIComponent(partes[0]); } catch(e) { autor = partes[0]; }
+        uuid = partes[1];
+        try { descripcion = decodeURIComponent(partes[2]); } catch(e) { descripcion = partes[2]; }
+      }
+
+      const autorSeguro = escaparHTML(autor);
+      const descSeguro = escaparHTML(descripcion);
+      const usuarioIG = autorSeguro.startsWith("@") ? autorSeguro.substring(1) : autorSeguro;
+      const linkIG = usuarioIG ? `https://instagram.com/${usuarioIG}` : "#";
+
+      const card = document.createElement("div");
+      card.className = "pw-card";
+      card.innerHTML = `
+        <div class="pw-photo-wrap">
+          <div class="pw-name">
+            <a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>
+            ${uuid && esMia(uuid) ? '<button class="btn btn-sm btn-danger float-end eliminar-btn">❌</button>' : ""}
+          </div>
+          <img src="${url}" alt="foto de ${autorSeguro}" />
         </div>
-        <img src="${url}" alt="foto de ${autorSeguro}" />
-      </div>
-    `;
+        ${descSeguro ? `<div class="pw-desc">${descSeguro}</div>` : ""}
+      `;
 
-    // Lightbox
-    card.querySelector("img").addEventListener("click", () => {
-      lightboxImg.src = url;
-      lightbox.classList.add("active");
-    });
-
-    // Eliminar si es mía
-    if (uuid && esMia(uuid)) {
-      card.querySelector(".eliminar-btn").addEventListener("click", async (e) => {
-        e.stopPropagation();
-        preguntar("¿Eliminar esta foto?", async (respuesta) => {
-          if (respuesta) {
-            const { error } = await supabaseClient.storage.from("fotos").remove([f.name]);
-            if (error) {
-              notificar("❌ Error al eliminar: " + error.message, "danger");
-            } else {
-              card.remove();
-              notificar("🗑️ Foto eliminada", "success");
-            }
-          }
-        });
+      // Lightbox
+      card.querySelector("img").addEventListener("click", () => {
+        lightboxImg.src = url;
+        lightbox.classList.add("active");
       });
-    }
 
-    // 👇 ahora usamos append porque ya está ordenado
-    galeria.append(card);
-  });
-}
+      // Eliminar si es mía
+      if (uuid && esMia(uuid)) {
+        card.querySelector(".eliminar-btn").addEventListener("click", async (e) => {
+          e.stopPropagation();
+          preguntar("¿Eliminar esta foto?", async (respuesta) => {
+            if (respuesta) {
+              const { error } = await supabaseClient.storage.from("fotos").remove([f.name]);
+              if (error) {
+                notificar("❌ Error al eliminar: " + error.message, "danger");
+              } else {
+                card.remove();
+                notificar("🗑️ Foto eliminada", "success");
+              }
+            }
+          });
+        });
+      }
 
+      galeria.append(card);
+    });
+  }
 
   // Subir foto
   subirBtn.addEventListener("click", async () => {
     const archivo = archivoInput.files[0];
     let autorBruto = limpiarAutorNombre(autorInput.value || "").trim();
+    let descripcionBruta = limpiarAutorNombre(descripcionInput.value || "").trim();
 
-    // Si no escribió nada → preguntar
+    // Si no escribió nada en IG → preguntar
     if (!autorBruto) {
       preguntar("¿Querés agregar tu Instagram?", (quiereAgregar) => {
         if (quiereAgregar) {
-          autorInput.focus(); // que lo escriba
+          autorInput.focus();
           return;
         } else {
-          autorBruto = ""; // sube sin IG
-          seguirSubida(archivo, autorBruto);
+          autorBruto = "";
+          seguirSubida(archivo, autorBruto, descripcionBruta);
         }
       });
       return;
     }
 
-    
     if (!autorBruto.startsWith("@")) {
       autorBruto = "@" + autorBruto;
     }
 
-    seguirSubida(archivo, autorBruto);
+    seguirSubida(archivo, autorBruto, descripcionBruta);
   });
 
   // Función auxiliar para subir
-  async function seguirSubida(archivo, autorBruto) {
+  async function seguirSubida(archivo, autorBruto, descripcionBruta) {
     if (!archivo) {
       notificar("⚠️ Elegí un archivo primero", "warning");
       return;
@@ -558,7 +607,8 @@ async function cargarFotos() {
 
     const uuid = generarUUID();
     const autorEncoded = encodeURIComponent(autorBruto);
-    const nombreArchivo = `${autorEncoded}__${uuid}__${Date.now()}-${archivo.name}`;
+    const descEncoded = encodeURIComponent(descripcionBruta || "");
+    const nombreArchivo = `${autorEncoded}__${uuid}__${descEncoded}__${Date.now()}-${archivo.name}`;
 
     const { error } = await supabaseClient.storage.from("fotos").upload(nombreArchivo, archivo);
     if (error) {
@@ -569,6 +619,7 @@ async function cargarFotos() {
     guardarToken(uuid);
     archivoInput.value = "";
     autorInput.value = "";
+    descripcionInput.value = "";
 
     notificar("✅ Foto subida correctamente", "success");
     cargarFotos();
@@ -584,5 +635,7 @@ async function cargarFotos() {
   });
 </script>
 
+
 </body>
 </html>
+
