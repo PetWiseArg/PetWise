@@ -633,9 +633,15 @@ main {
     lightbox.classList.remove("active");
     lightboxImg.src = "";
   });
+  // ✅ Limitar descripción a 40 caracteres en tiempo real
+descripcionInput.addEventListener("input", () => {
+  if (descripcionInput.value.length > 40) {
+    descripcionInput.value = descripcionInput.value.slice(0, 40);
+  }
+});
+
 </script>
 
 
 </body>
 </html>
-
