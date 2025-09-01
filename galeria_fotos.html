@@ -271,28 +271,43 @@
 }
 #autor::placeholder {
   color: #aaa;   /* gris claro */
+}.notificacion {
+  position: fixed;          /* La notificación se queda fija en pantalla aunque hagas scroll */
+  top: 70px;           /* Distancia desde la parte superior */
+  right: 20px;              /* Distancia desde el lado derecho */
+  padding: 1rem 1.5rem;     /* Espaciado interno (arriba/abajo = 1rem, izquierda/derecha = 1.5rem) */
+  border-radius: 10px;      /* Bordes redondeados */
+  color: #fff;              /* Texto en color blanco */
+  font-weight: 600;         /* Texto en negrita */
+  opacity: 0;               /* Invisible por defecto */
+  transform: translateY(-20px); /* Aparece desplazada hacia arriba, lista para animación */
+  transition: all 0.4s ease; /* Animación suave en opacidad y posición */
+  z-index: 99999;           /* Se asegura que quede por encima de todo */
 }
-.notificacion {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 1rem 1.5rem;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: 600;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.4s ease;
-  z-index: 99999;
-}
+
 .notificacion.mostrar {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1;               /* Cuando tiene la clase "mostrar", se hace visible */
+  transform: translateY(0); /* Se mueve a su posición normal (baja suavemente) */
 }
-.notificacion.success { background: #28a745; }
-.notificacion.danger { background: #dc3545; }
-.notificacion.warning { background: #ffc107; color: #000; }
-.notificacion.info { background: #17a2b8; }
+
+/* ✅ Colores para distintos tipos de notificación */
+.notificacion.success { 
+  background: #28a745;      /* Verde: éxito (acción correcta) */
+}
+
+.notificacion.danger { 
+  background: #dc3545;      /* Rojo: error o advertencia grave */
+}
+
+.notificacion.warning { 
+  background: #ffc107;      /* Amarillo: advertencia */
+  color: #000;              /* Texto en negro para mejor contraste */
+}
+
+.notificacion.info { 
+  background: #17a2b8;      /* Celeste: información */
+}
+
 
   </style>
 </head>
@@ -335,7 +350,8 @@
   <button id="subirFoto">Subir Foto</button>
 </header>
 <br>
-  <center><h3><b>Galería de Fotos (Beta)</b></h3></center>
+  <center><h3><b>Galería de Fotos </b></h3></center>
+  <center><p>Versión 1.0</p></center>
 
   <!-- Galería -->
   <div id="galeria" class="gallery-grid"></div>
