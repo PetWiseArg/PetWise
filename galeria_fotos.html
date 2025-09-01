@@ -272,6 +272,27 @@
 #autor::placeholder {
   color: #aaa;   /* gris claro */
 }
+.notificacion {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+  z-index: 99999;
+}
+.notificacion.mostrar {
+  opacity: 1;
+  transform: translateY(0);
+}
+.notificacion.success { background: #28a745; }
+.notificacion.danger { background: #dc3545; }
+.notificacion.warning { background: #ffc107; color: #000; }
+.notificacion.info { background: #17a2b8; }
 
   </style>
 </head>
@@ -326,7 +347,8 @@
   </div>
 
   <!-- Supabase JS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
   const supabaseUrl = "https://tilsnvckijrgnjzylgof.supabase.co";
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbHNudmNraWpyZ25qenlsZ29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NTI3MjIsImV4cCI6MjA3MjIyODcyMn0.HMnClyn3fnPP16H_UqxKvEhyD3Iv4_g1F9b_0_3b1mw";
@@ -340,6 +362,44 @@
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = lightbox.querySelector("img");
   const lightboxClose = lightbox.querySelector(".lightbox-close");
+
+  // 🔹 Sistema de notificaciones bonitas
+  function notificar(texto, tipo="info") {
+    const div = document.createElement("div");
+    div.className = `notificacion ${tipo}`;
+    div.textContent = texto;
+    document.body.appendChild(div);
+
+    setTimeout(() => div.classList.add("mostrar"), 100);
+    setTimeout(() => {
+      div.classList.remove("mostrar");
+      setTimeout(() => div.remove(), 500);
+    }, 3000);
+  }
+
+  // 🔹 Confirm personalizado con Sí/No
+  function preguntar(pregunta, callback) {
+    const div = document.createElement("div");
+    div.className = "notificacion info";
+    div.innerHTML = `
+      ${pregunta}
+      <br>
+      <button id="btnSi">Sí</button>
+      <button id="btnNo">No</button>
+    `;
+    document.body.appendChild(div);
+
+    setTimeout(() => div.classList.add("mostrar"), 100);
+
+    div.querySelector("#btnSi").onclick = () => {
+      callback(true);
+      div.remove();
+    };
+    div.querySelector("#btnNo").onclick = () => {
+      callback(false);
+      div.remove();
+    };
+  }
 
   // Utilidad para evitar XSS
   function escaparHTML(str) {
@@ -374,8 +434,7 @@
     const fotos = JSON.parse(localStorage.getItem("misFotos") || "[]");
     return fotos.includes(id);
   }
-
-  // Cargar fotos
+// Cargar fotos
 async function cargarFotos() {
   galeria.innerHTML = "Cargando fotos...";
   let { data, error } = await supabaseClient.storage.from("fotos").list("", { limit: 100 });
@@ -383,23 +442,16 @@ async function cargarFotos() {
     galeria.innerHTML = "Error al cargar fotos";
     return;
   }
-
-  // 🔥 Ordenar por timestamp en el nombre (más recientes primero)
-  data.sort((a, b) => {
-    const partesA = a.name.split("__");
-    const partesB = b.name.split("__");
-
-    const timeA = partesA.length >= 3 ? parseInt(partesA[2].split("-")[0]) : 0;
-    const timeB = partesB.length >= 3 ? parseInt(partesB[2].split("-")[0]) : 0;
-
-    return timeB - timeA; // 👈 ahora sí: más nuevas arriba
-  });
-
   galeria.innerHTML = "";
+
+  // 🔹 ORDENAR por fecha (descendente)
+  // usa `created_at` si Supabase lo trae
+  data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
   data.forEach(f => {
     const url = `${supabaseUrl}/storage/v1/object/public/fotos/${f.name}`;
 
-    // Parsear nombre: autor__uuid__timestamp-archivo
+    // Parsear nombre: autor__uuid__archivo
     let autor = "Anónimo";
     let uuid = null;
     const partes = f.name.split("__");
@@ -434,69 +486,82 @@ async function cargarFotos() {
     if (uuid && esMia(uuid)) {
       card.querySelector(".eliminar-btn").addEventListener("click", async (e) => {
         e.stopPropagation();
-        if (confirm("¿Eliminar esta foto?")) {
-          const { error } = await supabaseClient.storage.from("fotos").remove([f.name]);
-          if (error) {
-            alert("Error al eliminar: " + error.message);
-          } else {
-            card.remove();
+        preguntar("¿Eliminar esta foto?", async (respuesta) => {
+          if (respuesta) {
+            const { error } = await supabaseClient.storage.from("fotos").remove([f.name]);
+            if (error) {
+              notificar("❌ Error al eliminar: " + error.message, "danger");
+            } else {
+              card.remove();
+              notificar("🗑️ Foto eliminada", "success");
+            }
           }
-        }
+        });
       });
     }
 
-    galeria.appendChild(card);
+    // 👇 ahora usamos append porque ya está ordenado
+    galeria.append(card);
   });
 }
 
-// Subir foto
-subirBtn.addEventListener("click", async () => {
-  const archivo = archivoInput.files[0];
-  let autorBruto = limpiarAutorNombre(autorInput.value || "").trim();
 
-  // ⚡ Preguntar si olvidó escribir IG
-  if (!autorBruto) {
-    const quiereAgregar = confirm("No ingresaste tu Instagram. ¿Querés escribirlo antes de subir?");
-    if (quiereAgregar) {
-      autorInput.focus();
-      return; // no sube, deja al usuario escribir
+  // Subir foto
+  subirBtn.addEventListener("click", async () => {
+    const archivo = archivoInput.files[0];
+    let autorBruto = limpiarAutorNombre(autorInput.value || "").trim();
+
+    // Si no escribió nada → preguntar
+    if (!autorBruto) {
+      preguntar("¿Querés agregar tu Instagram?", (quiereAgregar) => {
+        if (quiereAgregar) {
+          autorInput.focus(); // que lo escriba
+          return;
+        } else {
+          autorBruto = ""; // sube sin IG
+          seguirSubida(archivo, autorBruto);
+        }
+      });
+      return;
     }
-  }
 
-  // Validar formato de Instagram SOLO si escribió algo
-  if (autorBruto.length > 0) {
+    // Validar IG si escribió algo
     const regexIG = /^@?[a-zA-Z0-9._]{2,30}$/; 
     if (!regexIG.test(autorBruto)) {
-      alert("Debes ingresar un Instagram válido (ejemplo: @usuario o usuario).");
+      notificar("⚠️ Debes ingresar un Instagram válido (ejemplo: @usuario o usuario)", "warning");
       return;
     }
     if (!autorBruto.startsWith("@")) {
       autorBruto = "@" + autorBruto;
     }
+
+    seguirSubida(archivo, autorBruto);
+  });
+
+  // Función auxiliar para subir
+  async function seguirSubida(archivo, autorBruto) {
+    if (!archivo) {
+      notificar("⚠️ Elegí un archivo primero", "warning");
+      return;
+    }
+
+    const uuid = generarUUID();
+    const autorEncoded = encodeURIComponent(autorBruto);
+    const nombreArchivo = `${autorEncoded}__${uuid}__${Date.now()}-${archivo.name}`;
+
+    const { error } = await supabaseClient.storage.from("fotos").upload(nombreArchivo, archivo);
+    if (error) {
+      notificar("❌ Error al subir: " + error.message, "danger");
+      return;
+    }
+
+    guardarToken(uuid);
+    archivoInput.value = "";
+    autorInput.value = "";
+
+    notificar("✅ Foto subida correctamente", "success");
+    cargarFotos();
   }
-
-  if (!archivo) {
-    alert("Elegí un archivo primero");
-    return;
-  }
-
-  const uuid = generarUUID();
-  const autorEncoded = encodeURIComponent(autorBruto);
-  const nombreArchivo = `${autorEncoded}__${uuid}__${Date.now()}-${archivo.name}`;
-
-  const { error } = await supabaseClient.storage.from("fotos").upload(nombreArchivo, archivo);
-  if (error) {
-    alert("Error al subir: " + error.message);
-    return;
-  }
-
-  guardarToken(uuid);
-  archivoInput.value = "";
-  autorInput.value = "";
-
-  cargarFotos();
-});
-
 
   // Inicial
   cargarFotos();
