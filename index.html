@@ -186,16 +186,27 @@
     opacity: 0.6;
   }
 }
-
-    #principios-petwise {
-  background: transparent !important;
-  box-shadow: none !important;
+.install-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background-color: #0d6efd; /* azul tipo bootstrap */
+  color: white;
+  font-size: 28px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s ease;
 }
-#publico {
 
-  background: transparent !important;
-  box-shadow: none !important;
+.install-btn:hover {
+  transform: scale(1.1);
 }
+
   </style>
 </head>
 <body style="visibility: hidden;">
@@ -212,7 +223,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="img/qrpet.png" target="-blank">QR</a></li>
+        <li class="nav-item"><a class="nav-link" href="img/qrpet.jpg" target="-blank">QR</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
         <li class="nav-item"><a class="nav-link" href="informacion.html">Información</a></li>
         <li class="nav-item"><a class="nav-link" href="consultas.html">Consultas</a></li>
@@ -230,7 +241,10 @@
       <h1 id="typed-text">Bienvenidos a <span class="highlight">PetWise</span></h1>
       <p>Transformamos el cuidado de tus mascotas combinando tecnología, diseño y amor animal.</p>
       <a href="conocenosmas.html" class="btn hero1-btn">Conocé más</a>
-<button id="installBtn" class="btn hero1-btn mt-3">📲 Instalar</button>
+
+<!-- Botón flotante -->
+<button id="installBtn" class="install-btn">📲</button>
+
 
     </div>
     <div class="hero1-decor"></div>
@@ -239,21 +253,13 @@
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
-// Detectar si es móvil o tablet
-const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
-
-// Si es PC, ocultar el botón
-if (!isMobile) {
-  installBtn.style.display = "none";
-}
-
 // Función para chequear si ya está instalada
 function checkIfInstalled() {
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
                     || window.navigator.standalone === true;
 
   if (isStandalone) {
-    installBtn.innerText = "✅";
+    installBtn.textContent = "✅";
     installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
     return true;
   }
@@ -261,7 +267,7 @@ function checkIfInstalled() {
   if ('getInstalledRelatedApps' in navigator) {
     navigator.getInstalledRelatedApps().then(apps => {
       if (apps.length > 0) {
-        installBtn.innerText = "✅";
+        installBtn.textContent = "✅";
         installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
       }
     });
@@ -275,10 +281,11 @@ window.addEventListener("beforeinstallprompt", (e) => {
   deferredPrompt = e;
 });
 
-// Acción al hacer clic
+// Acción al hacer clic en el botón
 installBtn.onclick = async () => {
   if (checkIfInstalled()) return;
 
+  // 📲 Android con soporte
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -286,27 +293,30 @@ installBtn.onclick = async () => {
     deferredPrompt = null;
 
     if (outcome === "accepted") {
-      installBtn.innerText = "✅";
+      installBtn.textContent = "✅";
       installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
     }
-  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+  } 
+  // 🍏 iPhone/iPad
+  else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
     alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
-  } else {
-    alert("Tu navegador no soporta instalación directa.");
+  } 
+  // 💻 Otros navegadores
+  else {
+    alert("Tu navegador no soporta instalación directa.\nPodés usar la opción 'Agregar a pantalla de inicio' desde el menú.");
   }
 };
 
+// Revisar estado al cargar
 checkIfInstalled();
 </script>
-
-
 
   <!-- Hero 2 -->
 <header id="hero2" class="hero2" style="display: none;">
   <div class="hero2-content">
-    <h1>Accedé a <span class="highlight">Consultas Veterinarias</span> en línea</h1>
-    <p>Resolvemos tus dudas de salud animal con asesoramiento rápido y confiable.</p>
-    <a href="consultas.html" class="btn hero1-btn">Ir a Consultas</a>
+    <h1>Accedé al <span class="highlight">Apartado de fotos</span> en línea</h1>
+    <p>Te invitamos a que compartas con la comunidad fotos de tus mascotas.</p>
+    <a href="galeria_fotos.html" class="btn hero1-btn">Ir a Fotos</a>
   </div>
   <div class="hero1-decor"></div>
 </header>
@@ -336,13 +346,29 @@ btn.addEventListener("click", () => {
 </script>
 
 
+<!-- Empresa -->
+<section id="empresa">
+  <h2>Nuestra Empresa</h2>
+  <p><strong>Nombre:</strong> PetWise Company</p>
+  <p><strong>Logo:</strong> <a href="img/logo2.png" target="_blank"><img src="img/logo.png" alt="Logo de PetWise" style="height: 30px; vertical-align: middle; margin-left: 8px;"></a></p>
+  <p><strong>Historia:</strong> Proyecto de estudiantes que decidieron combinar conocimientos y pasión por los animales. PetWise nació para crear un vínculo entre tecnología y bienestar animal.</p>
+  <p><strong>Misión:</strong> Digitalizar y facilitar el cuidado animal de forma moderna, cálida y accesible.</p>
+  <p><strong>Objetivo General:</strong> Superar expectativas ofreciendo herramientas que mejoren la vida de humanos y mascotas.</p>
+  <p><strong>Problematica Central:</strong> Muchos dueños de mascotas enfrentan dificultades para mantener un cuidado organizado y completo de sus animales, porque los servicios, información y controles están dispersos, poco centralizados y a veces son difíciles de acceder.</p>
+  <p><strong>PetWise surge para resolver esto,</strong> ofreciendo una plataforma que centraliza la información, digitaliza registros de salud y vacunación, facilita la reserva de servicios, permite consultas veterinarias en línea y conecta a adoptantes con refugios, todo en un solo lugar.</p>
+</section>
 
-<br>
 <!-- Principios -->
 <section id="principios-petwise" class="pw-values">
   <div class="container-fluid">
-<center><h1><b>¿Por qué PetWise?</b></h1></center>
+    <h2>¿Qué Ofrece PetWise?</h2>
     <br>
+    <div class="row g-4 align-items-stretch">
+      <div class="col-12 col-lg-5">
+        <div class="pw-photo-wrap">
+          <img src="img/gatoperro2.png" alt="Equipo PetWise" class="pw-photo">
+        </div>
+      </div>
       <div class="col-12 col-lg-7 d-flex flex-column justify-content-center">
 
         <!-- CARD 1 -->
@@ -748,17 +774,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
