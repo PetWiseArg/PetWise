@@ -230,22 +230,30 @@
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
+// Detectar si es móvil o tablet
+const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+
+// Si es PC, ocultar el botón
+if (!isMobile) {
+  installBtn.style.display = "none";
+}
+
 // Función para chequear si ya está instalada
 function checkIfInstalled() {
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
                     || window.navigator.standalone === true;
 
   if (isStandalone) {
-    installBtn.innerText = "✅";
-    installBtn.onclick = () => alert("Disfruta de PetWise");
+    installBtn.innerText = "✅ Ya la tenés instalada";
+    installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
     return true;
   }
 
   if ('getInstalledRelatedApps' in navigator) {
     navigator.getInstalledRelatedApps().then(apps => {
       if (apps.length > 0) {
-        installBtn.innerText = "✅";
-        installBtn.onclick = () => alert("Disfruta de PetWise");
+        installBtn.innerText = "✅ Ya la tenés instalada";
+        installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
       }
     });
   }
@@ -258,12 +266,10 @@ window.addEventListener("beforeinstallprompt", (e) => {
   deferredPrompt = e;
 });
 
-// Acción al hacer clic en el botón
+// Acción al hacer clic
 installBtn.onclick = async () => {
-  // Si ya está instalada (Android o iPhone standalone)
   if (checkIfInstalled()) return;
 
-  // 📲 Android con soporte
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -271,24 +277,19 @@ installBtn.onclick = async () => {
     deferredPrompt = null;
 
     if (outcome === "accepted") {
-      installBtn.innerText = "✅";
-    installBtn.onclick = () => alert("Disfruta de PetWise");
-     
+      installBtn.innerText = "✅ Ya la tenés instalada";
+      installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
     }
-  } 
-  // 🍏 iPhone/iPad (Safari)
-  else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
     alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
-  } 
-  // 💻 Otros navegadores sin soporte
-  else {
-    alert("Tu navegador no soporta instalación directa.\nPodés usar la opción 'Agregar a pantalla de inicio' desde el menú.");
+  } else {
+    alert("Tu navegador no soporta instalación directa.");
   }
 };
 
-// Revisar estado al cargar la página
 checkIfInstalled();
 </script>
+
 
 
   <!-- Hero 2 -->
@@ -754,6 +755,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
