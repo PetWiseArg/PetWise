@@ -168,12 +168,28 @@ function agregarMensaje(msg){
   chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
+// Función para cargar mensajes y bajar el scroll
 async function cargarMensajes(){
-  const { data, error } = await supabaseClient.from("mensajes").select("*").order("created_at", { ascending:true });
+  const { data, error } = await supabaseClient.from("mensajes")
+    .select("*")
+    .order("created_at", { ascending:true });
+
   if(error) return alert("Error al cargar mensajes: " + error.message);
+
   chatDiv.innerHTML = "";
   if(data) data.forEach(agregarMensaje);
+
+  // Bajar scroll al final
+  chatDiv.scrollTop = chatDiv.scrollHeight;
 }
+
+// Llamada inicial
+cargarMensajes();
+
+// Actualizar automáticamente cada 5 segundos
+setInterval(() => {
+  cargarMensajes();
+}, 5000);
 
 async function enviarMensaje(){
   const autor = autorInput.value.trim() || "Anónimo";
