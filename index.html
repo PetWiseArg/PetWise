@@ -196,6 +196,18 @@
   background: transparent !important;
   box-shadow: none !important;
 }
+
+#quick-access a {
+  background: #f1f1f1;
+  color: #1f2937;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#quick-access a:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
   </style>
 </head>
 <body style="visibility: hidden;">
@@ -338,8 +350,33 @@ btn.addEventListener("click", () => {
 </script>
 
 
-
 <br>
+<section id="quick-access" class="py-5" style="background: transparent; box-shadow: none;">
+  <div class="container">
+    <div class="row g-4 justify-content-center">
+
+      <!-- Botón Fotos -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <a href="galeria_fotos.html" class="btn d-flex flex-column align-items-center justify-content-center p-4 rounded-4 text-center h-100" style="background: rgba(255,255,255,0.85); border: none;">
+          <i class="bi bi-camera-fill fs-1 mb-2" style="color:#086b92;"></i>
+          <span style="color:#086b92;">Fotos</span>
+        </a>
+      </div>
+
+      <!-- Botón Mensajes -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <a href="mensajeria.html" class="btn d-flex flex-column align-items-center justify-content-center p-4 rounded-4 text-center h-100" style="background: rgba(255,255,255,0.85); border: none;">
+          <i class="bi bi-chat-dots-fill fs-1 mb-2" style="color:#086b92;"></i>
+          <span style="color:#086b92;">Mensajes</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
 
 <!-- ¿Por qué PetWise? -->
 <section id="principios-petwise" class="pw-values py-5">
