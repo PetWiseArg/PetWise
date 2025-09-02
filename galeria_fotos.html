@@ -410,10 +410,15 @@ main {
    <!-- CAMBIO en el input -->
 <!-- Input Instagram con @ fijo -->
 <!-- En el HEADER, junto al input de Instagram -->
-<input type="text" id="autor" placeholder="Usuario de Instagram" label="Instagram (@usuario)">
+<!-- Input de autor (nombre o Instagram) -->
+<input type="text" id="autor" placeholder="Tu nombre o @Instagram">
+<small id="hintAutor" style="display:none; color:#fcfcfc; margin-left:5px;">
+  👉 Si usás <b>@</b> se toma como Instagram, sin @ es solo nombre.
+</small>
 <input type="text" id="descripcion" placeholder="Descripción (opcional)" maxlength="40">
 <input type="file" id="archivo" accept="image/*">
 <button id="subirFoto">Subir Foto</button>
+
 
 </header>
 <br>
@@ -428,9 +433,19 @@ main {
     <span class="lightbox-close">&times;</span>
     <img src="" alt="Imagen ampliada">
   </div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+  const autorInput = document.getElementById("autor");
+  const hintAutor = document.getElementById("hintAutor");
 
+  autorInput.addEventListener("focus", () => {
+    hintAutor.style.display = "block";
+  });
 
-
+  autorInput.addEventListener("blur", () => {
+    hintAutor.style.display = "none";
+  });
+});
+</script>
   <!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
@@ -530,19 +545,20 @@ main {
 
       const autorSeguro = escaparHTML(autor);
       const descSeguro = escaparHTML(descripcion);
-      const usuarioIG = autorSeguro.startsWith("@") ? autorSeguro.substring(1) : autorSeguro;
-      const linkIG = usuarioIG ? `https://instagram.com/${usuarioIG}` : "#";
 
-      // 🔹 Traer likes de la BD
+      // ✅ Nombre o Instagram
+      let autorHTML = `<span>${autorSeguro}</span>`;
+      if (autorSeguro.startsWith("@")) {
+        const usuarioIG = autorSeguro.substring(1);
+        const linkIG = `https://instagram.com/${usuarioIG}`;
+        autorHTML = `<a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>`;
+      }
+
+      // 🔹 Traer likes
       const { data: likesData, error: likesError } = await supabaseClient
         .from("likes")
         .select("*")
         .eq("foto_id", uuid);
-
-      if (likesError) {
-        console.error("Error cargando likes:", likesError.message, "uuid:", uuid);
-      }
-      console.log("LikesData para", uuid, likesData);
 
       const totalLikes = likesData ? likesData.length : 0;
       const yoLike = likesData?.some(l => l.user_id === userId);
@@ -552,7 +568,7 @@ main {
       card.innerHTML = `
         <div class="pw-photo-wrap" style="position:relative;">
           <div class="pw-name">
-            <a href="${linkIG}" target="_blank" rel="noopener noreferrer">${autorSeguro}</a>
+            ${autorHTML}
             ${uuid && esMia(uuid) ? '<button class="btn btn-sm btn-danger float-end eliminar-btn">❌</button>' : ""}
           </div>
           <img src="${url}" alt="foto de ${autorSeguro}" />
@@ -592,7 +608,7 @@ main {
         });
       }
 
-      // 🔹 Manejar likes
+      // Manejo de likes
       const likeBtn = card.querySelector(".like-btn");
       likeBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
@@ -615,36 +631,6 @@ main {
     }
   }
 
-  // 🔹 Suscripción a Realtime para likes
-  supabaseClient
-    .channel('likes-changes')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'likes' },
-      (payload) => {
-        console.log("Realtime cambio en likes:", payload);
-        const fotoId = payload.new?.foto_id || payload.old?.foto_id;
-        if (!fotoId) return;
-        // actualizar el contador en pantalla
-        actualizarLikes(fotoId);
-      }
-    )
-    .subscribe();
-
-  async function actualizarLikes(fotoId) {
-    const { count, error } = await supabaseClient
-      .from("likes")
-      .select("*", { count: "exact", head: true })
-      .eq("foto_id", fotoId);
-
-    if (!error) {
-      const likeBtn = document.querySelector(`.like-btn[data-id="${fotoId}"]`);
-      if (likeBtn) {
-        likeBtn.querySelector(".count").textContent = count;
-      }
-    }
-  }
-
   // Subir foto
   subirBtn.addEventListener("click", async () => {
     const archivo = archivoInput.files[0];
@@ -652,7 +638,7 @@ main {
     let descripcionBruta = limpiarAutorNombre(descripcionInput.value || "").trim();
 
     if (!autorBruto) {
-      preguntar("¿Querés agregar tu Instagram?", (quiereAgregar) => {
+      preguntar("¿Querés agregar tu Nombre o Instagram?", (quiereAgregar) => {
         if (quiereAgregar) {
           autorInput.focus();
           return;
@@ -663,7 +649,8 @@ main {
       });
       return;
     }
-    if (!autorBruto.startsWith("@")) autorBruto = "@" + autorBruto;
+
+    // ❌ Ya no se agrega automáticamente el @
     seguirSubida(archivo, autorBruto, descripcionBruta);
   });
 
@@ -703,6 +690,8 @@ main {
     }
   });
 </script>
+
+
 
 
 </body>
