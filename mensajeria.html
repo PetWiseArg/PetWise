@@ -11,17 +11,16 @@ body { margin:0; font-family:sans-serif; background:#ece5dd; display:flex; flex-
 nav { background:#048c96; }
 
 /* Chat */
-#chat { 
-  flex:1; 
-  overflow-y:auto; 
-  padding:1rem; 
-  display:flex; 
-  flex-direction:column; 
-  gap:0.3rem; 
+#chat {
+  height: calc(100vh - 60px - 70px); /* 60px nav + 70px inputArea */
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
   color: #000000;
-  margin-top:60px; /* espacio debajo del nav */
-  margin-bottom:70px; /* espacio para input fijo */
 }
+
 
 /* Burbujas estilo WhatsApp */
 .msg { max-width:75%; padding:0.5rem 0.8rem; border-radius:18px; word-wrap:break-word; display:inline-block; line-height:1.3; position:relative; }
