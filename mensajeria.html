@@ -18,6 +18,7 @@ nav { background:#075e54; color:#fff; padding:1rem; text-align:center; font-weig
   display:flex; 
   flex-direction:column; 
   gap:0.3rem; 
+  color: #000000;
   margin-top:60px; /* espacio debajo del nav */
   margin-bottom:70px; /* espacio para input fijo */
 }
@@ -72,6 +73,26 @@ nav { background:#075e54; color:#fff; padding:1rem; text-align:center; font-weig
   #mensaje { width:65%; }
   .msg { max-width:90%; }
 }
+#recargarBtn {
+  position:fixed;
+  bottom:90px; /* arriba del input fijo */
+  right:20px;
+  background:#075e54;
+  color:white;
+  border:none;
+  border-radius:50%;
+  width:50px;
+  height:50px;
+  font-size:1.5rem;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:200;
+  box-shadow:0 4px 6px rgba(0,0,0,0.2);
+}
+#recargarBtn:hover { background:#128c7e; }
+
 </style>
 </head>
 <body>
@@ -98,7 +119,12 @@ nav { background:#075e54; color:#fff; padding:1rem; text-align:center; font-weig
     </div>
   </div>
 </nav>
-
+<!-- Botón flotante recargar -->
+<button id="recargarBtn" title="Recargar chat">&#10227;</button> <!-- icono de recarga -->
+<script>document.getElementById("recargarBtn").addEventListener("click", () => {
+  location.reload();
+});
+</script>
 <div id="chat"></div>
 
 <div id="inputArea">
