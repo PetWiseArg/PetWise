@@ -694,7 +694,7 @@ img {
   justify-content: center;
   overflow: hidden;
   border-radius: 18px;
-  background: linear-gradient(180deg, #86da7a 0%, #7ad16d 100%);
+  background: linear-gradient(180deg, #000000 0%, #000000 100%);
   box-shadow: 0 12px 36px rgba(0,0,0,.35);
 }
 
