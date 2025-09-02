@@ -337,79 +337,78 @@ btn.addEventListener("click", () => {
 
 
 <br>
-<!-- Principios -->
-<section id="principios-petwise" class="pw-values">
-  <div class="container-fluid">
-<center><h1><b>¿Por qué PetWise?</b></h1></center>
-    
-      <div class="col-12 col-lg-7 d-flex flex-column justify-content-center">
 
-        <!-- CARD 1 -->
+<!-- ¿Por qué PetWise? -->
+<section id="principios-petwise" class="pw-values py-5">
+  <div class="container">
+    <center><h1><b>¿Por qué PetWise?</b></h1></center>
+    <br>
+    <div class="row g-4">
+
+      <!-- CARD 1 -->
+      <div class="col-12 col-md-6">
         <article class="pw-card toggle-card">
           <div class="pw-icon-side"><i class="bi bi-shield-check"></i></div>
           <div class="pw-content">
+            <br>
             <h5 class="pw-title">Seguridad</h5>
-            <p>Todos nuestros servicios y productos cumplen con los estándares de seguridad más exigentes. Nos aseguramos de que sean seguros, confiables y fáciles de usar, priorizando la tranquilidad tanto de las mascotas como de sus familias.</p>
-            <!-- TEXTO OCULTO -->
+            <p>Todos nuestros servicios y productos cumplen con los estándares de seguridad más exigentes.</p>
             <div class="extra-text">
-              Protegemos la información usando encriptación (los datos se codifican y solo se leen con una clave) y autenticación segura, con bases de datos confiables, respaldos automáticos y productos certificados.
+              Protegemos la información usando encriptación, autenticación segura y respaldos automáticos.
+            </div>
+          </div>
         </article>
+      </div>
 
-        <!-- CARD 2 -->
+      <!-- CARD 2 -->
+      <div class="col-12 col-md-6">
         <article class="pw-card toggle-card">
           <div class="pw-icon-side"><i class="bi bi-journal-medical"></i></div>
           <div class="pw-content">
+            <br>
             <h5 class="pw-title">Registro Digital de Vacunación</h5>
-            <p>Guardá en un solo lugar vacunas, controles y consultas médicas de tu mascota. La libreta digital de PetWise te permite acceder desde cualquier dispositivo, recibir recordatorios y compartir fácilmente la información con tu veterinario de confianza.</p>
+            <p>Guardá vacunas, controles y consultas médicas en un solo lugar.</p>
             <div class="extra-text">
-              Podés activar notificaciones personalizadas para nunca olvidar una cita importante.
+              Activá notificaciones para nunca olvidar una cita importante.
             </div>
           </div>
         </article>
+      </div>
 
-        <!-- CARD 3 -->
+      <!-- CARD 3 -->
+      <div class="col-12 col-md-6">
         <article class="pw-card toggle-card">
           <div class="pw-icon-side"><i class="bi bi-calendar-check"></i></div>
           <div class="pw-content">
+            <br>
             <h5 class="pw-title">Agenda tu servicio</h5>
-            <p>Reservá turnos de manera rápida y sencilla con veterinarias, peluquerías, paseadores y cuidadores. Nuestra plataforma centraliza la gestión de servicios para que siempre tengas a mano las mejores opciones para tu mascota.</p>
+            <p>Reservá turnos rápidamente con veterinarias, paseadores y cuidadores.</p>
             <div class="extra-text">
-              Incluso podés sincronizar tu calendario personal con PetWise.
+              Incluso podés sincronizar tu calendario personal.
             </div>
           </div>
         </article>
+      </div>
 
-        <!-- CARD 4 -->
+      <!-- CARD 4 -->
+      <div class="col-12 col-md-6">
         <article class="pw-card toggle-card">
           <div class="pw-icon-side"><i class="bi bi-heart-fill"></i></div>
           <div class="pw-content">
+            <br>
             <h5 class="pw-title">Adopción y Rescate</h5>
-            <p>Conectamos a rescatistas, adoptantes y organizaciones en un mismo espacio. Podés publicar, adoptar y encontrar mascotas en tu zona, generando una red solidaria que fomenta el bienestar animal y promueve hogares responsables.</p>
+            <p>Conectamos rescatistas, adoptantes y refugios en un mismo espacio.</p>
             <div class="extra-text">
-              Nuestro sistema permite filtrar por zona, tamaño y características de la mascota.
+              Podés filtrar por zona, tamaño y características.
             </div>
           </div>
         </article>
-
       </div>
+
     </div>
   </div>
 </section>
-<script>
-  // Activar desplegable al hacer clic en cada card
-  document.querySelectorAll(".toggle-card").forEach(card => {
-    card.addEventListener("click", () => {
-      card.classList.toggle("active");
-    });
-  });
-</script>
 
-
-
-
-
-
-<!-- Público -->
 <section id="publico" class="pw-target">
   <div class="container">
     <h2 class="text-center mb-5">¿A Quién Está Dirigido?</h2>
@@ -474,6 +473,21 @@ btn.addEventListener("click", () => {
     </div>
   </div>
 </section>
+<script>
+  // Toggle para cards con texto extra
+  document.querySelectorAll(".toggle-card").forEach(card => {
+    card.addEventListener("click", () => {
+      card.classList.toggle("active");
+    });
+  });
+
+  // Toggle para "¿A quién está dirigido?"
+  document.querySelectorAll(".publico-card .pw-header").forEach(header => {
+    header.addEventListener("click", () => {
+      header.parentElement.classList.toggle("active");
+    });
+  });
+</script>
 
 <!-- Diferenciador -->
 <section id="diferenciador">
@@ -747,6 +761,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
