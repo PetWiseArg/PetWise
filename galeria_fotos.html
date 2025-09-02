@@ -379,7 +379,21 @@ main {
   min-height: 120px; /* <- elegí la altura que quieras */
   background-color: #f2f2f2; /* solo para que no quede blanco vacío */
 }
+.colort {
+  display: inline-block;
+  padding: 10px 10px;
+  background-color: #00426e; /* color de fondo */
+  color: white; /* color del texto */
+  text-decoration: none; /* quita el subrayado */
+  border-radius: 20px; /* bordes redondeados */
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+}
 
+.colort:hover {
+  background-color: #25af2c; /* color al pasar el mouse */
+  transform: scale(1.05); /* efecto pequeño de zoom */
+}
   </style>
 </head>
 <body>
@@ -424,6 +438,7 @@ main {
 <input type="text" id="descripcion" placeholder="Descripción (opcional)" maxlength="40">
 <input type="file" id="archivo" accept="image/*">
 <button id="subirFoto">Subir Foto</button>
+<a href="mensajeria.html" class="colort">Mensajes</a>
 
 
 </header>
