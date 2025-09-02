@@ -50,7 +50,7 @@ nav {
 
 .hero {
   position: relative;
-  background: linear-gradient(135deg, #078c9e, #3b3f3b); /* verde a azul celeste */
+  background: linear-gradient(135deg, #078c9e, #05b95f); /* verde a azul celeste */
   background-size: 400% 400%; 
   margin-top: 70px;
   color: white;
