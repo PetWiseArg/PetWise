@@ -304,9 +304,11 @@ checkIfInstalled();
 
 <header id="hero2" class="hero2" style="display: none;">
   <div class="hero2-content">
-    <h1>Accedé al <span class="highlight">Apartado de fotos</span> en línea</h1>
+    <h1 ><b>Accedé al</b> <span class="highlight"><b>Apartado de fotos</b></span></h1>
     <p>Te invitamos a que compartas con la comunidad fotos de tus mascotas.</p>
     <a href="galeria_fotos.html" class="btn hero1-btn">Ir a Fotos</a>
+    <br>
+    <a href="mensajeria.html" class="btn hero1-btn">Ir a Mensajes</a>
   </div>
   <div class="hero1-decor"></div>
 </header>
@@ -755,7 +757,16 @@ document.addEventListener("DOMContentLoaded", () => {
       cambiarHero();
     }
   });
+  // ==============================
+// Auto-deslizar héroes cada 10 segundos
+// ==============================
+setInterval(() => {
+  // Solo ejecuta si el usuario no está interactuando activamente (opcional)
+  cambiarHero();
+}, 10000); // 10000ms = 10 segundos
+
 });
+
 </script>
 
 
