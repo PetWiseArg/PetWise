@@ -8,7 +8,7 @@
  <link rel="stylesheet" href="estilo.css" />
 <style>
 body { margin:0; font-family:sans-serif; background:#ece5dd; display:flex; flex-direction:column; height:100vh; }
-nav { background:#075e54; }
+nav { background:#048c96; }
 
 /* Chat */
 #chat { 
@@ -25,7 +25,7 @@ nav { background:#075e54; }
 
 /* Burbujas estilo WhatsApp */
 .msg { max-width:75%; padding:0.5rem 0.8rem; border-radius:18px; word-wrap:break-word; display:inline-block; line-height:1.3; position:relative; }
-.msg.mine { background:#dcf8c6; align-self:flex-end; border-bottom-right-radius:4px; }
+.msg.mine { background:#c6f2f8; align-self:flex-end; border-bottom-right-radius:4px; }
 .msg.other { background:#fff; align-self:flex-start; border-bottom-left-radius:4px; }
 .autor { font-size:0.75rem; font-weight:bold; margin-bottom:0.2rem; color:#555; }
 
@@ -53,7 +53,7 @@ nav { background:#075e54; }
 
 /* Botón circular enviar con flecha */
 #enviar {
-  background:#075e54; 
+  background:#0093ad; 
   color:#fff; 
   border:none; 
   border-radius:50%; 
@@ -65,7 +65,7 @@ nav { background:#075e54; }
   cursor:pointer;
   font-size:1.2rem;
 }
-#enviar:hover { background:#128c7e; }
+#enviar:hover { background:#0093ad; }
 
 /* Mensajes max ancho y responsive */
 @media (max-width: 576px) {
@@ -136,6 +136,59 @@ window.addEventListener('load', () => {
   <button id="enviar">&#9658;</button> <!-- Flecha -->
 </div>
 
+
+
+
+<script>
+const newMsgBtn = document.getElementById("newMsgBtn");
+
+// Saber si el usuario está abajo del todo
+function estaAbajo() {
+  return chatDiv.scrollHeight - chatDiv.scrollTop <= chatDiv.clientHeight + 10;
+}
+
+// Cuando aparece un mensaje nuevo
+function notificarNuevoMensaje() {
+  if (!estaAbajo()) {
+    newMsgBtn.style.display = "block";
+  }
+}
+
+// Cuando el usuario hace click en el botón
+newMsgBtn.addEventListener("click", () => {
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+  newMsgBtn.style.display = "none";
+});
+
+// Detectar scroll: si baja hasta el final, ocultar botón
+chatDiv.addEventListener("scroll", () => {
+  if (estaAbajo()) newMsgBtn.style.display = "none";
+});
+
+// 🔥 Hookear las funciones existentes sin tocarlas:
+// - Cuando se agrega un mensaje nuevo en `agregarMensaje` o en la subscripción
+const originalAgregarMensaje = agregarMensaje;
+window.agregarMensaje = function(msg) {
+  originalAgregarMensaje(msg);
+  if (msg.user_id !== userId) notificarNuevoMensaje();
+};
+
+// También en la subscripción en tiempo real:
+const originalSub = supabaseClient.channel;
+supabaseClient.channel = function(...args) {
+  const ch = originalSub.apply(this, args);
+  ch.on = function(event, filter, callback) {
+    const wrappedCallback = (payload) => {
+      callback(payload);
+      if (payload.new.user_id !== userId) notificarNuevoMensaje();
+    };
+    return Object.getPrototypeOf(ch).on.call(ch, event, filter, wrappedCallback);
+  };
+  return ch;
+};
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
 const supabaseUrl = "https://tilsnvckijrgnjzylgof.supabase.co";
@@ -154,11 +207,14 @@ function escaparHTML(str){
   return String(str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
-// Hora local Argentina
 function horaLocal(timestamp) {
   const fecha = new Date(timestamp);
-  return fecha.toLocaleTimeString('es-AR', { hour: "2-digit", minute: "2-digit", hour12: false });
+  fecha.setHours(fecha.getHours() - 3);
+  return fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
 }
+
+// --- Variable para primera carga ---
+let primeraCarga = true;
 
 function agregarMensaje(msg){
   const div = document.createElement("div");
@@ -167,11 +223,15 @@ function agregarMensaje(msg){
   div.innerHTML = `<div class="autor">${escaparHTML(msg.autor)}</div>
                    <div class="contenido">${escaparHTML(msg.contenido)}</div>
                    <div class="hora">${horaStr}</div>`;
+
   chatDiv.appendChild(div);
-  chatDiv.scrollTop = chatDiv.scrollHeight;
+
+  // Solo bajar scroll si es la primera carga o si es mensaje propio
+  if(primeraCarga || msg.user_id === userId){
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+  }
 }
 
-// Función para cargar mensajes y bajar el scroll
 async function cargarMensajes(){
   const { data, error } = await supabaseClient.from("mensajes")
     .select("*")
@@ -182,16 +242,36 @@ async function cargarMensajes(){
   chatDiv.innerHTML = "";
   if(data) data.forEach(agregarMensaje);
 
-  // Bajar scroll al final
-  chatDiv.scrollTop = chatDiv.scrollHeight;
+  // Primera carga completada
+  if(primeraCarga){
+    chatDiv.scrollTop = chatDiv.scrollHeight; // bajar solo la primera vez
+    primeraCarga = false;
+  }
 }
 
 // Llamada inicial
 cargarMensajes();
 
-// Actualizar automáticamente cada 5 segundos
-setInterval(() => {
-  cargarMensajes();
+// Actualizar mensajes cada 5 segundos SIN bajar el scroll
+setInterval(async () => {
+  const { data, error } = await supabaseClient.from("mensajes")
+    .select("*")
+    .order("created_at", { ascending:true });
+  if(error) return;
+
+  // Solo actualizar el contenido, no tocar scroll
+  const scrollActual = chatDiv.scrollTop;
+  chatDiv.innerHTML = "";
+  if(data) data.forEach(msg => {
+    const div = document.createElement("div");
+    div.className = "msg " + (msg.user_id === userId ? "mine" : "other");
+    const horaStr = horaLocal(msg.created_at);
+    div.innerHTML = `<div class="autor">${escaparHTML(msg.autor)}</div>
+                     <div class="contenido">${escaparHTML(msg.contenido)}</div>
+                     <div class="hora">${horaStr}</div>`;
+    chatDiv.appendChild(div);
+  });
+  chatDiv.scrollTop = scrollActual; // mantener scroll donde estaba
 }, 5000);
 
 async function enviarMensaje(){
@@ -222,18 +302,23 @@ mensajeInput.addEventListener("keydown", (e) => {
   }
 });
 
-// Suscripción en tiempo real
+// Suscripción en tiempo real: solo agregar mensajes nuevos sin tocar scroll
 supabaseClient.channel('chat')
   .on('postgres_changes', { event:'INSERT', schema:'public', table:'mensajes' }, payload => {
-    if(payload.new.user_id !== userId) agregarMensaje(payload.new);
+    if(payload.new.user_id !== userId){
+      const div = document.createElement("div");
+      div.className = "msg other";
+      const horaStr = horaLocal(payload.new.created_at);
+      div.innerHTML = `<div class="autor">${escaparHTML(payload.new.autor)}</div>
+                       <div class="contenido">${escaparHTML(payload.new.contenido)}</div>
+                       <div class="hora">${horaStr}</div>`;
+      chatDiv.appendChild(div);
+    }
   })
   .subscribe();
 
-// Inicial: cargar mensajes y bajar scroll al final
-cargarMensajes().then(() => {
-  chatDiv.scrollTop = chatDiv.scrollHeight;
-});
 </script>
+
 
 </body>
 </html>
