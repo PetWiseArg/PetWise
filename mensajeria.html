@@ -86,7 +86,6 @@ nav { background:#048c96; }
   }
 }
 #mensaje {
- 
   padding:0.5rem 0.75rem;   /* igual que #autor */
   border-radius:20px;
   border:1px solid #ccc;
@@ -135,8 +134,8 @@ nav { background:#048c96; }
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        <p style="color: #000000;">Bienvenido al grupo de noticias de PetWise. Aquí compartiremos novedades, actualizaciones y comunicados importantes sobre nuestra comunidad y mascotas. 
-Mantente atento a la información y participa respetuosamente en los comentarios. 🐾</p>
+        <p style="color: #000000;">Este espacio es para que compartas tus experiencias, consejos y preguntas sobre tus mascotas.
+Por favor, sé respetuoso con los demás y disfruta la conversación. 🐾</p>
        <p style="color: #000000;">(Los mensajes se eliminan cada 7 dias)</p>
       </div>
       <div class="modal-footer">
@@ -259,7 +258,7 @@ function agregarMensaje(msg){
 }
 
 async function cargarMensajes(){
-  const { data, error } = await supabaseClient.from("mensajes_chat2")
+  const { data, error } = await supabaseClient.from("mensajes")
     .select("*")
     .order("created_at", { ascending:true });
 
@@ -280,7 +279,7 @@ cargarMensajes();
 
 // Actualizar mensajes cada 5 segundos SIN bajar el scroll
 setInterval(async () => {
-  const { data, error } = await supabaseClient.from("mensajes_chat2")
+  const { data, error } = await supabaseClient.from("mensajes")
     .select("*")
     .order("created_at", { ascending:true });
   if(error) return;
@@ -306,7 +305,7 @@ async function enviarMensaje(){
   if(!contenido) return;
 
   try {
-    const { data, error } = await supabaseClient.from("mensajes_chat2").insert([
+    const { data, error } = await supabaseClient.from("mensajes").insert([
       { user_id: userId, autor, contenido }
     ]).select();
 
@@ -329,8 +328,8 @@ enviarBtn.addEventListener("click", enviarMensaje);
 //});
 
 // Suscripción en tiempo real: solo agregar mensajes nuevos sin tocar scroll
-supabaseClient.channel('chat2')
-  .on('postgres_changes', { event:'INSERT', schema:'public', table:'mensajes_chat2' }, payload => {
+supabaseClient.channel('chat')
+  .on('postgres_changes', { event:'INSERT', schema:'public', table:'mensajes' }, payload => {
     if(payload.new.user_id !== userId){
       const div = document.createElement("div");
       div.className = "msg other";
