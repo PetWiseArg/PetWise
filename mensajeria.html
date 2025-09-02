@@ -73,25 +73,7 @@ nav { background:#075e54; }
   #mensaje { width:65%; }
   .msg { max-width:90%; }
 }
-#recargarBtn {
-  position:fixed;
-  bottom:90px; /* arriba del input fijo */
-  right:20px;
-  background:#075e54;
-  color:white;
-  border:none;
-  border-radius:50%;
-  width:50px;
-  height:50px;
-  font-size:1.5rem;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:200;
-  box-shadow:0 4px 6px rgba(0,0,0,0.2);
-}
-#recargarBtn:hover { background:#128c7e; }
+
 
 </style>
 </head>
@@ -119,12 +101,33 @@ nav { background:#075e54; }
     </div>
   </div>
 </nav>
-<!-- Botón flotante recargar -->
-<button id="recargarBtn" title="Recargar chat">&#10227;</button> <!-- icono de recarga -->
-<script>document.getElementById("recargarBtn").addEventListener("click", () => {
-  location.reload();
+<!-- Modal -->
+<div class="modal fade" id="bienvenidaModal" tabindex="-1" aria-labelledby="bienvenidaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: #000000;" id="bienvenidaLabel">¡Bienvenido a PetWise Chat!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p style="color: #000000;">Este espacio es para que compartas tus experiencias, consejos y preguntas sobre tus mascotas.
+Por favor, sé respetuoso con los demás y disfruta la conversación. 🐾</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Mostrar el modal al cargar la página
+window.addEventListener('load', () => {
+  const bienvenidaModal = new bootstrap.Modal(document.getElementById('bienvenidaModal'));
+  bienvenidaModal.show();
 });
 </script>
+
 <div id="chat"></div>
 
 <div id="inputArea">
