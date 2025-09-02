@@ -12,7 +12,11 @@ nav { background:#048c96; }
 
 /* Chat */
 #chat {
-  height: calc(100vh - 60px - 70px); /* 60px nav + 70px inputArea */
+  position: absolute;
+  top: 70px;       /* altura del navbar */
+  bottom: 70px;    /* altura del inputArea */
+  left: 0;
+  right: 0;
   overflow-y: auto;
   padding: 1rem;
   display: flex;
@@ -20,6 +24,7 @@ nav { background:#048c96; }
   gap: 0.3rem;
   color: #000000;
 }
+
 
 
 /* Burbujas estilo WhatsApp */
