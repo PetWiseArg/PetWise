@@ -373,10 +373,74 @@ main {
   text-align: right;
   margin-bottom: 1rem;
 }
-.gallery-item {
-  position: relative;
-  aspect-ratio: 1 / 1; /* mantiene cuadrado */
-  background: #3d3d3d;
+
+/* Previene que el contenedor se colapse si no carga la imagen */
+.pw-card {
+  min-height: 220px;  /* asegura un alto mínimo */
+  background-color: #e9e9e9; /* color de relleno si no hay foto */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* así la descripción queda abajo */
+}
+
+/* Imagen ocupa todo el ancho disponible */
+.pw-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Fallback si la imagen no carga */
+.pw-card img:empty,
+.pw-card img[src=""],
+.pw-card img:not([src]) {
+  display: none;
+}
+
+.pw-card::before {
+  content: "📷 Imagen no disponible";
+  color: #666;
+  font-size: 0.9rem;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/* Previene que el contenedor se colapse si no carga la imagen */
+.pw-card {
+  min-height: 220px;  /* asegura un alto mínimo */
+  background-color: #e9e9e9; /* color de relleno si no hay foto */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* así la descripción queda abajo */
+}
+
+/* Imagen ocupa todo el ancho disponible */
+.pw-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Fallback si la imagen no carga */
+.pw-card img:empty,
+.pw-card img[src=""],
+.pw-card img:not([src]) {
+  display: none;
+}
+
+.pw-card::before {
+  content: "📷 Imagen no disponible";
+  color: #666;
+  font-size: 0.9rem;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
   </style>
