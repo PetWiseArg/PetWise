@@ -22,17 +22,27 @@ nav { background:#075e54; color:#fff; padding:1rem; text-align:center; font-weig
 .hora { font-size:0.65rem; color:#555; text-align:right; margin-top:2px; }
 
 /* Inputs */
-#inputArea { display:flex; padding:0.5rem; background:#f0f0f0; gap:0.5rem; }
-#autor, #mensaje { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; }
-#autor { width:20%; min-width:80px; }
-#mensaje { flex:1; }
-#enviar { background:#075e54; color:#fff; border:none; border-radius:20px; padding:0 1rem; cursor:pointer; }
+#inputArea {
+  display:flex;
+  padding:0.5rem;
+  background:#f0f0f0;
+  gap:0.5rem;
+  align-items:center;
+}
+#autor { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; width:25%; min-width:80px; }
+#mensaje { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; flex:1; }
+#enviar { background:#075e54; color:#fff; border:none; border-radius:20px; padding:0 1rem; cursor:pointer; height:40px; }
 #enviar:hover { background:#128c7e; }
 
 /* Mensajes max ancho y responsive */
 @media (max-width: 576px) {
-  #inputArea { flex-direction: column; gap:0.5rem; }
-  #autor, #mensaje, #enviar { width:100%; margin:0; }
+  #inputArea {
+    flex-wrap: wrap;
+    gap:0.3rem;
+  }
+  #autor { width:30%; min-width:70px; }
+  #mensaje { width:65%; }
+  #enviar { width:100%; margin-top:0.3rem; }
   .msg { max-width:90%; }
 }
 </style>
@@ -68,18 +78,14 @@ function escaparHTML(str){
 }
 function horaLocal(timestamp) {
   const fecha = new Date(timestamp);
-  // restar 2 horas (en milisegundos)
-  fecha.setHours(fecha.getHours() - 3);
+  fecha.setHours(fecha.getHours() - 3); // ajustar si hay diferencia
   return fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
 }
-
 
 function agregarMensaje(msg){
   const div = document.createElement("div");
   div.className = "msg " + (msg.user_id === userId ? "mine" : "other");
-
   const horaStr = horaLocal(msg.created_at);
-
   div.innerHTML = `<div class="autor">${escaparHTML(msg.autor)}</div>
                    <div class="contenido">${escaparHTML(msg.contenido)}</div>
                    <div class="hora">${horaStr}</div>`;
@@ -87,7 +93,6 @@ function agregarMensaje(msg){
   chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
-// Cargar mensajes iniciales
 async function cargarMensajes(){
   const { data, error } = await supabaseClient.from("mensajes").select("*").order("created_at", { ascending:true });
   if(error) return alert("Error al cargar mensajes: " + error.message);
@@ -95,7 +100,6 @@ async function cargarMensajes(){
   if(data) data.forEach(agregarMensaje);
 }
 
-// Enviar mensaje
 async function enviarMensaje(){
   const autor = autorInput.value.trim() || "Anónimo";
   const contenido = mensajeInput.value.trim();
@@ -117,7 +121,6 @@ async function enviarMensaje(){
 
 enviarBtn.addEventListener("click", enviarMensaje);
 
-// Enviar con Enter (PC)
 mensajeInput.addEventListener("keydown", (e) => {
   if(e.key === "Enter" && !e.shiftKey){
     e.preventDefault();
