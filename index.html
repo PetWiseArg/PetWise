@@ -1,123 +1,154 @@
-/* ==== RESET Y SCROLL ==== */
-html {
-  scroll-behavior: smooth;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="YVMSVH6LA3ZY-Z4NBdyS7aP1Efr7r-0CYpZ73qWTcoE" />
+  
+  <meta name="description" content="PetWise: productos, atención veterinaria y tecnología para el bienestar de tus mascotas. Conectamos innovación y amor animal en una sola plataforma." />
+  <meta name="keywords" content="PetWise, mascotas, tecnología para mascotas, cuidado animal, tienda mascotas, bienestar animal" />
+  <meta name="author" content="PetWise Company" />
+
+  <meta property="og:title" content="PetWise | Cuidado animal moderno" />
+  <meta property="og:description" content="Conectamos tecnología, productos y atención veterinaria para el bienestar de tu mascota." />
+  <meta property="og:image" content="https://lautaroarce.github.io/petwise.arg.proyec/img/logo.png" />
+  <meta property="og:url" content="https://lautaroarce.github.io/petwise.arg.proyec/" />
+  <meta property="og:type" content="website" />
+
+  <title>PetWise | Cuidado animal</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="estilo.css" />
+ 
+    <!-- Iconos -->
+  <link rel="icon" href="img/logo2 (1).png" type="image/png">
+  <link rel="apple-touch-icon" href="img/logo2 (1).png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    footer a {
+      display: inline-block;
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+    footer a:hover {
+      transform: scale(1.05);
+      color: #0ea5e9 !important;
+    }
+    nav li {
+      display: inline-block;
+      transition: transform 0.50s ease, color 0.50s ease;
+    }
+    nav li:hover {
+      transform: scale(1.1);
+      color: #0ea5e9 !important;
+    }
+    h2, p, li { transition: transform 0.50s ease; }
+    h6 { color: #69aa2d; }
+    h2:hover, p:hover, li:hover { transform: scale(1.02); }
+    footer h6 { color: #69aa2d !important; }
+    footer a i { color: #69aa2d !important; }
+
+    .extra-text {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.4s ease;
+  
+  /* Estilos visuales */
+  background: #fff;
+  color: #000;
+  border-radius: 12px;
+  padding: 0 1rem; /* padding lateral (no ocupa espacio mientras está oculto) */
+  margin-top: 0.5rem;
 }
 
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #0b0133;
-  color: #f1f1f1;
+/* Cuando la card está activa */
+.pw-card.active .extra-text {
+  max-height: 200px; /* ajusta según lo largo del texto */
+  opacity: 1;
+  padding: 1rem; /* ahora sí se muestra el padding completo */
 }
-/* ==== NAVBAR ==== */
-nav {
-  background-color: rgba(31, 41, 55, 0.95); /* semi-transparente */
-  backdrop-filter: blur(10px); /* efecto glass */
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 1030;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+
+/* Cursor tipo botón */
+.toggle-card {
+  cursor: pointer;
 }
 
 
-
-/* Efectos de links y brand */
-.nav-link {
-  margin-left: 1rem;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #0ee983;
-  transform: scale(1.05);
-}
-
-.navbar-brand img {
+/* Botón deslizador dentro del hero */
+.hero-toggle-btn {
+  position: absolute;        /* dentro del header */
+  top: 50%;                  /* centrado verticalmente */
+  right: 20px;               /* margen derecho */
+  transform: translateY(-50%);
+  z-index: 999;
+  width: 50px;
   height: 50px;
-  margin-right: 10px;
-  max-width: 100%;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-toggle-btn:hover {
+  background: rgba(0,0,0,0.7);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Flecha */
+.hero-toggle-btn::before {
+  content: "➜";              /* o → */
+  font-size: 1.5rem;
+  color: #fff;
   transition: transform 0.3s ease;
 }
 
-.navbar-brand img:hover {
-  transform: scale(1.05);
+.hero-toggle-btn:hover::before {
+  transform: translateX(5px);
 }
+/* Ajuste del botón para móviles */
+@media (max-width: 768px) {
+  .hero-toggle-btn {
+    width: 35px;             /* más pequeño */
+    height: 35px;
+    top: auto;               /* para no tapar texto */
+    bottom: 230px;            /* lo bajamos */
+    right: 10px;             /* un poco más hacia adentro */
+    background: rgba(0,0,0,0.3); /* más transparente */
+  }
 
-.hero {
-  position: relative;
-  background: linear-gradient(135deg, #078c9e, #3b3f3b); /* verde a azul celeste */
-  background-size: 400% 400%; 
-  margin-top: 70px;
-  color: white;
-  text-align: center;
-  padding: 6rem 1rem 4rem;
-  border-radius: 0;
-  animation: gradientShiftHero 15s linear infinite; /* lineal */
-}
-
-/* Ajustes para móviles y tablets */
-@media (max-width: 1024px) { .hero { margin-top: 75px; } }
-@media (max-width: 768px) { .hero { margin-top: 80px; } }
-
-@keyframes gradientShiftHero {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-
-
-/* Ajuste del hero para no quedar debajo del navbar */
-.hero1, .hero {
-  padding-top: 80px; /* altura mínima navbar + margen */
-}
-
-/* Ajuste responsive según tamaño del navbar expandido */
-@media (max-width: 991.98px) { /* lg breakpoint de bootstrap */
-  .hero1, .hero {
-    padding-top: 120px; /* navbar más alto con toggler */
+  .hero-toggle-btn::before {
+    font-size: 1rem;         /* flecha más pequeña */
   }
 }
 
-@media (max-width: 575.98px) { /* sm breakpoint */
-  .hero1, .hero {
-    padding-top: 140px;
-  }
-}
- /* ==== HERO Estilo Apple ==== */ /* ==== HERO Estilo Apple Completo con Fondo Animado ==== */
-/* ==== HERO ESTILO APPLE ==== */
-.hero1 {
+/* Hero2 hereda estilos de hero1 */
+.hero2 {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* ocupa toda la pantalla en desktop */
-  margin-top: 0;      /* pegado al navbar */
+  min-height: 100vh;
   padding: 0 1.5rem;
   overflow: hidden;
   color: #fff;
   text-align: center;
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
-  background: linear-gradient(135deg, #2abe37, #078c9e);
+  background: linear-gradient(135deg, #3ec1e9, #086b92);
   background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  animation: gradientShift2 15s ease infinite;
 }
 
-/* Gradiente animado */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Contenido central */
-.hero1-content {
+/* Contenido central hero2 */
+.hero2-content {
   width: 100%;
   max-width: 720px;
   z-index: 2;
@@ -130,118 +161,15 @@ nav {
   padding: 0 1rem;
   box-sizing: border-box;
 }
-
-/* Título principal */
-.hero1 h1 {
-  font-size: 3.5rem;
-  font-weight: 900;
-  margin-bottom: 1rem;
-  line-height: 1.15;
-  letter-spacing: -1px;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.25);
-}
-
-/* Texto secundario */
-.hero1 p {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.85);
-}
-
-/* Texto destacado */
-.highlight {
-  color: transparent;
-  background: linear-gradient(90deg, #a3e635, #22c0c5);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-/* Texto tipo “escribiendo” */
-#typed-text {
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  border-right: 2px solid #fff;
-  animation: blinkCursor 0.8s steps(1) infinite;
-}
-
-@keyframes blinkCursor {
-  0%, 50% { border-color: #fff; }
-  51%, 100% { border-color: transparent; }
-}
-
-/* Botón estilo Apple */
-.hero1-btn {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  color: #fff;
-  padding: 0.9rem 2rem;
-  font-weight: 600;
-  font-size: 1.1rem;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.2);
-  transition: all 0.4s ease;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  text-decoration: none;
-}
-
-.hero1-btn:hover {
-  background: rgba(255,255,255,0.2);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-}
-
-/* Animación de entrada del contenido */
-@keyframes fadeInUpScaleStrong {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Partículas decorativas */
-.hero1-decor {
-  position: absolute;
-  width: 250%;
-  height: 250%;
-  top: -75%;
-  left: -75%;
-  background: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.08), transparent 60%),
-              radial-gradient(circle at 75% 75%, rgba(255,255,255,0.06), transparent 60%);
-  animation: rotateDecor 45s linear infinite, floatDecor 6s ease-in-out infinite alternate, pulseDecor 3s ease-in-out infinite alternate;
-}
-
-@keyframes rotateDecor {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes floatDecor {
-  0% { transform: translateY(0px) translateX(0px); }
-  50% { transform: translateY(-20px) translateX(10px); }
-  100% { transform: translateY(0px) translateX(0px); }
-}
-
-@keyframes pulseDecor {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-/* Imagen decorativa inferior izquierda */
-.hero1::after {
+/* Imagen decorativa inferior izquierda para hero2 */
+.hero2::after {
   content: "";
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 400px;
+  width: 400px; /* ajustá según tu imagen */
   height: 400px;
-  background-image: url('img/perroimg.png');
+  background-image: url('img/gatoperrocamara.webp'); /* tu imagen */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: bottom left;
@@ -250,531 +178,605 @@ nav {
   z-index: 1;
 }
 
-/* Responsive desktop mediano */
-@media screen and (max-width: 1024px) {
-  .hero1 h1 { font-size: 3rem; }
-  .hero1 p { font-size: 1.15rem; }
-}
-
-/* Responsive tablet y móvil */
+/* Responsive hero2 */
 @media screen and (max-width: 768px) {
-  .hero1 {
-    height: 100vh; /* ocupa solo la pantalla */
-    padding: 0 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* centra verticalmente */
-    align-items: center;     /* centra horizontalmente */
-  }
-
-  .hero1-content {
-    width: 90%;
-    padding: 0 0.5rem;
-  }
-
-  .hero1 h1 { font-size: 2.25rem; }
-  .hero1 p { font-size: 1rem; margin-bottom: 1.5rem; }
-  .hero1-btn { font-size: 1rem; padding: 0.8rem 1.8rem; }
-
-  .hero1::after {
-    width: 200px;
-    height: 200px;
-    opacity: 0.5;
+  .hero2::after {
+    width: 300px;
+    height: 300px;
+    opacity: 0.6;
   }
 }
 
-/* Responsive celular pequeño */
-@media screen and (max-width: 480px) {
-  .hero1 {
-    height: 100vh;
-    padding: 0 0.5rem;
+    #principios-petwise {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#publico {
+
+  background: transparent !important;
+  box-shadow: none !important;
+}
+  </style>
+</head>
+<body style="visibility: hidden;">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="img/logo.png" alt="PetWise Logo" class="img-fluid" />
+      <span>PetWise Company</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="img/qrpet.png" target="-blank">QR</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="informacion.html">Información</a></li>
+        <li class="nav-item"><a class="nav-link" href="consultas.html">Consultas</a></li>
+        <li class="nav-item"><a class="nav-link" href="galeria_fotos.html">Fotos</a></li>
+        <li class="nav-item"><a class="nav-link" href="mensajeria.html">Mensajes</a></li>
+        <li class="nav-item"><a class="nav-link" href="tienda.html">Tienda</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Contenedor general -->
+<div class="hero-wrapper">
+  <!-- Hero 1 -->
+  <header id="hero1" class="hero1">
+    <div class="hero1-content">
+      <h1 id="typed-text">Bienvenidos a <span class="highlight">PetWise</span></h1>
+      <p>Transformamos el cuidado de tus mascotas combinando tecnología, diseño y amor animal.</p>
+      <a href="conocenosmas.html" class="btn hero1-btn">Conocé más</a>
+<button id="installBtn" class="btn hero1-btn mt-3">📲 Instalar</button>
+
+    </div>
+    <div class="hero1-decor"></div>
+  </header>
+<script>
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+
+// Detectar si es móvil o tablet
+const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+
+// Si es PC, ocultar el botón
+if (!isMobile) {
+  installBtn.style.display = "none";
+}
+
+// Función para chequear si ya está instalada
+function checkIfInstalled() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                    || window.navigator.standalone === true;
+
+  if (isStandalone) {
+    installBtn.innerText = "✅";
+    installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+    return true;
   }
 
-  .hero1-content { width: 95%; padding: 0 0.5rem; }
-  .hero1 h1 { font-size: 1.8rem; line-height: 1.2; }
-  .hero1 p { font-size: 0.95rem; line-height: 1.4; }
-  .hero1-btn { font-size: 0.95rem; padding: 0.7rem 1.5rem; }
+  if ('getInstalledRelatedApps' in navigator) {
+    navigator.getInstalledRelatedApps().then(apps => {
+      if (apps.length > 0) {
+        installBtn.innerText = "✅";
+        installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+      }
+    });
+  }
+  return false;
+}
 
-  .hero1::after {
-    width: 150px;
-    height: 150px;
-    opacity: 0.4;
+// Guardamos el evento para Android
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+// Acción al hacer clic
+installBtn.onclick = async () => {
+  if (checkIfInstalled()) return;
+
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`Instalación: ${outcome}`);
+    deferredPrompt = null;
+
+    if (outcome === "accepted") {
+      installBtn.innerText = "✅";
+      installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+    }
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
+  } else {
+    alert("Tu navegador no soporta instalación directa.");
+  }
+};
+
+checkIfInstalled();
+</script>
+
+
+
+<header id="hero2" class="hero2" style="display: none;">
+  <div class="hero2-content">
+    <h1 ><b>Accedé al</b> <span class="highlight"><b>Apartado de fotos</b></span></h1>
+    <p>Te invitamos a que compartas con la comunidad fotos de tus mascotas.</p>
+    <a href="galeria_fotos.html" class="btn hero1-btn">Ir a Fotos</a>
+    <br>
+    <a href="mensajeria.html" class="btn hero1-btn">Ir a Mensajes</a>
+  </div>
+  <div class="hero1-decor"></div>
+</header>
+
+
+  <!-- Botón deslizador fijo sobre ambos -->
+  <button id="toggleHeroBtn" class="hero-toggle-btn"></button>
+</div>
+
+
+
+<script>
+const btn = document.getElementById("toggleHeroBtn");
+const hero1 = document.getElementById("hero1");
+const hero2 = document.getElementById("hero2");
+
+btn.addEventListener("click", () => {
+  if (hero1.style.display !== "none") {
+    hero1.style.display = "none";
+    hero2.style.display = "flex";
+  } else {
+    hero1.style.display = "flex";
+    hero2.style.display = "none";
+  }
+});
+
+</script>
+
+
+
+<br>
+
+<!-- ¿Por qué PetWise? -->
+<section id="principios-petwise" class="pw-values py-5">
+  <div class="container">
+    <center><h1><b>¿Por qué PetWise?</b></h1></center>
+    <br>
+    <div class="row g-4">
+
+      <!-- CARD 1 -->
+      <div class="col-12 col-md-6">
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-shield-check"></i></div>
+          <div class="pw-content">
+            <br>
+            <h5 class="pw-title">Seguridad</h5>
+            <p>Todos nuestros servicios y productos cumplen con los estándares de seguridad más exigentes.</p>
+            <div class="extra-text">
+              Protegemos la información usando encriptación, autenticación segura y respaldos automáticos.
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="col-12 col-md-6">
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-journal-medical"></i></div>
+          <div class="pw-content">
+            <br>
+            <h5 class="pw-title">Registro Digital de Vacunación</h5>
+            <p>Guardá vacunas, controles y consultas médicas en un solo lugar.</p>
+            <div class="extra-text">
+              Activá notificaciones para nunca olvidar una cita importante.
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="col-12 col-md-6">
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-calendar-check"></i></div>
+          <div class="pw-content">
+            <br>
+            <h5 class="pw-title">Agenda tu servicio</h5>
+            <p>Reservá turnos rápidamente con veterinarias, paseadores y cuidadores.</p>
+            <div class="extra-text">
+              Incluso podés sincronizar tu calendario personal.
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="col-12 col-md-6">
+        <article class="pw-card toggle-card">
+          <div class="pw-icon-side"><i class="bi bi-heart-fill"></i></div>
+          <div class="pw-content">
+            <br>
+            <h5 class="pw-title">Adopción y Rescate</h5>
+            <p>Conectamos rescatistas, adoptantes y refugios en un mismo espacio.</p>
+            <div class="extra-text">
+              Podés filtrar por zona, tamaño y características.
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="publico" class="pw-target">
+  <div class="container">
+    <h2 class="text-center mb-5">¿A Quién Está Dirigido?</h2>
+    <div class="row g-4 justify-content-center">
+
+      <!-- Dueños -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-heart-fill"></i></div>
+            <h5 class="pw-title">Dueños de Mascotas</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Personas que buscan un cuidado más organizado y completo para sus mascotas.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Veterinarias -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-hospital-fill"></i></div>
+            <h5 class="pw-title">Veterinarias</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Clínicas y profesionales que brindan servicios de salud animal.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Refugios -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-house-heart-fill"></i></div>
+            <h5 class="pw-title">Refugios</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Organizaciones dedicadas al rescate, cuidado y adopción de animales.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuidadores -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="pw-card">
+          <div class="pw-header">
+            <div class="pw-icon"><i class="bi bi-people-fill"></i></div>
+            <h5 class="pw-title">Cuidadores</h5>
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+          <div class="pw-body">
+            <p>Servicios de estética, paseadores y cuidadores que ofrecen atención personalizada.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<script>
+  // Toggle para cards con texto extra
+  document.querySelectorAll(".toggle-card").forEach(card => {
+    card.addEventListener("click", () => {
+      card.classList.toggle("active");
+    });
+  });
+
+  // Toggle para "¿A quién está dirigido?"
+  document.querySelectorAll(".publico-card .pw-header").forEach(header => {
+    header.addEventListener("click", () => {
+      header.parentElement.classList.toggle("active");
+    });
+  });
+</script>
+
+<!-- Diferenciador -->
+<section id="diferenciador">
+  <h2>¿Qué Nos Hace Diferentes?</h2>
+  <ul>
+    <li><strong>Diseño intuitivo:</strong> Accesible para cualquier edad.</li>
+    <li><strong>Solución completa:</strong> Todo lo que necesitas en un solo lugar.</li>
+    <li><strong>Enfoque emocional:</strong> Pensado desde el amor por los animales.</li>
+    <li><strong>Compromiso académico:</strong> Proyecto con base educativa y social.</li>
+  </ul>
+</section>
+
+<!-- App Demo -->
+<section id="app-demo">
+  <h2>Un vistazo a nuestra app</h2>
+  <p>PetWise ofrece una interfaz moderna, simple y centrada en la experiencia del usuario. Mirá un adelanto:</p>
+  <div class="row g-4 mt-4">
+    <div class="col-12 col-md-6">
+      <a href="img/imagenapp1.png" target="_blank">
+        <img src="img/imagenapp1.png" alt="Vista de la app PetWise" class="img-fluid rounded">
+      </a>
+    </div>
+    <div class="col-12 col-md-6">
+      <a href="img/imagenapp2.png" target="_blank">
+        <img src="img/imagenapp2.png" alt="Funcionalidades de PetWise" class="img-fluid rounded">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Descarga -->
+<section id="descarga" class="text-center mt-5">
+  <h2>Descargá PetWise</h2>
+  <p class="mb-5">Llevá el cuidado de tu mascota en tu bolsillo. Nuestra app está disponible para Android y iOS.</p>
+  <div class="row justify-content-center g-4">
+    <div class="col-12 col-md-5">
+      <div class="tarjeta-descarga p-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Logo Android" class="logo-sistema mb-3">
+        <h5 class="mb-3">Versión para Android</h5>
+        <p>Compatible con Android 8.0 o superior. Instalá la app y empezá a cuidar a tu mascota desde cualquier lugar.</p>
+      </div>
+    </div>
+    <div class="col-12 col-md-5">
+      <div class="tarjeta-descarga p-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Logo iOS" class="logo-sistema mb-3">
+        <h5 class="mb-3">Versión para iOS</h5>
+        <p>Disponible en la App Store para iPhone y iPad. Accedé a todas las funciones desde tu dispositivo Apple.</p>
+      </div>
+    </div>
+    <div class="col-12">
+      <h2 class="mt-5">Descargá PetWise en tu celular</h2>
+      <p>Escaneá el código QR con tu teléfono y accedé directamente a la app.</p>
+      <img src="img/qr.png" alt="QR para descargar PetWise" class="img-fluid rounded mt-4" style="max-width: 200px;">
+      <p class="mt-3 text-muted">Disponible para Android e iOS</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="pt-5 pb-4" style="background-color: #1f2937; color: #f1f1f1;">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      <div class="col-12 col-md-4 mb-4">
+        <h5 style="color: #69aa2d;"><b>PetWise</b></h5>
+        <p style="font-size: 0.95rem;">Unimos tecnología y amor por los animales para transformar el cuidado de las mascotas.</p>
+        <small class="text-muted">Proyecto educativo • Argentina</small>
+      </div>
+      <div class="col-12 col-md-4 mb-4">
+        <h6><b>Contacto</b></h6>
+        <ul class="list-unstyled" style="font-size: 0.95rem;">
+          <li class="mb-2"><i class="bi bi-envelope-fill me-2"></i><a href="mailto:petwise.arg@gmail.com" class="text-decoration-none text-white">petwise.arg@gmail.com</a></li>
+          <li class="mb-2"><i class="bi bi-telephone-fill me-2"></i><a href="tel:+543777823789" class="text-decoration-none text-white">+54 3777 823789</a></li>
+          <li><i class="bi bi-geo-alt-fill me-2"></i>Goya, Corrientes</li>
+        </ul>
+      </div>
+      <div class="col-12 col-md-4 mb-4">
+        <h6><b>Enlaces útiles</b></h6>
+        <ul class="list-unstyled" style="font-size: 0.95rem;">
+          <li class="mb-2"><a href="index.html" class="text-decoration-none text-white">Inicio</a></li>
+          <li class="mb-2"><a href="conocenosmas.html" class="text-decoration-none text-white">Sobre Nosotros</a></li>
+          <li class="mb-2"><a href="conocenosmas.html" class="text-decoration-none text-white">Sobre Nosotros</a></li>
+          <li class="mb-2"><a href="consultas.html" class="text-decoration-none text-white">Consultas</a></li>
+          <li class="mb-2"><a href="tienda.html" class="text-decoration-none text-white">Tienda</a></li>
+          <li><a href="contacto.html" class="text-decoration-none text-white">Contacto</a></li>
+        </ul>
+        <div class="mt-3">
+          <a href="https://instagram.com/petwise_arg" target="_blank" class="text-info me-3 fs-5"><i class="bi bi-instagram"></i></a>
+          <a href="mailto:petwise.arg@gmail.com" class="text-info me-3 fs-5"><i class="bi bi-envelope"></i></a>
+          <a href="https://wa.me/543777823789" target="blank" class="text-info fs-5"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="border-secondary mt-4" />
+    <div class="text-center text-muted small">
+      <p style="color: white;">&copy; 2025 PetWise Company — Todos los derechos reservados.</p>
+      <p style="color: white;">Creador: <a href="https://www.instagram.com/lauty_arcee" target="_blank" class="text-decoration-none text-white">Arce Lautaro</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/scrollreveal"></script>
+<script>
+  // ==============================
+  // Navbar móvil
+  // ==============================
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      const collapseEl = document.getElementById('navbarNav');
+      const bsCollapse = bootstrap.Collapse.getInstance(collapseEl);
+      if (!bsCollapse) { new bootstrap.Collapse(collapseEl, { toggle: true }); }
+      else { bsCollapse.hide(); }
+    });
+  });
+// Cierra la navbar al hacer clic o desplazar la página
+function cerrarNavbarSiAbierta() {
+  const collapseEl = document.getElementById('navbarNav');
+  const bsCollapse = bootstrap.Collapse.getInstance(collapseEl);
+  if (bsCollapse && collapseEl.classList.contains('show')) {
+    bsCollapse.hide();
   }
 }
 
-/* Imagen decorativa hero1 */
-.hero1::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 400px;
-  height: 400px;
-  background-image: url('img/perroimg.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: bottom left;
-  opacity: 0.7;
-  pointer-events: none;
-  z-index: 1;
-}
+// Cierra al hacer scroll
+window.addEventListener('scroll', cerrarNavbarSiAbierta);
 
-/* Tablets */
-@media screen and (max-width: 1024px) {
-  .hero1::after {
-    width: 2500px;   /* antes 250px */
-    height: 250px;  /* antes 250px */
-    opacity: 0.65;  /* un poco más visible */
+// Cierra al hacer clic en cualquier parte de la página
+document.addEventListener('click', (e) => {
+  // Evita cerrar si el clic es sobre el menú o el botón toggler
+  if (!e.target.closest('.navbar') && !e.target.closest('.navbar-toggler')) {
+    cerrarNavbarSiAbierta();
   }
-}
+});
 
-/* Móviles */
-@media screen and (max-width: 768px) {
-  .hero1::after {
-    width: 300px;   /* antes 300px */
-    height: 300px;  /* antes 300px */
-    opacity: 0.6;   /* un poco más visible */
-  }
-}
-/* Contenedor de headers */
-.hero-wrapper {
-  position: relative;
-  width: 100%;
-}
+  // ==============================
+  // Cards plegables
+  // ==============================
+  document.querySelectorAll('.pw-card .pw-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const card = header.parentElement;
+      card.classList.toggle('active');
+      const arrow = card.querySelector('.arrow i');
+      if (arrow) arrow.style.transform = card.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+  });
 
-/* Botón alternar */
-.toggle-hero-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 20;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.5);
-  background: rgba(255,255,255,0.2);
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+  // ==============================
+// Typed Text con borrado y repetición
+// ==============================
+document.addEventListener("DOMContentLoaded", () => {
+  const typedText = document.getElementById("typed-text");
+  if (!typedText) return;
 
-.toggle-hero-btn:hover {
-  background: rgba(255,255,255,0.3);
-  transform: scale(1.05);
-}
+  const fullText = typedText.textContent;
+  const typingSpeed = 100;       // velocidad de escritura por letra
+  const deleteDuration = 2000;   // duración total del borrado (2 segundos)
+  const pauseAfterWrite = 30000;  // tiempo que permanece el texto completo (1 segundo)
+  const pauseBeforeRewrite = 2000; // espera antes de volver a escribir (2 segundos)
 
-/* Base para ambos headers */
-.heroA, .heroB {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  min-height: 100vh;
-  padding: 2rem 1rem;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  background-size: 400% 400%;
-  transition: opacity 0.6s ease;
-}
+  function typeText() {
+    typedText.textContent = "";
+    let index = 0;
 
-/* Ocultar heroB por defecto */
-.heroB {
-  display: none;
-}
+    function type() {
+      if (index < fullText.length) {
+        typedText.textContent += fullText.charAt(index);
+        index++;
+        setTimeout(type, typingSpeed);
+      } else {
+        // después de escribir todo, espera 1 segundo y borra
+        setTimeout(deleteText, pauseAfterWrite);
+      }
+    }
 
-/* Fondos distintos */
-.heroA { background: linear-gradient(135deg, #2abe37, #078c9e); animation: gradientShift 15s ease infinite; }
-.heroB { background: linear-gradient(135deg, #ff7f50, #ffb347); animation: gradientShift2 15s ease infinite; }
-
-/* Contenido */
-.heroA-content, .heroB-content {
-  max-width: 720px;
-  z-index: 2;
-}
-
-/* Títulos */
-.heroA h1, .heroB h1 {
-  font-size: 3rem;
-  font-weight: 900;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-  letter-spacing: -1px;
-}
-
-/* Texto */
-.heroA p, .heroB p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  line-height: 1.5;
-  color: rgba(255,255,255,0.85);
-}
-
-/* Highlight */
-.highlight {
-  color: transparent;
-  background: linear-gradient(90deg, #a3e635, #22c0c5);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-/* Botón */
-.hero-btn {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-  color: #fff;
-  padding: 0.8rem 2rem;
-  font-weight: 600;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.2);
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.hero-btn:hover {
-  background: rgba(255,255,255,0.2);
-  transform: translateY(-3px) scale(1.05);
-}
-
-/* Animaciones de fondo */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes gradientShift2 {
-  0% { background-position: 100% 50%; }
-  50% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .heroA h1, .heroB h1 { font-size: 2rem; }
-  .heroA p, .heroB p { font-size: 1rem; }
-  .hero-btn { padding: 0.6rem 1.5rem; font-size: 1rem; }
-}
-
-
-
-/* SECCIONES */
-section {
-  max-width: 1000px;
-  margin: 3rem auto;
-  background-color: #1f2937;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
-
-
-.uno {
-  max-width: 700px;
-  margin: 3rem auto;
-  background-color: #1f2937;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
-
-
-h2 {
-  color: #69aa2d;
-  margin-bottom: 1rem;
-}
-
-ul {
-  margin-top: 0.5rem;
-  padding-left: 1.5rem;
-}
-
-footer {
-  text-align: center;
-  background-color: #1f2937;
-  color: white;
-  padding: 1.5rem;
-  margin-top: 2rem;
-}
-
-/* BOTONES */
-.btn-custom {
-  background-color: #111535;
-  color: #ffffff;
-  border: none;
-  transition: background-color 0.3s;
-}
-.btn-custom:hover {
-  background-color: #0ea5e9;
-}
-
-.btn-descarga {
-  background-color: #38bdf8;
-  color: #0e1117;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: background-color 0.3s, transform 0.2s;
-}
-.btn-descarga:hover {
-  background-color: #0ea5e9;
-  transform: scale(1.03);
-}
-
-/* TARJETAS */
-.card-dark {
-  background-color: #2c2f3a;
-  border: none;
-  color: white;
-}
-
-.tarjeta-descarga {
-  background-color: #1f2937;
-  border-radius: 16px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.3);
-  color: #f1f1f1;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-.tarjeta-descarga:hover {
-  transform: translateY(-5px);
-}
-
-/* LOGOS */
-.logo-sistema {
-  width: 64px;
-  height: auto;
-  max-width: 100%;
-}
-
-/* DESTACADOS */
-.highlight {
-  color: #0a0b0c;
-  font-weight: 600;
-}
-
-/* IMÁGENES */
-#app-demo img,
-img {
-  max-width: 100%;
-  height: auto;
-  transition: transform 0.3s ease;
-}
-#app-demo img:hover {
-  transform: scale(1.03);
-}
-@media screen and (max-width: 576px) {
-  .hero {
-    padding: 3rem 1rem 2rem;
+    type();
   }
 
-  .hero h1 {
-    font-size: 1.8rem;
+  function deleteText() {
+    const currentText = typedText.textContent;
+    let i = currentText.length;
+    const interval = deleteDuration / i;
+
+    function erase() {
+      if (i > 0) {
+        typedText.textContent = currentText.substring(0, i - 1);
+        i--;
+        setTimeout(erase, interval);
+      } else {
+        // espera 2 segundos antes de volver a escribir
+        setTimeout(typeText, pauseBeforeRewrite);
+      }
+    }
+
+    erase();
   }
 
-  main, section {
-    padding: 1.25rem;
-    margin: 2rem 1rem;
+  // iniciar ciclo
+  typeText();
+
+  document.body.style.visibility = "visible";
+});
+
+
+  // ==============================
+  // ScrollReveal
+  // ==============================
+  const sr = ScrollReveal({ distance:'40px', duration:950, easing:'cubic-bezier(0.65, 0, 0.35, 1)', opacity:0, scale:0.95, reset:false });
+  function revealSection(selector, interval=150, origin='bottom'){ sr.reveal(selector,{origin:origin,interval:interval}); }
+  revealSection('.hero1 h1',200); revealSection('.hero1 p',300); revealSection('.hero1 .btn',400);
+  revealSection('#principios-petwise .pw-photo-wrap',200,'left'); revealSection('#principios-petwise .pw-card',150,'bottom');
+  revealSection('#empresa h2',200); revealSection('#empresa p',150);
+  revealSection('#publico h2',200); revealSection('#publico .pw-card',150,'bottom');
+  revealSection('#diferenciador h2',200); revealSection('#diferenciador ul li',150,'bottom');
+  revealSection('#app-demo h2',200); revealSection('#app-demo p',300); revealSection('#app-demo .col-12.col-md-6',150,'bottom');
+  revealSection('#descarga h2',200); revealSection('#descarga p',300); revealSection('#descarga .tarjeta-descarga',150,'bottom'); revealSection('#descarga img',300,'bottom');
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const hero1 = document.getElementById("hero1");
+  const hero2 = document.getElementById("hero2");
+  const toggleBtn = document.getElementById("toggleHeroBtn");
+  const heroWrapper = document.querySelector(".hero-wrapper");
+
+  let currentHero = 1;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+
+  // 🔄 función para cambiar hero
+  function cambiarHero() {
+    if (currentHero === 1) {
+      hero1.style.display = "none";
+      hero2.style.display = "flex"; // usar flex para mantener diseño
+      currentHero = 2;
+    } else {
+      hero2.style.display = "none";
+      hero1.style.display = "flex";
+      currentHero = 1;
+    }
   }
 
-  .navbar-brand span {
-    font-size: 0.95rem;
-  }
+  // ✅ Botón funciona
+  toggleBtn.addEventListener("click", cambiarHero);
 
-  footer {
-    font-size: 0.9rem;
-  }
+  // ✅ Swipe funciona
+  heroWrapper.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  });
 
-  img,
-  .logo-sistema {
-    max-width: 100%;
-    height: auto;
-  }
-}
+  heroWrapper.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
 
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
 
-.mapa-container {
-  width: 100%;
-  max-width: 1000px;
-  height: 400px;
-  margin: 0 auto;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  overflow: hidden;
-}
+    const threshold = 50; // mínimo 50px para contar swipe
 
-.mapa-container iframe {
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  border: none;
-}
+    // 🔹 solo si es horizontal y supera el threshold
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+      cambiarHero();
+    }
+  });
+  // ==============================
+// Auto-deslizar héroes cada 10 segundos
+// ==============================
+setInterval(() => {
+  // Solo ejecuta si el usuario no está interactuando activamente (opcional)
+  cambiarHero();
+}, 10000); // 10000ms = 10 segundos
 
-/* ==== CARD GENERAL ==== */
-.pw-card {
-  background: #073a5b; /* fondo único */
-  color: #fff;
-  border-radius: 18px;
-  padding: 1.5rem 1.25rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,.35);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
+});
 
-.pw-icon-side {
-  background: #0aa0c8;
-  border-radius: 50%;
-  width: 70px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.8rem; /* pegado al texto */
-}
-
-.pw-icon-side i {
-  font-size: 2rem;
-  color: #fff;
-}
-
-.pw-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
-}
-
-.pw-title::after {
-  content: "";
-  display: block;
-  width: 40px;
-  height: 2px;
-  background: #0aa0c8;
-  margin: 0.4rem auto 0;
-}
-
-.pw-content p {
-  font-size: 0.95rem;
-  margin: 0;
-}
-
-/* ==== RESPONSIVE ==== */
-@media (min-width: 992px) {
-  /* Escritorio: icono izquierda, texto derecha */
-  .pw-card {
-    flex-direction: row;
-    text-align: left;
-    align-items: flex-start;
-    padding: 1.5rem;
-  }
-
-  .pw-icon-side {
-    margin: 0 1rem 0 0;
-    flex-shrink: 0;
-  }
-
-  .pw-title::after {
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
-
-/* ==== Imagen Perrito ==== */
-.pw-photo-wrap {
-  width: 100%;
-  height: 100%;
-  min-height: 30px; /* asegura buena altura en desktop */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #000000 0%, #000000 100%);
-  box-shadow: 0 12px 36px rgba(0,0,0,.35);
-}
-
-.pw-photo {
-  width: 500%;
-  height: 100%;
-  object-fit: cover; /* llena el cuadro y recorta lo sobrante */
-}
+</script>
 
 
-/* Sección */
-.pw-target {
-  padding: 60px 20px;
-}
 
-.pw-target h2 {
-  font-weight: 700;
-  color: #fff;
-}
+</body>
+</html>
 
-/* Tarjetas */
-.pw-card {
-  background: #1f2937;
-  border-radius: 16px;
-  padding: 20px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 
-.pw-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
 
-/* Encabezado */
-.pw-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-}
 
-.pw-icon {
-  font-size: 2.2rem;
-  color: #4ade80;
-  margin-bottom: 10px;
-}
 
-.pw-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 5px;
-}
 
-/* Flecha */
-.arrow {
-  font-size: 1.2rem;
-  color: #9ca3af;
-  transition: transform 0.3s ease;
-}
 
-.pw-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-}
-
-.pw-card.active .pw-body {
-  max-height: 200px; /* Ajusta según tu contenido */
-}
-
-.arrow i {
-  transition: transform 0.4s;
-}
-
-.pw-card.active .arrow i {
-  transform: rotate(180deg);
-}
