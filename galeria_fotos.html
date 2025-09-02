@@ -428,7 +428,10 @@ main {
     <span class="lightbox-close">&times;</span>
     <img src="" alt="Imagen ampliada">
   </div>
-<!-- Supabase JS SDK -->
+
+
+
+  <!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
   const supabaseUrl = "https://tilsnvckijrgnjzylgof.supabase.co";
@@ -598,25 +601,47 @@ main {
         const fotoId = likeBtn.dataset.id;
 
         if (heart.textContent === "🤍") {
-          const { error: insertError } = await supabaseClient.from("likes").insert({ foto_id: fotoId, user_id: userId });
-          if (insertError) {
-            console.error("Error insertando like:", insertError.message, "fotoId:", fotoId, "userId:", userId);
-            return;
-          }
+          await supabaseClient.from("likes").insert({ foto_id: fotoId, user_id: userId });
           heart.textContent = "❤️";
           countSpan.textContent = parseInt(countSpan.textContent) + 1;
         } else {
-          const { error: deleteError } = await supabaseClient.from("likes").delete().eq("foto_id", fotoId).eq("user_id", userId);
-          if (deleteError) {
-            console.error("Error borrando like:", deleteError.message, "fotoId:", fotoId, "userId:", userId);
-            return;
-          }
+          await supabaseClient.from("likes").delete().eq("foto_id", fotoId).eq("user_id", userId);
           heart.textContent = "🤍";
           countSpan.textContent = parseInt(countSpan.textContent) - 1;
         }
-      });
+      }); 
 
       galeria.append(card);
+    }
+  }
+
+  // 🔹 Suscripción a Realtime para likes
+  supabaseClient
+    .channel('likes-changes')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'likes' },
+      (payload) => {
+        console.log("Realtime cambio en likes:", payload);
+        const fotoId = payload.new?.foto_id || payload.old?.foto_id;
+        if (!fotoId) return;
+        // actualizar el contador en pantalla
+        actualizarLikes(fotoId);
+      }
+    )
+    .subscribe();
+
+  async function actualizarLikes(fotoId) {
+    const { count, error } = await supabaseClient
+      .from("likes")
+      .select("*", { count: "exact", head: true })
+      .eq("foto_id", fotoId);
+
+    if (!error) {
+      const likeBtn = document.querySelector(`.like-btn[data-id="${fotoId}"]`);
+      if (likeBtn) {
+        likeBtn.querySelector(".count").textContent = count;
+      }
     }
   }
 
@@ -678,7 +703,6 @@ main {
     }
   });
 </script>
-
 
 
 </body>
