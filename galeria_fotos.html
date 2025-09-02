@@ -582,7 +582,7 @@ main {
             background:rgba(0,0,0,0.6); color:white; padding:5px 10px;
             border-radius:20px; cursor:pointer; display:flex; align-items:center; gap:5px;
           ">
-            <span class="heart">${yoLike ? "❤️" : "🤍"}</span>
+            <span class="heart">${yoLike ? "💚" : "🤍"}</span>
             <span class="count">${totalLikes}</span>
           </div>
         </div>
@@ -623,7 +623,7 @@ main {
 
         if (heart.textContent === "🤍") {
           await supabaseClient.from("likes").insert({ foto_id: fotoId, user_id: userId });
-          heart.textContent = "❤️";
+          heart.textContent = "💚";
           countSpan.textContent = parseInt(countSpan.textContent) + 1;
         } else {
           await supabaseClient.from("likes").delete().eq("foto_id", fotoId).eq("user_id", userId);
