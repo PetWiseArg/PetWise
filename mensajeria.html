@@ -12,24 +12,21 @@ body {
   font-family: sans-serif;
   background: #ece5dd;
   height: 100vh;
-  overflow: hidden; /* Evita scroll en body */
+  position: relative; /* para que los hijos absolute se posicionen respecto a body */
 }
 
 /* Navbar fijo arriba */
 nav {
   background:#048c96;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
+  
+  
 }
 
-/* Chat ocupa todo el espacio entre navbar y input fijo */
 #chat {
   position: absolute;
-  top: 70px;      /* altura del navbar */
-  bottom: 70px;   /* altura del input */
+  color: #000000;
+  top: 70px;      /* debajo del navbar */
+  bottom: 70px;   /* arriba del input */
   left: 0;
   right: 0;
   overflow-y: auto;
@@ -39,13 +36,12 @@ nav {
   gap: 0.3rem;
 }
 
-/* Input fijo en la parte inferior */
 #inputArea {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 70px;
+  height: 70px;  /* mismo valor que bottom del chat */
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;
@@ -55,89 +51,63 @@ nav {
   z-index: 1000;
 }
 
-/* Campos de autor y mensaje */
-#autor {
-  padding: 0.5rem 0.75rem;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  font-size: 0.9rem;
-  width: 20%;
-  min-width: 80px;
-}
 
-#mensaje {
-  padding: 0.5rem 0.75rem;
-  border-radius: 20px;
-  border: 1px solid #000000;
-  font-size: 0.9rem;
-  flex: 1;
-  height: 38px;
-  line-height: 1.2rem;
-  resize: none;
-  overflow-y: auto;
-}
-
-/* Botón enviar */
-#enviar {
-  background: #0093ad;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.2rem;
-}
-
-#enviar:hover { background:#0093ad; }
 
 /* Burbujas estilo WhatsApp */
-.msg { 
-  max-width: 75%; 
-  padding: 0.5rem 0.8rem; 
-  border-radius: 18px; 
-  word-wrap: break-word; 
-  display: inline-block; 
-  line-height: 1.3; 
-  position: relative; 
-}
-
-.msg.mine { 
-  background: #c6f2f8; 
-  align-self: flex-end; 
-  border-bottom-right-radius: 4px; 
-}
-
-.msg.other { 
-  background: #fff; 
-  align-self: flex-start; 
-  border-bottom-left-radius: 4px; 
-}
-
-.autor { 
-  font-size: 0.75rem; 
-  font-weight: bold; 
-  margin-bottom: 0.2rem; 
-  color: #555; 
-}
+.msg { max-width:75%; padding:0.5rem 0.8rem; border-radius:18px; word-wrap:break-word; display:inline-block; line-height:1.3; position:relative; }
+.msg.mine { background:#c6f2f8; align-self:flex-end; border-bottom-right-radius:4px; }
+.msg.other { background:#fff; align-self:flex-start; border-bottom-left-radius:4px; }
+.autor { font-size:0.75rem; font-weight:bold; margin-bottom:0.2rem; color:#555; }
 
 /* Hora debajo del mensaje */
-.hora { 
-  font-size: 0.65rem; 
-  color: #555; 
-  text-align: right; 
-  margin-top: 2px; 
+.hora { font-size:0.65rem; color:#555; text-align:right; margin-top:2px; }
+
+
+
+/* Campos de autor y mensaje */
+#autor { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; width:20%; min-width:80px; }
+#mensaje { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; flex:1; }
+
+/* Botón circular enviar con flecha */
+#enviar {
+  background:#0093ad; 
+  color:#fff; 
+  border:none; 
+  border-radius:50%; 
+  width:45px; 
+  height:45px; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  cursor:pointer;
+  font-size:1.2rem;
+}
+#enviar:hover { background:#0093ad; }
+
+/* Mensajes max ancho y responsive */
+@media (max-width: 576px) {
+  #autor { width:25%; min-width:60px; }
+  #mensaje { width:65%; }
+  .msg { max-width:90%; }
 }
 
-/* Responsive móviles */
+/* Responsive para móviles */
 @media (max-width: 576px) {
-  #autor { width: 25%; min-width: 60px; }
-  #mensaje { width: 65%; }
-  .msg { max-width: 90%; }
-  #chat { padding: 0.5rem; gap: 0.2rem; }
+  #chat {
+    padding: 0.5rem;
+    gap: 0.2rem;
+  }
+}
+#mensaje {
+  padding:0.5rem 0.75rem;   /* igual que #autor */
+  border-radius:20px;
+  border:1px solid #ccc;
+  font-size:0.9rem;
+  flex:1;
+  height: 38px;             /* misma altura aproximada que #autor */
+  line-height: 1.2rem;      /* ajusta la altura de las líneas */
+  resize: none;             /* evita cambiar el tamaño */
+  overflow-y: auto;         /* permite scroll interno si se escribe mucho */
 }
 
 </style>
