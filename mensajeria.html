@@ -12,19 +12,26 @@ body {
   font-family: sans-serif;
   background: #ece5dd;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
+  overflow: hidden; /* Evita scroll en body */
 }
 
 /* Navbar fijo arriba */
 nav {
   background:#048c96;
-  flex-shrink: 0; /* No se encoge */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
-/* Chat ocupa todo el espacio entre navbar y input */
+/* Chat ocupa todo el espacio entre navbar y input fijo */
 #chat {
-  flex: 1; /* ocupa todo el espacio disponible */
+  position: absolute;
+  top: 70px;      /* altura del navbar */
+  bottom: 70px;   /* altura del input */
+  left: 0;
+  right: 0;
   overflow-y: auto;
   padding: 1rem;
   display: flex;
@@ -32,8 +39,12 @@ nav {
   gap: 0.3rem;
 }
 
-/* Input fijo abajo */
+/* Input fijo en la parte inferior */
 #inputArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   height: 70px;
   display: flex;
   gap: 0.5rem;
@@ -41,7 +52,7 @@ nav {
   background: #f0f0f0;
   align-items: center;
   box-sizing: border-box;
-  flex-shrink: 0; /* No se encoge */
+  z-index: 1000;
 }
 
 /* Campos de autor y mensaje */
@@ -57,7 +68,7 @@ nav {
 #mensaje {
   padding: 0.5rem 0.75rem;
   border-radius: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
   font-size: 0.9rem;
   flex: 1;
   height: 38px;
@@ -128,7 +139,6 @@ nav {
   .msg { max-width: 90%; }
   #chat { padding: 0.5rem; gap: 0.2rem; }
 }
-
 
 </style>
 </head>
