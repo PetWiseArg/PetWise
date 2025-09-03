@@ -10,7 +10,7 @@
 /* Nav fijo arriba */
 nav {
   background: #048c96;
-  position: fixed;   /* se mantiene fijo */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -18,13 +18,12 @@ nav {
   height: 70px;
 }
 
-/* Forzar que el body siempre use la pantalla completa real */
+/* Body ocupa siempre la pantalla completa */
 body {
   margin: 0;
   font-family: sans-serif;
   background: #ece5dd;
-  height: 100dvh; /* usa altura del dispositivo, ignora teclado */
-  overflow: hidden;
+  height: 100dvh;   /* altura estable */
   display: flex;
   flex-direction: column;
 }
@@ -45,14 +44,14 @@ body {
   height: 70px;
 }
 
-/* Chat ocupa solo el espacio intermedio */
+/* Chat ocupa solo el espacio intermedio y tiene scroll */
 #chat {
   position: absolute;
-  top: 70px;     /* altura del nav */
-  bottom: 70px;  /* altura del input */
+  top: 70px;     /* debajo del nav */
+  bottom: 70px;  /* arriba del input */
   left: 0;
   right: 0;
-  overflow-y: auto;
+  overflow-y: auto;  /* solo aquí el scroll */
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -60,6 +59,7 @@ body {
   color: #000000;
   box-sizing: border-box;
 }
+
 
 /* Burbujas estilo WhatsApp */
 .msg { max-width:75%; padding:0.5rem 0.8rem; border-radius:18px; word-wrap:break-word; display:inline-block; line-height:1.3; position:relative; }
