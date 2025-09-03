@@ -8,38 +8,13 @@
  <link rel="stylesheet" href="estilo.css" />
 <style>
 body { margin:0; font-family:sans-serif; background:#ece5dd; display:flex; flex-direction:column; height:100vh; }
-/* Nav fijo arriba */
-nav {
-  background: #048c96;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1050;
-  height: 70px; /* altura del nav */
-}
+nav { background:#048c96; }
 
-/* Input fijo abajo */
-#inputArea {
-  display: flex;
-  padding: 0.5rem;
-  background: #f0f0f0;
-  gap: 0.5rem;
-  align-items: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
-  z-index: 100;
-  height: 70px; /* altura del input */
-}
-
-/* Chat ocupa solo el espacio entre nav y input */
+/* Chat */
 #chat {
   position: absolute;
-  top: 70px;     /* justo debajo del nav */
-  bottom: 70px;  /* justo encima del input */
+  top: 70px;       /* altura del navbar */
+  bottom: 70px;    /* altura del inputArea */
   left: 0;
   right: 0;
   overflow-y: auto;
@@ -48,9 +23,7 @@ nav {
   flex-direction: column;
   gap: 0.3rem;
   color: #000000;
-  box-sizing: border-box;
 }
-
 
 
 
@@ -64,7 +37,19 @@ nav {
 .hora { font-size:0.65rem; color:#555; text-align:right; margin-top:2px; }
 
 /* Inputs fijos abajo */
-
+#inputArea {
+  display:flex;
+  padding:0.5rem;
+  background:#f0f0f0;
+  gap:0.5rem;
+  align-items:center;
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  box-sizing:border-box;
+  z-index:100;
+}
 
 /* Campos de autor y mensaje */
 #autor { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; width:20%; min-width:80px; }
