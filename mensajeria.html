@@ -13,24 +13,26 @@ nav {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1050; /* bien arriba */
-  height: 70px;  /* altura fija del nav */
+  z-index: 1050;
+  height: 70px; /* altura fija del nav */
 }
 
-/* Que el contenido arranque después del nav */
+/* Que el body se ajuste al alto total */
 body {
   margin: 0;
   font-family: sans-serif;
   background: #ece5dd;
-  display: flex;
-  flex-direction: column;
   height: 100vh;
-  padding-top: 70px; /* separa el contenido del nav */
+  overflow: hidden; /* evita scroll del body */
 }
 
-/* Chat ocupa todo el espacio entre nav y input */
+/* Chat ocupa el espacio entre nav y input */
 #chat {
-  flex: 1;
+  position: absolute;
+  top: 70px;     /* altura del nav */
+  bottom: 70px;  /* altura del input */
+  left: 0;
+  right: 0;
   overflow-y: auto;
   padding: 1rem;
   display: flex;
@@ -39,8 +41,6 @@ body {
   color: #000000;
   box-sizing: border-box;
 }
-
-
 /* Burbujas estilo WhatsApp */
 .msg { max-width:75%; padding:0.5rem 0.8rem; border-radius:18px; word-wrap:break-word; display:inline-block; line-height:1.3; position:relative; }
 .msg.mine { background:#c6f2f8; align-self:flex-end; border-bottom-right-radius:4px; }
@@ -52,17 +52,18 @@ body {
 
 /* Inputs fijos abajo */
 #inputArea {
-  display:flex;
-  padding:0.5rem;
-  background:#f0f0f0;
-  gap:0.5rem;
-  align-items:center;
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  box-sizing:border-box;
-  z-index:100;
+  display: flex;
+  padding: 0.5rem;
+  background: #f0f0f0;
+  gap: 0.5rem;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 100;
+  height: 70px; /* altura fija del input */
 }
 
 /* Campos de autor y mensaje */
