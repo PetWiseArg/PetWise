@@ -209,54 +209,6 @@ window.addEventListener('load', () => {
 
 
 
-<script>
-const newMsgBtn = document.getElementById("newMsgBtn");
-
-// Saber si el usuario está abajo del todo
-function estaAbajo() {
-  return chatDiv.scrollHeight - chatDiv.scrollTop <= chatDiv.clientHeight + 10;
-}
-
-// Cuando aparece un mensaje nuevo
-function notificarNuevoMensaje() {
-  if (!estaAbajo()) {
-    newMsgBtn.style.display = "block";
-  }
-}
-
-// Cuando el usuario hace click en el botón
-newMsgBtn.addEventListener("click", () => {
-  chatDiv.scrollTop = chatDiv.scrollHeight;
-  newMsgBtn.style.display = "none";
-});
-
-// Detectar scroll: si baja hasta el final, ocultar botón
-chatDiv.addEventListener("scroll", () => {
-  if (estaAbajo()) newMsgBtn.style.display = "none";
-});
-
-// 🔥 Hookear las funciones existentes sin tocarlas:
-// - Cuando se agrega un mensaje nuevo en `agregarMensaje` o en la subscripción
-const originalAgregarMensaje = agregarMensaje;
-window.agregarMensaje = function(msg) {
-  originalAgregarMensaje(msg);
-  if (msg.user_id !== userId) notificarNuevoMensaje();
-};
-
-// También en la subscripción en tiempo real:
-const originalSub = supabaseClient.channel;
-supabaseClient.channel = function(...args) {
-  const ch = originalSub.apply(this, args);
-  ch.on = function(event, filter, callback) {
-    const wrappedCallback = (payload) => {
-      callback(payload);
-      if (payload.new.user_id !== userId) notificarNuevoMensaje();
-    };
-    return Object.getPrototypeOf(ch).on.call(ch, event, filter, wrappedCallback);
-  };
-  return ch;
-};
-</script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
@@ -321,17 +273,22 @@ async function cargarMensajes(){
 
 // Llamada inicial
 cargarMensajes();
+// Función para saber si el usuario está viendo el final del chat
+function estaAbajo() {
+  return chatDiv.scrollHeight - chatDiv.scrollTop <= chatDiv.clientHeight + 10;
+}
 
-// Actualizar mensajes cada 5 segundos SIN bajar el scroll
+// Actualizar mensajes cada 5 segundos
 setInterval(async () => {
   const { data, error } = await supabaseClient.from("mensajes")
     .select("*")
     .order("created_at", { ascending:true });
   if(error) return;
 
-  // Solo actualizar el contenido, no tocar scroll
-  const scrollActual = chatDiv.scrollTop;
-  chatDiv.innerHTML = "";
+  // Saber si el usuario está al final antes de actualizar
+  const usuarioAlFinal = estaAbajo();
+
+  chatDiv.innerHTML = ""; // limpiar chat
   if(data) data.forEach(msg => {
     const div = document.createElement("div");
     div.className = "msg " + (msg.user_id === userId ? "mine" : "other");
@@ -341,7 +298,11 @@ setInterval(async () => {
                      <div class="hora">${horaStr}</div>`;
     chatDiv.appendChild(div);
   });
-  chatDiv.scrollTop = scrollActual; // mantener scroll donde estaba
+
+  // Solo bajar scroll si el usuario estaba viendo el final
+  if(usuarioAlFinal){
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+  }
 }, 5000);
 
 async function enviarMensaje(){
