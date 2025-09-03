@@ -1,3 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetWise Chat</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="estilo.css" />
+<style>
+body { 
+  margin:0; 
+  font-family:sans-serif; 
+  background:#ece5dd; 
+  display:flex; 
+  flex-direction:column; 
+  height:100vh; 
+  padding-top: 70px;  /* altura navbar */
+}
+nav { background:#048c96; }
+#chat {
+  position: absolute;
+  top: 70px;                     /* justo debajo del navbar */
+  bottom: 70px;                  /* justo arriba del input */
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: #000000;
+}
+
+
+
+
+/* Burbujas estilo WhatsApp */
+.msg { max-width:75%; padding:0.5rem 0.8rem; border-radius:18px; word-wrap:break-word; display:inline-block; line-height:1.3; position:relative; }
+.msg.mine { background:#c6f2f8; align-self:flex-end; border-bottom-right-radius:4px; }
+.msg.other { background:#fff; align-self:flex-start; border-bottom-left-radius:4px; }
+.autor { font-size:0.75rem; font-weight:bold; margin-bottom:0.2rem; color:#555; }
+
+/* Hora debajo del mensaje */
+.hora { font-size:0.65rem; color:#555; text-align:right; margin-top:2px; }
+
 #inputArea {
   display:flex;
   padding:0.5rem;
@@ -12,3 +57,300 @@
   box-sizing:border-box;
   z-index:100;
 }
+
+/* Campos de autor y mensaje */
+#autor { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; width:20%; min-width:80px; }
+#mensaje { padding:0.5rem 0.75rem; border-radius:20px; border:1px solid #ccc; font-size:0.9rem; flex:1; }
+
+/* Botón circular enviar con flecha */
+#enviar {
+  background:#0093ad; 
+  color:#fff; 
+  border:none; 
+  border-radius:50%; 
+  width:45px; 
+  height:45px; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  cursor:pointer;
+  font-size:1.2rem;
+}
+#enviar:hover { background:#0093ad; }
+
+/* Mensajes max ancho y responsive */
+@media (max-width: 576px) {
+  #autor { width:25%; min-width:60px; }
+  #mensaje { width:65%; }
+  .msg { max-width:90%; }
+}
+
+/* Responsive para móviles */
+@media (max-width: 576px) {
+  #chat {
+    padding: 0.5rem;
+    gap: 0.2rem;
+  }
+}
+#mensaje {
+  padding:0.5rem 0.75rem;   /* igual que #autor */
+  border-radius:20px;
+  border:1px solid #ccc;
+  font-size:0.9rem;
+  flex:1;
+  height: 38px;             /* misma altura aproximada que #autor */
+  line-height: 1.2rem;      /* ajusta la altura de las líneas */
+  resize: none;             /* evita cambiar el tamaño */
+  overflow-y: auto;         /* permite scroll interno si se escribe mucho */
+}
+
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="img/logo.png" alt="PetWise Logo" class="img-fluid" />
+      <span>PetWise Company</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+       <li class="nav-item">
+          <a class="nav-link" href="grupos.html">Grupos</a>
+        </li>
+        <li class="nav-item">
+          <!-- Volver a la página anterior con JS -->
+          <a class="nav-link" href="#" onclick="history.back(); return false;">Atrás</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Modal -->
+<div class="modal fade" id="bienvenidaModal" tabindex="-1" aria-labelledby="bienvenidaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: #000000;" id="bienvenidaLabel">¡Bienvenido a PetWise Chat!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p style="color: #000000;">Este espacio es para que compartas tus experiencias, consejos y preguntas sobre tus mascotas.
+Por favor, sé respetuoso con los demás y disfruta la conversación. 🐾</p>
+       <p style="color: #000000;">(Los mensajes se eliminan cada 7 dias)</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Mostrar el modal al cargar la página
+window.addEventListener('load', () => {
+  const bienvenidaModal = new bootstrap.Modal(document.getElementById('bienvenidaModal'));
+  bienvenidaModal.show();
+});
+</script>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+  <input type="text" id="autor" placeholder="Tu nombre o @Instagram">
+  <textarea id="mensaje" placeholder="Escribe tu mensaje..." maxlength="500" rows="2" style="resize:none;"></textarea>
+  <button id="enviar">&#9658;</button> <!-- Flecha -->
+</div>
+
+
+
+
+<script>
+const newMsgBtn = document.getElementById("newMsgBtn");
+
+// Saber si el usuario está abajo del todo
+function estaAbajo() {
+  return chatDiv.scrollHeight - chatDiv.scrollTop <= chatDiv.clientHeight + 10;
+}
+
+// Cuando aparece un mensaje nuevo
+function notificarNuevoMensaje() {
+  if (!estaAbajo()) {
+    newMsgBtn.style.display = "block";
+  }
+}
+
+// Cuando el usuario hace click en el botón
+newMsgBtn.addEventListener("click", () => {
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+  newMsgBtn.style.display = "none";
+});
+
+// Detectar scroll: si baja hasta el final, ocultar botón
+chatDiv.addEventListener("scroll", () => {
+  if (estaAbajo()) newMsgBtn.style.display = "none";
+});
+
+// 🔥 Hookear las funciones existentes sin tocarlas:
+// - Cuando se agrega un mensaje nuevo en `agregarMensaje` o en la subscripción
+const originalAgregarMensaje = agregarMensaje;
+window.agregarMensaje = function(msg) {
+  originalAgregarMensaje(msg);
+  if (msg.user_id !== userId) notificarNuevoMensaje();
+};
+
+// También en la subscripción en tiempo real:
+const originalSub = supabaseClient.channel;
+supabaseClient.channel = function(...args) {
+  const ch = originalSub.apply(this, args);
+  ch.on = function(event, filter, callback) {
+    const wrappedCallback = (payload) => {
+      callback(payload);
+      if (payload.new.user_id !== userId) notificarNuevoMensaje();
+    };
+    return Object.getPrototypeOf(ch).on.call(ch, event, filter, wrappedCallback);
+  };
+  return ch;
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+const supabaseUrl = "https://tilsnvckijrgnjzylgof.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbHNudmNraWpyZ25qenlsZ29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NTI3MjIsImV4cCI6MjA3MjIyODcyMn0.HMnClyn3fnPP16H_UqxKvEhyD3Iv4_g1F9b_0_3b1mw";
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+const chatDiv = document.getElementById("chat");
+const autorInput = document.getElementById("autor");
+const mensajeInput = document.getElementById("mensaje");
+const enviarBtn = document.getElementById("enviar");
+
+let userId = localStorage.getItem("userId");
+if(!userId){ userId = crypto.randomUUID(); localStorage.setItem("userId", userId); }
+
+function escaparHTML(str){
+  return String(str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function horaLocal(timestamp) {
+  const fecha = new Date(timestamp);
+  fecha.setHours(fecha.getHours() - 3);
+  return fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+}
+
+// --- Variable para primera carga ---
+let primeraCarga = true;
+
+function agregarMensaje(msg){
+  const div = document.createElement("div");
+  div.className = "msg " + (msg.user_id === userId ? "mine" : "other");
+  const horaStr = horaLocal(msg.created_at);
+  div.innerHTML = `<div class="autor">${escaparHTML(msg.autor)}</div>
+                   <div class="contenido">${escaparHTML(msg.contenido)}</div>
+                   <div class="hora">${horaStr}</div>`;
+
+  chatDiv.appendChild(div);
+
+  // Solo bajar scroll si es la primera carga o si es mensaje propio
+  if(primeraCarga || msg.user_id === userId){
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+  }
+}
+
+async function cargarMensajes(){
+  const { data, error } = await supabaseClient.from("mensajes")
+    .select("*")
+    .order("created_at", { ascending:true });
+
+  if(error) return alert("Error al cargar mensajes: " + error.message);
+
+  chatDiv.innerHTML = "";
+  if(data) data.forEach(agregarMensaje);
+
+  // Primera carga completada
+  if(primeraCarga){
+    chatDiv.scrollTop = chatDiv.scrollHeight; // bajar solo la primera vez
+    primeraCarga = false;
+  }
+}
+
+// Llamada inicial
+cargarMensajes();
+
+// Actualizar mensajes cada 5 segundos SIN bajar el scroll
+setInterval(async () => {
+  const { data, error } = await supabaseClient.from("mensajes")
+    .select("*")
+    .order("created_at", { ascending:true });
+  if(error) return;
+
+  // Solo actualizar el contenido, no tocar scroll
+  const scrollActual = chatDiv.scrollTop;
+  chatDiv.innerHTML = "";
+  if(data) data.forEach(msg => {
+    const div = document.createElement("div");
+    div.className = "msg " + (msg.user_id === userId ? "mine" : "other");
+    const horaStr = horaLocal(msg.created_at);
+    div.innerHTML = `<div class="autor">${escaparHTML(msg.autor)}</div>
+                     <div class="contenido">${escaparHTML(msg.contenido)}</div>
+                     <div class="hora">${horaStr}</div>`;
+    chatDiv.appendChild(div);
+  });
+  chatDiv.scrollTop = scrollActual; // mantener scroll donde estaba
+}, 5000);
+
+async function enviarMensaje(){
+  const autor = autorInput.value.trim() || "Anónimo";
+  const contenido = mensajeInput.value.trim();
+  if(!contenido) return;
+
+  try {
+    const { data, error } = await supabaseClient.from("mensajes").insert([
+      { user_id: userId, autor, contenido }
+    ]).select();
+
+    if(error) throw error;
+
+    agregarMensaje(data[0]);
+    mensajeInput.value = "";
+  } catch(err){
+    alert("Error al enviar: " + err.message);
+  }
+}
+
+enviarBtn.addEventListener("click", enviarMensaje);
+
+///mensajeInput.addEventListener("keydown", (e) => {
+  //if(e.key === "Enter" && !e.shiftKey){
+    //e.preventDefault();
+    //enviarMensaje();
+  //}
+//});
+
+// Suscripción en tiempo real: solo agregar mensajes nuevos sin tocar scroll
+supabaseClient.channel('chat')
+  .on('postgres_changes', { event:'INSERT', schema:'public', table:'mensajes' }, payload => {
+    if(payload.new.user_id !== userId){
+      const div = document.createElement("div");
+      div.className = "msg other";
+      const horaStr = horaLocal(payload.new.created_at);
+      div.innerHTML = `<div class="autor">${escaparHTML(payload.new.autor)}</div>
+                       <div class="contenido">${escaparHTML(payload.new.contenido)}</div>
+                       <div class="hora">${horaStr}</div>`;
+      chatDiv.appendChild(div);
+    }
+  })
+  .subscribe();
+
+</script>
+
+
+</body>
+</html>
