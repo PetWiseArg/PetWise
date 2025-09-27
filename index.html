@@ -227,10 +227,7 @@
         <li class="nav-item"><a class="nav-link" href="img/qrpet.png" target="-blank">QR</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
         <li class="nav-item"><a class="nav-link" href="informacion.html">Información</a></li>
-        <li class="nav-item"><a class="nav-link" href="consultas.html">Consultas</a></li>
-        <li class="nav-item"><a class="nav-link" href="galeria_fotos.html">Fotos</a></li>
-        <li class="nav-item"><a class="nav-link" href="mensajeria.html">Mensajes</a></li>
-        <li class="nav-item"><a class="nav-link" href="tienda.html">Tienda</a></li>
+        <li class="nav-item"><a class="nav-link" href="consultas.html">Servicios</a></li>
       </ul>
     </div>
   </div>
@@ -243,74 +240,11 @@
       <h1 id="typed-text">Bienvenidos a <span class="highlight">PetWise</span></h1>
       <p>Transformamos el cuidado de tus mascotas combinando tecnología, diseño y amor animal.</p>
       <a href="conocenosmas.html" class="btn hero1-btn">Conocé más</a>
-<button id="installBtn" class="btn hero1-btn mt-3">📲 Instalar</button>
 
     </div>
     <div class="hero1-decor"></div>
   </header>
-<script>
-let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
 
-// Detectar si es móvil o tablet
-const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
-
-// Si es PC, ocultar el botón
-if (!isMobile) {
-  installBtn.style.display = "none";
-}
-
-// Función para chequear si ya está instalada
-function checkIfInstalled() {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-                    || window.navigator.standalone === true;
-
-  if (isStandalone) {
-    installBtn.innerText = "✅";
-    installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
-    return true;
-  }
-
-  if ('getInstalledRelatedApps' in navigator) {
-    navigator.getInstalledRelatedApps().then(apps => {
-      if (apps.length > 0) {
-        installBtn.innerText = "✅";
-        installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
-      }
-    });
-  }
-  return false;
-}
-
-// Guardamos el evento para Android
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-// Acción al hacer clic
-installBtn.onclick = async () => {
-  if (checkIfInstalled()) return;
-
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`Instalación: ${outcome}`);
-    deferredPrompt = null;
-
-    if (outcome === "accepted") {
-      installBtn.innerText = "✅";
-      installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
-    }
-  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-    alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
-  } else {
-    alert("Tu navegador no soporta instalación directa.");
-  }
-};
-
-checkIfInstalled();
-</script>
 
 
 
@@ -351,29 +285,6 @@ btn.addEventListener("click", () => {
 
 
 <br>
-<section id="quick-access" class="py-5" style="background: transparent; box-shadow: none;">
-  <div class="container">
-    <div class="row g-4 justify-content-center">
-
-      <!-- Botón Fotos -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <a href="galeria_fotos.html" class="btn d-flex flex-column align-items-center justify-content-center p-4 rounded-4 text-center h-100" style="background: rgba(255,255,255,0.85); border: none;">
-          <i class="bi bi-camera-fill fs-1 mb-2" style="color:#086b92;"></i>
-          <span style="color:#086b92;">Fotos</span>
-        </a>
-      </div>
-
-      <!-- Botón Mensajes -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <a href="mensajeria.html" class="btn d-flex flex-column align-items-center justify-content-center p-4 rounded-4 text-center h-100" style="background: rgba(255,255,255,0.85); border: none;">
-          <i class="bi bi-chat-dots-fill fs-1 mb-2" style="color:#086b92;"></i>
-          <span style="color:#086b92;">Mensajes</span>
-        </a>
-      </div>
-
-    </div>
-  </div>
-</section>
 
 
 
@@ -381,7 +292,7 @@ btn.addEventListener("click", () => {
 <!-- ¿Por qué PetWise? -->
 <section id="principios-petwise" class="pw-values py-5">
   <div class="container">
-    <center><h1><b>¿Por qué PetWise?</b></h1></center>
+    <center><h1><b>¿Por qué elegir PetWise?</b></h1></center>
     <br>
     <div class="row g-4">
 
@@ -560,28 +471,70 @@ btn.addEventListener("click", () => {
 
 <!-- Descarga -->
 <section id="descarga" class="text-center mt-5">
-  <h2>Descargá PetWise</h2>
-  <p class="mb-5">Llevá el cuidado de tu mascota en tu bolsillo. Nuestra app está disponible para Android y iOS.</p>
-  <div class="row justify-content-center g-4">
-    <div class="col-12 col-md-5">
-      <div class="tarjeta-descarga p-4">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Logo Android" class="logo-sistema mb-3">
-        <h5 class="mb-3">Versión para Android</h5>
-        <p>Compatible con Android 8.0 o superior. Instalá la app y empezá a cuidar a tu mascota desde cualquier lugar.</p>
+  <div class="container">
+    <h2>Descargá PetWise</h2>
+    <p class="mb-5">Llevá el cuidado de tu mascota en tu bolsillo. Nuestra app está disponible para Android y iOS.</p>
+
+    <div class="row justify-content-center g-4">
+      <!-- Android -->
+      <div class="col-12 col-md-5">
+        <div class="tarjeta-descarga p-4">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Logo Android" class="logo-sistema mb-3">
+          <h5 class="mb-3">Versión para Android</h5>
+          <p>Compatible con Android 8.0 o superior. Instalá la app y empezá a cuidar a tu mascota desde cualquier lugar.</p>
+        </div>
+      </div>
+      <!-- iOS -->
+      <div class="col-12 col-md-5">
+        <div class="tarjeta-descarga p-4">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Logo iOS" class="logo-sistema mb-3">
+          <h5 class="mb-3">Versión para iOS</h5>
+          <p>Disponible en la App Store para iPhone y iPad. Accedé a todas las funciones desde tu dispositivo Apple.</p>
+        </div>
       </div>
     </div>
-    <div class="col-12 col-md-5">
-      <div class="tarjeta-descarga p-4">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Logo iOS" class="logo-sistema mb-3">
-        <h5 class="mb-3">Versión para iOS</h5>
-        <p>Disponible en la App Store para iPhone y iPad. Accedé a todas las funciones desde tu dispositivo Apple.</p>
-      </div>
+
+    <!-- QR -->
+    <div class="col-12 mt-4">
+      <h3>Escaneá el QR para descargar la app</h3>
+      <img src="img/qr.png" alt="QR para descargar PetWise" class="img-fluid rounded mt-3" style="max-width: 200px;">
+      <p class="mt-2 text-muted">Disponible para Android e iOS</p>
     </div>
-    <div class="col-12">
-      <h2 class="mt-5">Descargá PetWise en tu celular</h2>
-      <p>Escaneá el código QR con tu teléfono y accedé directamente a la app.</p>
-      <img src="img/qr.png" alt="QR para descargar PetWise" class="img-fluid rounded mt-4" style="max-width: 200px;">
-      <p class="mt-3 text-muted">Disponible para Android e iOS</p>
+
+    <!-- Botón instalar -->
+    <div class="col-12 mt-4">
+      <button id="installBtn" class="btn hero1-btn mt-3">📲 Instalar</button>
+    </div>
+  </div>
+</section>
+<style>
+  /* Por defecto oculto */
+  #installBtn {
+    display: none;
+  }
+
+  /* Solo visible en pantallas pequeñas (móviles/tablets) */
+  @media (max-width: 768px) {
+    #installBtn {
+      display: inline-block;
+    }
+  }
+</style>
+
+
+<section id="quick-access" class="py-5" style="background: transparent; box-shadow: none;">
+  <div class="container">
+    <div class="row g-4 justify-content-center">
+
+
+      <!-- Botón Mensajes -->
+      <div class="col-12 col-md-6 col-lg-3">
+        <a href="mensajeria.html" class="btn d-flex flex-column align-items-center justify-content-center p-4 rounded-4 text-center h-100" style="background: rgba(255,255,255,0.85); border: none;">
+          <i class="bi bi-chat-dots-fill fs-1 mb-2" style="color:#086b92;"></i>
+          <span style="color:#086b92;">Mensajes</span>
+        </a>
+      </div>
+
     </div>
   </div>
 </section>
@@ -806,6 +759,69 @@ setInterval(() => {
 
 </script>
 
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const installBtn = document.getElementById("installBtn");
+
+  // Detectar si es móvil o tablet
+  const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  // Ocultar si no es móvil
+  if (!isMobile) installBtn.style.display = "none";
+
+  let deferredPrompt;
+
+  // Guardar evento de instalación (Android)
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  function checkIfInstalled() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                      || window.navigator.standalone === true;
+
+    if (isStandalone) {
+      installBtn.innerText = "✅ Instalado";
+      installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+      return true;
+    }
+
+    if ('getInstalledRelatedApps' in navigator) {
+      navigator.getInstalledRelatedApps().then(apps => {
+        if (apps.length > 0) {
+          installBtn.innerText = "✅ Instalado";
+          installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+        }
+      });
+    }
+    return false;
+  }
+
+  installBtn.onclick = async () => {
+    if (checkIfInstalled()) return;
+
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === "accepted") {
+        installBtn.innerText = "✅ Instalado";
+        installBtn.onclick = () => alert("La app ya está instalada en tu dispositivo.");
+      }
+    } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+      alert("Para instalar en iPhone:\n1. Tocá el botón 'Compartir' (⬆️)\n2. Elegí 'Agregar a pantalla de inicio'");
+    } else {
+      alert("Tu navegador no soporta instalación directa.");
+    }
+  };
+
+  checkIfInstalled();
+});
+</script>
 
 
 </body>
