@@ -26,8 +26,8 @@
       transition: all 0.3s ease;
     }
     .btn-custom:hover {
-      background-color: #8ed849;
-      color: #1f2937;
+      background-color: #4e4e4eff;
+      color: #f0f0f0ff;
     }
     main { max-width: 1200px; margin: 4rem auto; padding: 0 1rem; }
     .services-grid {
@@ -59,9 +59,16 @@
       .service-card button { width:80%; margin:0.5rem auto 0 auto; display:block; }
     }
 
-    .modal-content { background-color:#1f2937; color:#f1f1f1; border-radius:12px; }
-    .modal-content .form-label { color: #8ed849; }
-    .modal-content .form-control::placeholder { color: #ccc; }
+    .modal-content { background-color:#b9b9b9; color:#f1f1f1; border-radius:12px; }
+    .modal-content .form-label { color: #141414; }
+    .modal-content .form-control::placeholder { color: #a0a0a0; }
+    .modal-title {color: #000;}
+    .btn-close {
+  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg);
+  opacity: 1;
+}
+
+
 
     footer {
       text-align: center;
@@ -74,6 +81,11 @@
     .color1{
       color: #000;
     }
+
+    .form-label{
+      color: rgb(4, 157, 218);
+    }
+
   </style>
 </head>
 <body>
