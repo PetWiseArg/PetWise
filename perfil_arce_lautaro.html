@@ -109,7 +109,61 @@
       }
     }
 
-   
+
+
+
+
+
+   .card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  width: 100%;
+  height: auto;            /* ← altura automática */
+  max-height: 180px;       /* ← límite razonable para no ser gigante */
+  object-fit: contain;     /* ← muestra la imagen completa */
+  background-color: #f8f9fa; /* ← relleno gris claro si sobra espacio */
+  padding: 8px;            /* ← agrega margen interno */
+  border-bottom: 1px solid #eee;
+}
+
+.card-body {
+  padding: 1rem;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #2563eb;
+}
+
+.card-text {
+  font-size: 0.85rem;
+  color: #666;
+  min-height: 45px;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  border: none;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0a58ca;
+}
+
   </style>
 </head>
 
@@ -163,6 +217,40 @@
       <li><i class="bi bi-briefcase-fill"></i><strong>Experiencia:</strong> Desarrollo Frontend y Backend en proyectos académicos y personales</li>
     </ul>
   </div>
+
+
+
+<div class="info-section">
+  <h4>Mis Proyectos</h4>
+  <div class="row g-4 mt-3">
+    
+    <!-- Proyecto 1 -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm border-0">
+        <img src="img/logo2 (1).png" class="card-img-top" alt="Proyecto 1">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-semibold">PetWise</h5>
+          <p class="card-text text-muted small">Plataforma web para gestión de cuidado de mascotas, turnos y seguimiento veterinario.</p>
+          <a href="https://lautaroarce.github.io/petwise.arg.proyec/" target="_blank" class="btn btn-primary btn-sm">Ver Proyecto</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyecto 2 -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm border-0">
+        <img src="img/logo radio.png" class="card-img-top" alt="Proyecto 2">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-semibold">FM Ñanderoga</h5>
+          <p class="card-text text-muted small">Aplicación web que permite escuchar radio en vivo.<br><br></p>
+          <a href="https://fmnanderoga.netlify.app" target="_blank" class="btn btn-primary btn-sm">Ver Proyecto</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
   <div class="info-section text-center">
     <h4>Contacto</h4>
