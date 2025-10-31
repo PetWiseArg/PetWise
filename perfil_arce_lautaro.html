@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Perfil profesional de un integrante de Software LFE." />
+
+  <title>Perfil Profesional | Software LFE</title>
+
+  <!-- Fuentes y estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="estilo.css" />
+  <link rel="icon" href="img/logo2.png" type="image/png">
+
+  <style>
+    main {
+      max-width: 900px;
+      margin: 5rem auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.1);
+      padding: 3rem 2.5rem;
+      color: #0e1117;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .profile-header img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #2563eb;
+      margin-bottom: 1rem;
+    }
+
+    .profile-header h2 {
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 0.3rem;
+    }
+
+    .profile-header h5 {
+      color: #6b7280;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .profile-description {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: #333;
+    }
+
+    .info-section {
+      background-color: #f8f9fc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h4 {
+      color: #2563eb;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #2563eb;
+      display: inline-block;
+      padding-bottom: 0.3rem;
+    }
+
+    .info-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .info-list li {
+      margin-bottom: 0.6rem;
+      font-size: 1rem;
+    }
+
+    .info-list li i {
+      color: #2563eb;
+      margin-right: 8px;
+    }
+
+    .contact-links a {
+      font-size: 1.4rem;
+      margin: 0 10px;
+      color: #2563eb;
+      transition: color 0.3s ease;
+    }
+
+    .contact-links a:hover {
+      color: #0a58ca;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        margin: 4rem 1rem;
+        padding: 2rem;
+      }
+    }
+
+   
+  </style>
+</head>
+
+<body>
+<!-- ====== NAVBAR ====== -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="img/logo lfe logo.png" alt="PetWise Logo" class="img-fluid" />
+      <span>Software LFE</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="history.back(); return false;">Atrás</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Inicio</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<br>
+<br>
+<!-- ====== PERFIL ====== -->
+<main>
+  <div class="profile-header">
+    <img src="data:image/webp;base64,UklGRiACAABXRUJQVlA4IBQCAABQHQCdASrSANIAPp1OoUwlpKMiJjoYKLATiWlu4Wt3cNAI74mTpMn8hdLfDaOdgMsMIO3XgfA5s6pMkFPbJHCRuKbuWjbv2yjUtkpU9p8C8KYD9+zCwbf06UqbZGiWHBXVT/J0pTeESZ6+FX2peDLKdQJH+w9rXeuyv/iWDM3OvclaEsF2dqMwsl/sdrZeBe6xWNGVjw9m2dUTc+6AJfODQ7nVJiXTn2r8dn6z5km/0Ey5etk19+r3SeC+W+eC7RMi3dVxPJOZ44Iq/voSc0f6CpEQnYxQrgmXYy8aeDLSp7ZgDCe1l58UbHuUtj1brq6atqAA/vzqgHYyNobTW18cVkX2Q53OkiIJkDbwBvDi4RVWjjv9jOnvDLCD/g1udmkJ9ZppCdUSyi8ze6BDiCtdPxpvzNhJc+6nVZj/1Jv6LyGlXkYKaGkdnMB6jNVptrGPxS3Hcexhr30MiLzN11s7ig5kj9e3Wd4Z/BKZIy6SdRO1M9HCME92HADRq/lQbmG9lilPNRdOcITj4gc3qHihtQCRd+/thyJxY1dl9sh7Qglq8ti9SKlaIC2h9ZLGFs+9hfjCt1jMUx9jGxxacI6VbSjr0PgBDToUOI47Q3gza1KzDyDN2duvb8qfZCTHBmzWMJxXUowstQmsD2Ogk6qP/ZYLs1+tgD5Fu0nMDOK+SRu4Z9ja++TEojk4NM8A3Scp1wAA" alt="Foto del perfil" />
+    <h2>Arce Lautaro</h2>
+    <h5>Desarrollador Web</h5>
+  </div>
+
+  <div class="profile-description">
+    Apasionado por la tecnología y el diseño, creo soluciones digitales que combinan eficiencia, estética y funcionalidad.  
+    Me especializo en desarrollo web moderno, integrando frameworks como React, Node.js y Firebase, con un enfoque en la experiencia del usuario y la innovación continua.
+  </div>
+
+  <div class="info-section">
+    <h4>Información Personal</h4>
+    <ul class="info-list">
+      <li><i class="bi bi-person-fill"></i><strong>ID:</strong> LFE-001</li>
+      <li><i class="bi bi-calendar-event-fill"></i><strong>Fecha de nacimiento:</strong> 02 de Febrero de 2004</li>
+      <li><i class="bi bi-geo-alt-fill"></i><strong>Ubicación:</strong> Goya, Corrientes, Argentina</li>
+      <li><i class="bi bi-mortarboard-fill"></i><strong>Formación:</strong> Tec. Sup. en Desarrollo de Software</li>
+      <li><i class="bi bi-briefcase-fill"></i><strong>Experiencia:</strong> Desarrollo Frontend y Backend en proyectos académicos y personales</li>
+    </ul>
+  </div>
+
+  <div class="info-section text-center">
+    <h4>Contacto</h4>
+    <div class="contact-links">
+      <a href="mailto:lautaroarce383@gmail.com" title="Correo"><i class="bi bi-envelope-fill"></i></a>
+      <a href="https://www.instagram.com/lauty_arcee" target="_blank" title="Instagram"><i class="bi bi-instagram"></i></a>
+      <a href="https://www.linkedin.com/" target="_blank" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+      <a href="https://github.com/lautaroarce" target="_blank" title="GitHub"><i class="bi bi-github"></i></a>
+    </div>
+  </div>
+</main>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <p>&copy;2025 Software LFE. Todos los derechos reservados.</p>
+  <p style="color: white;">Creador: <a href="https://www.instagram.com/lauty_arcee" target="_blank" class="text-decoration-none text-white">Software LFE</a></p>
+</footer>
+
+<script>
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    link.addEventListener('click', function () {
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+      if (navbarToggler.offsetParent !== null && navbarCollapse.classList.contains('show')) {
+        navbarToggler.click();
+      }
+    });
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
